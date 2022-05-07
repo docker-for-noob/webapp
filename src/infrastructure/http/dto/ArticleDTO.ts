@@ -1,6 +1,6 @@
 export type ArticleDTO = {
 userId: number;
-ìd: number;
+id: number;
 title: string;
 body: string;
 }

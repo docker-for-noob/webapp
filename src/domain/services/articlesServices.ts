@@ -1,10 +1,18 @@
-import {IArticlesRepository, IArticlesService} from "../ports/articlesPorts";
+import {
+  IArticlesRepository,
+  IArticlesService,
+} from '../ports/articlesPorts';
 
+interface Props {
+    articlesRepository: IArticlesRepository;
+}
 
+export const articleService = ({
+  articlesRepository,
+}: Props): IArticlesService => ({
+  fetchArticles: () => {
+    return articlesRepository.getArticles();
+  },
+});
 
-export const articleService = (repository: IArticlesRepository): IArticlesService => ({
-     fetchArticles: () => {
-       return  repository.getArticles()
-    }
-  });
 

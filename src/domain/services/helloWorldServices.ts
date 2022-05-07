@@ -1,18 +1,19 @@
-import {IExampleRepository, IExampleService} from "../ports/examplePorts";
-import {helloWorldRepository} from "../../infrastructure/repositories/helloWorldRepository";
+import {
+  IExampleRepository,
+  IExampleService,
+} from '../ports/examplePorts';
 
 
-const repository: IExampleRepository = helloWorldRepository();
+interface Props {
+    exampleRepository: IExampleRepository;
+}
 
-   const  getHelloWorld =() => {
-        return repository.createHelloWorld();
-    };
-
-export const helloWorldService: IExampleService = {
-    getHelloWorld
-};
-
-
-
+export const helloWorldService = ({
+  exampleRepository,
+}: Props): IExampleService => ({
+  getHelloWorld: () => {
+    return exampleRepository.createHelloWorld();
+  },
+});
 
 

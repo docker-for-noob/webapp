@@ -1,4 +1,4 @@
-export type Article ={
-    title : string,
-    body : string,
+export type Article = {
+    title: string,
+    body: string,
 }

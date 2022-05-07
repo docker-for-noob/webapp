@@ -1,41 +1,53 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {helloWorldService} from "@domain/services/helloWorldServices";
 import {articleService} from "@domain/services/articlesServices";
 import {articleRepository} from "@infrastructure/repositories/articleRepository";
 import {httpAxios} from "@infrastructure/http/helpers/httpAxios";
 import {Article} from "@domain/models/Article";
+import {helloWorldRepository} from "@infrastructure/repositories/helloWorldRepository";
 
+
+type AppState = {
+    articles: Article[];
+    count : number;
+}
 
 function App() {
-    const service = articleService(articleRepository(httpAxios));
-    const [articles, setArticles] = useState<Article[]>();
-    const [state,setState] = useState(0);
+    const articleServices = articleService({
+        articlesRepository: articleRepository(httpAxios)
+    });
+    const helloWorldServices = helloWorldService({
+        exampleRepository: helloWorldRepository()
+    });
 
-    const getArticles = useCallback(async () => {
-            const responseArticles = await service.fetchArticles();
-            setArticles(responseArticles);
-    }, []);
+    const [state,setState] = useState<AppState>({
+        articles: [],
+        count: 0
+    });
 
-    React.useEffect(() => {
+    const getArticles = async () => {
+        const responseArticles = await articleServices.fetchArticles();
+        setState({...state, articles: responseArticles});
+    };
+
+    useEffect(() => {
         getArticles();
-    }, []);
+    });
 
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    return (
+        <div className="App">
+            <header className="App-header">
 
-          {helloWorldService.getHelloWorld()}
-          <button onClick={()=> setState(state +1 )}>Increment</button>
-          <p>Incr :  {state}</p>
+                {helloWorldServices.getHelloWorld()}
+                <button onClick={() => setState({...state, count: state.count + 1})}>Increment</button>
+                <p>Increment : {state.count}</p>
 
-          {JSON.stringify(articles)}
-      </header>
-    </div>
-  );
+                {JSON.stringify(state.articles)}
+            </header>
+        </div>
+    );
 }
 
 export default App;
