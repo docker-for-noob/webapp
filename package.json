@@ -8,8 +8,6 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "eslint -c .eslintrc.js --ext .ts src"
   },
-  "author": "juanm4@gmail.com",
-  "license": "ISC",
   "devDependencies": {
     "@types/jest": "^27.5.0",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
