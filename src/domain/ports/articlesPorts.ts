@@ -1,9 +1,9 @@
-import {Article} from '../models/Article';
+import { Article } from "../models/Article";
 
 export interface IArticlesRepository {
-    getArticles: () => Promise<Article[]>;
+  getArticles: () => Promise<Article[]>;
 }
 
 export interface IArticlesService {
-    fetchArticles: () => Promise<Article[]>;
+  fetchArticles: () => Promise<Article[]>;
 }

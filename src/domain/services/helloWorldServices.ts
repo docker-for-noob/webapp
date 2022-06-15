@@ -1,11 +1,7 @@
-import {
-  IExampleRepository,
-  IExampleService,
-} from '../ports/examplePorts';
-
+import { IExampleRepository, IExampleService } from "../ports/examplePorts";
 
 interface Props {
-    exampleRepository: IExampleRepository;
+  exampleRepository: IExampleRepository;
 }
 
 export const helloWorldService = ({
@@ -15,5 +11,3 @@ export const helloWorldService = ({
     return exampleRepository.createHelloWorld();
   },
 });
-
-
