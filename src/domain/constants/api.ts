@@ -1,2 +1,1 @@
-export const PLACEHOLDER_ARTICLES_URL =
-  "https://jsonplaceholder.typicode.com/posts";
+export const PLACEHOLDER_ARTICLES_URL = "posts";
