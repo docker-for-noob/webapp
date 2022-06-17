@@ -33,7 +33,8 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "git-conventional-commits": "^1.2.1"
   },
   "files": [
     "lib/**/*",
