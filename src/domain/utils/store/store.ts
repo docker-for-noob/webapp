@@ -2,27 +2,26 @@ import {
     configureStore,
 } from '@reduxjs/toolkit';
 import {reduxBatch} from '@manaflair/redux-batch';
-import articleReducer from './article/slicer';
-import countReducer from './count/slicer';
 import {persistStore} from 'redux-persist'
 import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist/es/constants";
-import {persist, persistConfig} from "./persist";
-import {ApiSlice} from "./api/apiSlice";
 import {setupListeners} from '@reduxjs/toolkit/query'
+import requestReducer from '../request/slicer'
+import {apiSlice }   from '../../api/apiSlice'
+import imageReferenceReducer    from '../../imageReference/store/imageReference/slicer'
+
 
 export const store = configureStore({
     reducer: {
-        articleReducer: persist(persistConfig('article'), articleReducer),
-        countReducer: countReducer,
-        [ApiSlice.reducerPath]: ApiSlice.reducer,
+        imageReferenceReducer: imageReferenceReducer,
+        requestReducer: requestReducer,
+        [apiSlice.reducerPath]:  apiSlice.reducer,
     },
-
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(ApiSlice.middleware),
+        }).concat(apiSlice.middleware),
     enhancers: (defaultEnhancers) => [reduxBatch, ...defaultEnhancers, reduxBatch],
 });
 
