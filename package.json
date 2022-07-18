@@ -8,7 +8,8 @@
     "test": "jest --verbose ./src/tests",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "eslint -c .eslintrc.js --ext .ts src  --resolve-plugins-relative-to src/domain  --resolve-plugins-relative-to src/infrastructure/http --resolve-plugins-relative-to src/infrastructure/repositories",
-    "lint-project": "yarn run lint; cd src/infrastructure/views/react-ui; yarn run lint;"
+    "lint-project": "yarn run lint; cd src/infrastructure/views/react-ui; yarn run lint;",
+    "coverage": "jest --verbose --coverage ./src/tests"
   },
   "devDependencies": {
     "@types/jest": "^27.5.0",

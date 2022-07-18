@@ -1,13 +1,14 @@
-import { IExampleRepository, IExampleService } from "../ports/examplePorts";
+import { HelloWorldRepository } from "../../infrastructure/repositories/helloWorldRepository";
+import { IExampleService } from "../ports/examplePorts";
 
-interface Props {
-  exampleRepository: IExampleRepository;
+export class HelloWorldService implements IExampleService {
+  exampleRepository: HelloWorldRepository;
+
+  constructor(exampleRepository: HelloWorldRepository) {
+    this.exampleRepository = exampleRepository;
+  }
+
+  getHelloWorld(): string {
+    return this.exampleRepository.createHelloWorld();
+  }
 }
-
-export const helloWorldService = ({
-  exampleRepository,
-}: Props): IExampleService => ({
-  getHelloWorld: () => {
-    return exampleRepository.createHelloWorld();
-  },
-});

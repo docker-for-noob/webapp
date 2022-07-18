@@ -1,6 +1,6 @@
 # WebApp
 
-Partie Front du projet Docker for Noods.  
+Partie Front du projet Docker for Noods. [![Coverage Status](https://coveralls.io/repos/github/docker-for-noob/webapp/badge.svg)](https://coveralls.io/github/docker-for-noob/webapp)  
 *Par Camille ARSAC, Rémi COUFOURIER, Florian LEROY, Guillaume MARCEL, Steven NATIVEL, Cédric PIERRE-AUGUSTE et Arthur POULLIN.*
 
 Nous travaillons avec une architecture hexagonale en typescript. La partie rendu de templating en React à sa propre documentation spécifique [ici](./src/infrastructure/views/react-ui/README.md).
