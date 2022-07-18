@@ -1,9 +1,7 @@
-import {helloWorldService} from '../domain/services/helloWorldServices';
-import {helloWorldRepository} from '../infrastructure/repositories/helloWorldRepository';
+import { HelloWorldService } from "../domain/services/helloWorldServices";
+import { HelloWorldRepository } from "../infrastructure/repositories/helloWorldRepository";
 
-test('its an hello world', ()=> {
-  const service = helloWorldService({
-    exampleRepository: helloWorldRepository(),
-  });
-  expect(service.getHelloWorld()).toBe('Hello World');
+test("its an hello world", () => {
+  const service = new HelloWorldService(new HelloWorldRepository());
+  expect(service.getHelloWorld()).toBe("Hello World");
 });

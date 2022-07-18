@@ -5,5 +5,23 @@ module.exports = {
   testMatch: ['**/tests/**/*.ts?(x)', '**/?(*.)+(test).ts?(x)'],
   testPathIgnorePatterns: ['/node_modules/'],
   globals: { 'ts-jest': { diagnostics: false } },
-  transform: {}
+  transform: {},
+  coveragePathIgnorePatterns: [
+    "src/domain/constants",
+    "src/domain/ports",
+    "src/domain/models",
+    "src/infrastructure",
+    "coverage",
+    "src/mocks",
+    "src/tests",
+    '/node_modules/'
+  ],
+  coverageThreshold: {
+    "./src/domain/services": {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
+    },
+  },
 };

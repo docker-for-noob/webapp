@@ -4,14 +4,17 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "install-project": "yarn install; cd src/infrastructure/views/react-ui; yarn install;",
     "test": "jest --verbose ./src/tests",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "eslint -c .eslintrc.js --ext .ts src"
+    "lint": "eslint -c .eslintrc.js --ext .ts src  --resolve-plugins-relative-to src/domain  --resolve-plugins-relative-to src/infrastructure/http --resolve-plugins-relative-to src/infrastructure/repositories",
+    "lint-project": "yarn run lint; cd src/infrastructure/views/react-ui; yarn run lint;",
+    "coverage": "jest --verbose --coverage ./src/tests"
   },
   "devDependencies": {
     "@types/jest": "^27.5.0",
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
-    "@typescript-eslint/parser": "^5.22.0",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-root-import": "^6.6.0",
     "eslint": ">=5.16.0",
@@ -21,7 +24,7 @@
     "eslint-plugin-jest": "^24.1.3",
     "eslint-plugin-json": "^2.1.2",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react": "^7.30.0",
     "jest": "^28.1.0",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0",
@@ -31,7 +34,8 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "git-conventional-commits": "^1.2.1"
   },
   "files": [
     "lib/**/*",

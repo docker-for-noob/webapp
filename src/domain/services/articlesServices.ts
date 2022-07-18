@@ -1,10 +1,7 @@
-import {
-  IArticlesRepository,
-  IArticlesService,
-} from '../ports/articlesPorts';
+import { IArticlesRepository, IArticlesService } from "../ports/articlesPorts";
 
 interface Props {
-    articlesRepository: IArticlesRepository;
+  articlesRepository: IArticlesRepository;
 }
 
 export const articleService = ({
@@ -14,5 +11,3 @@ export const articleService = ({
     return articlesRepository.getArticles();
   },
 });
-
-

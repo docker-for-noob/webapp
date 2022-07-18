@@ -1,9 +1,9 @@
-import {Hello} from '../models/Hello';
+import { Hello } from "../models/Hello";
 
 export interface IExampleRepository {
-    createHelloWorld: () => Hello
+  createHelloWorld: () => Hello;
 }
 
 export interface IExampleService {
-    getHelloWorld: () => Hello
+  getHelloWorld: () => Hello;
 }
