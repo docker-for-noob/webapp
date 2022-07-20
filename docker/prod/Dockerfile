@@ -13,6 +13,8 @@ RUN npm -g install yarn
 
 WORKDIR /tmp
 
+COPY config/nginx.conf /etc/nginx/nginx.conf
+
 COPY . /tmp
 
 RUN rm -rf node_modules yarn.lock
@@ -22,8 +24,6 @@ RUN yarn run build
 RUN mkdir /app
 
 RUN mv src/infrastructure/views/react-ui/build/* /app
-
-RUN mv /tmp/config/nginx.conf /etc/nginx/nginx.conf
 
 RUN chown www-data:www-data -R /app
 
