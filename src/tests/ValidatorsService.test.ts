@@ -210,7 +210,6 @@ test("a version as int has been sent and return an error", () => {
     expect(versionValidator(initial)).toStrictEqual(mustBeStringError);
 })
 
-
 test("a correct tag has been sent and return undefined", () => {
     const initial = "9.0.0";
     expect(tagsValidator(initial)).toStrictEqual(undefined);

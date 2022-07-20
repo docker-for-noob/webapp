@@ -3,9 +3,6 @@ import {PLACEHOLDER_ARTICLES_URL} from "./endpoint";
 import {ArticleDTO} from "./ArticleDTO";
 import {REHYDRATE} from "redux-persist/es/constants";
 
-
-
-
 export const apiSlice = createApi({
         reducerPath: 'api',
         extractRehydrationInfo(action, { reducerPath }) {
