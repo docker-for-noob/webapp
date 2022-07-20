@@ -1,0 +1,69 @@
+name: Linter
+
+on:
+  pull_request:
+    branches: 
+      - "**"
+
+jobs:
+  linting:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ '16' ]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Staring Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Restoring Yarn cache
+      uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Bootstraping packages
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: yarn install
+
+    - name: Bootstraping packages react
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: cd src/infrastructure/views/react-ui && yarn install
+
+    - name: Get file changes
+      id: get_file_changes
+      uses: trilom/file-changes-action@v1.2.4
+      with:
+        output: ' '
+
+    - name: Echo file changes
+      run: |
+            echo Added files: ${{ steps.get_file_changes.outputs.files_added }}
+            echo Changed files: ${{ steps.get_file_changes.outputs.files_modified }}
+            echo Removed files: ${{ steps.get_file_changes.outputs.files_removed }}
+    - name: Prettier Checking
+      if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
+      run: yarn format
+
+    - name: ESLint Checking for all except React
+      if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
+      run: yarn run lint
+      
+    - name: ESLint Checking for react
+      if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
+      run: cd src/infrastructure/views/react-ui && yarn run lint
+
+    - name: Commit changes
+      if: always()
+      uses: stefanzweifel/git-auto-commit-action@v4.1.2
+      with:
+          commit_message: "chore(prettier): commit auto to formatted code"
+          branch: ${{ github.head_ref }}
