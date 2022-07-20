@@ -9,7 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: autopilot-cluster-1
   GKE_ZONE: europe-west1  
-  DEPLOYMENT_NAME: gke-webapp 
+  DEPLOYMENT_NAME: webapp-deployment
   IMAGE: webapp
 
 jobs:
