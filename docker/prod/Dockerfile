@@ -23,7 +23,7 @@ RUN mkdir /app
 
 RUN mv src/infrastructure/views/react-ui/build/* /app
 
-COPY config/nginx.conf /etc/nginx/nginx.conf
+RUN mv /tmp/config/nginx.conf /etc/nginx/nginx.conf
 
 RUN chown www-data:www-data -R /app
 
