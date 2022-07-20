@@ -1,4 +1,3 @@
-export type validator = (value: any) =>validatorResult
-export type validators = validator[];
-export type validatorResult = string | undefined;
-
+export type Validator = (value: any) =>ValidatorResult
+export type ValidatorResult = string | undefined;
+export type Ports = string[]

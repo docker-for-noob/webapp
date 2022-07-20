@@ -1,6 +1,6 @@
 import {IValidatorRepository} from "../../domain/imageReference/ports/ValidatorsPorts";
 import {
-    mustBeAPathError,
+    mustBePathError,
     mustBeInUpperCaseError,
     mustBeNumberError,
     mustBePositiveError,
@@ -10,37 +10,44 @@ import {
     mustNotContainsUppercaseError,
     mustNotContainsWhiteSpaceError,
     requiredError,
-    valueMustBeUniqueError
+    valueMustBeUniqueError,
+    mustNotContainsSpecialCharactersExceptUnderscoreError
 } from "../../domain/imageReference/constants/Strings";
-import {validator} from "../../domain/imageReference/service/Validator/type";
+import {Validator} from "../../domain/imageReference/service/Validator/type";
 
-const required: validator = value => value ? undefined : requiredError;
-const mustBeNumber: validator = value => isNaN(value) ? mustBeNumberError : undefined;
-const mustBePositive: validator = value => value < 0 ? mustBePositiveError : undefined;
-const mustBeString: validator = value => typeof value !== 'string' ? mustBeStringError : undefined;
-const mustNotContainsWhiteSpace: validator = value => value.indexOf(' ') >= 0 ? mustNotContainsWhiteSpaceError : undefined;
-const mustBeInUpperCase: validator = value => value.toUpperCase() !== value ? mustBeInUpperCaseError : undefined;
+const required: Validator = value => value ? undefined : requiredError;
+const mustBeNumber: Validator = value => isNaN(value) ? mustBeNumberError : undefined;
+const mustBePositive: Validator = value => value < 0 ? mustBePositiveError : undefined;
+const mustBeString: Validator = value => typeof value !== 'string' ? mustBeStringError : undefined;
+const mustNotContainsWhiteSpace: Validator = value => value.indexOf(' ') >= 0 ? mustNotContainsWhiteSpaceError : undefined;
+const mustBeInUpperCase: Validator = value => value.toUpperCase() !== value ? mustBeInUpperCaseError : undefined;
 
-const mustNotContainsUppercase: validator = value => {
+const mustNotContainsUppercase: Validator = value => {
     const upperCaseRegex = /[A-Z]/;
     return upperCaseRegex.test(value) ? mustNotContainsUppercaseError : undefined;
 }
-const mustBePath: validator = value => {
-    const pathRegex = /^(\/[^/]+)+\/?$/;
-    return pathRegex.test(value) ? undefined : mustBeAPathError;
+
+const mustBePath: Validator = value => {
+    const pathRegex = /^(?:[a-z]:)?([\/\\]{0,2})(?:[.\/\\ ](?![.\/\\\n])|[^<>:"|?*.\/\\ \n])+$/i;
+    return pathRegex.test(value) ? undefined : mustBePathError;
 }
 
-const valueMustBeUnique = (allValues: any[]): validator => (value) => {
+const valueMustBeUnique = (allValues: any[]): Validator => (value) => {
     const currentIndex = allValues.indexOf(value);
     return currentIndex === -1 ? undefined : valueMustBeUniqueError;
 }
 
-const mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPoint: validator = value => {
+const mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPoint: Validator = value => {
     const specialCharactersRegex = /[^a-zA-Z0-9./_-]/;
     return specialCharactersRegex.test(value) ? mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError : undefined;
 }
 
-const mustNotContainsSpecialCharactersExceptEquals: validator = value => {
+const mustNotContainsSpecialCharactersExceptUnderscore: Validator = value => {
+    const specialCharactersRegex = /[^a-zA-Z0-9_-]/;
+    return specialCharactersRegex.test(value) ? mustNotContainsSpecialCharactersExceptUnderscoreError : undefined;
+}
+
+const mustNotContainsSpecialCharactersExceptEquals: Validator = value => {
     const specialCharactersRegex = /[^a-zA-Z0-9=]/;
     return specialCharactersRegex.test(value) ? mustNotContainsSpecialCharactersExceptEqualsError : undefined;
 }
@@ -55,10 +62,7 @@ export const ValidatorRepository: IValidatorRepository = {
     mustNotContainsUppercase,
     valueMustBeUnique,
     mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPoint,
+    mustNotContainsSpecialCharactersExceptUnderscore,
     mustNotContainsSpecialCharactersExceptEquals,
     mustBePath,
 }
-
-// test code:
-// Must be a path
-// Must be in uppercase
