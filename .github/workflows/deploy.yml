@@ -41,8 +41,7 @@ jobs:
         credentials: ${{ secrets.GKE_SA_KEY }}
 
     - name: Copy
-      run: cp -r src/ /docker/prod && cp .eslintrc.js /docker/prod && cp package.json /docker-prod && cp tsconfig.json /docker/prod && cp yarn.lock /docker/prod
-
+      run: cp -r src/ docker/prod && cp .eslintrc.js docker/prod && cp package.json docker-prod && cp tsconfig.json docker/prod && cp yarn.lock docker/prod
 
     # Build the Docker image
     - name: Build
