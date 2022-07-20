@@ -40,10 +40,14 @@ jobs:
         location: ${{ env.GKE_ZONE }}
         credentials: ${{ secrets.GKE_SA_KEY }}
 
+    - name: Copy
+      run: cp src/ /docker/prod && cp .eslintrc.js /docker/prod && cp package.json /docker-prod && cp tsconfig.json /docker/prod && cp yarn.lock /docker/prod
+
     # Build the Docker image
     - name: Build
       run: |-
         docker build \
+          -f docker/prod/Dockerfile
           --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \

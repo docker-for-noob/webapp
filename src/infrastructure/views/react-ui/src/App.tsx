@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import {helloWorldService} from "@domain/services/helloWorldServices";
+import {HelloWorldService} from "@domain/services/helloWorldServices";
 import {articleService} from "@domain/services/articlesServices";
 import {articleRepository} from "@infrastructure/repositories/articleRepository";
 import {httpAxios} from "@infrastructure/http/helpers/httpAxios";
 import {Article} from "@domain/models/Article";
-import {helloWorldRepository} from "@infrastructure/repositories/helloWorldRepository";
+import {HelloWorldRepository} from "@infrastructure/repositories/helloWorldRepository";
 
 
 type AppState = {
@@ -17,9 +17,9 @@ function App() {
     const articleServices = articleService({
         articlesRepository: articleRepository(httpAxios)
     });
-    const helloWorldServices = helloWorldService({
-        exampleRepository: helloWorldRepository()
-    });
+    const helloWorldServices = new HelloWorldService(
+        new HelloWorldRepository()
+    );
 
     const [state,setState] = useState<AppState>({
         articles: [],
