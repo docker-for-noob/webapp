@@ -4,7 +4,7 @@ import {useAppDispatch, useAppSelector} from './hooks/storeHooks';
 import {getImageReferences} from "@domain/imageReference/store/imageReference/selectors";
 import {RootState} from "@domain/utils/store/type";
 import {useGetAllArticlesQuery} from "@domain/api/apiSlice";
-import {DownloaderService} from "@domain/imageReference/service/Downloader/DownloaderService";
+import {DownloaderService} from "@domain/imageReference/service/downloader/DownloaderService";
 import {imageReferences} from "@domain/imageReference/constants/seed";
 
 export function App() {
@@ -16,7 +16,7 @@ export function App() {
         <div className="App">
             <header className="App-header">
                 <button onClick={() => DownloaderService.downloadDockerCompose("test43", imageReferences)}>Download
-                    YAML
+                    YAMLssdgsd
                 </button>
                 {JSON.stringify(data)}
             </header>

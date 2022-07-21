@@ -12,8 +12,15 @@ import {
     requiredError,
     valueMustBeUniqueError,
     mustNotContainsSpecialCharactersExceptUnderscoreError
-} from "../../domain/imageReference/constants/Strings";
-import {Validator} from "../../domain/imageReference/service/Validator/type";
+} from "../../domain/utils/exception/DomainException";
+import {Validator} from "../../domain/imageReference/service/validator/type";
+import {
+    REGEXP_SPECIAL_CHARACTERS_EXCEPT_EQUALS,
+    REGEXP_SPECIAL_CHARACTERS_EXCEPT_UNDERSCORE,
+    REGEXP_SPECIAL_CHARACTERS_EXCEPT_UNDERSCORE_SLASH_AND_POINT,
+    REGEXP_PATH,
+    REGEXP_UPPERCASE
+} from "../../domain/imageReference/constants/RegExp";
 
 const required: Validator = value => value ? undefined : requiredError;
 const mustBeNumber: Validator = value => isNaN(value) ? mustBeNumberError : undefined;
@@ -23,13 +30,11 @@ const mustNotContainsWhiteSpace: Validator = value => value.indexOf(' ') >= 0 ? 
 const mustBeInUpperCase: Validator = value => value.toUpperCase() !== value ? mustBeInUpperCaseError : undefined;
 
 const mustNotContainsUppercase: Validator = value => {
-    const upperCaseRegex = /[A-Z]/;
-    return upperCaseRegex.test(value) ? mustNotContainsUppercaseError : undefined;
+    return REGEXP_UPPERCASE.test(value) ? mustNotContainsUppercaseError : undefined;
 }
 
 const mustBePath: Validator = value => {
-    const pathRegex = /^(?:[a-z]:)?([\/\\]{0,2})(?:[.\/\\ ](?![.\/\\\n])|[^<>:"|?*.\/\\ \n])+$/i;
-    return pathRegex.test(value) ? undefined : mustBePathError;
+    return REGEXP_PATH.test(value) ? undefined : mustBePathError;
 }
 
 const valueMustBeUnique = (allValues: any[]): Validator => (value) => {
@@ -38,18 +43,21 @@ const valueMustBeUnique = (allValues: any[]): Validator => (value) => {
 }
 
 const mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPoint: Validator = value => {
-    const specialCharactersRegex = /[^a-zA-Z0-9./_-]/;
-    return specialCharactersRegex.test(value) ? mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError : undefined;
+    return REGEXP_SPECIAL_CHARACTERS_EXCEPT_UNDERSCORE_SLASH_AND_POINT.test(value) ?
+        mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError :
+        undefined;
 }
 
 const mustNotContainsSpecialCharactersExceptUnderscore: Validator = value => {
-    const specialCharactersRegex = /[^a-zA-Z0-9_-]/;
-    return specialCharactersRegex.test(value) ? mustNotContainsSpecialCharactersExceptUnderscoreError : undefined;
+    return REGEXP_SPECIAL_CHARACTERS_EXCEPT_UNDERSCORE.test(value)
+        ? mustNotContainsSpecialCharactersExceptUnderscoreError :
+        undefined;
 }
 
 const mustNotContainsSpecialCharactersExceptEquals: Validator = value => {
-    const specialCharactersRegex = /[^a-zA-Z0-9=]/;
-    return specialCharactersRegex.test(value) ? mustNotContainsSpecialCharactersExceptEqualsError : undefined;
+    return REGEXP_SPECIAL_CHARACTERS_EXCEPT_EQUALS.test(value) ?
+        mustNotContainsSpecialCharactersExceptEqualsError :
+        undefined;
 }
 
 export const ValidatorRepository: IValidatorRepository = {

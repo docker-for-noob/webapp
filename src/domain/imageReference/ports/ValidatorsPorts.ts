@@ -1,4 +1,4 @@
-import {Ports, Validator} from "../service/Validator/type";
+import {Ports, Validator} from "../service/validator/type";
 
 export interface IValidatorService {
     portsValidator: (actual:  Ports) => Validator

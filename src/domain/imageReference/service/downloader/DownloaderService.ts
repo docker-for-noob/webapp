@@ -1,7 +1,7 @@
 import {IDownloaderService} from "../../ports/DownloaderPorts";
 import {DownloaderRepository} from "../../../../infrastructure/repositories/DownloaderRepository";
 import {data, fileName} from "./type";
-import {FormatService} from "../Format/FormatService";
+import {FormatService} from "../format/FormatService";
 
 const {
     inBrowser

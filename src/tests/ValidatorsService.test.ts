@@ -7,8 +7,8 @@ import {
     mustNotContainsWhiteSpaceError,
     requiredError,
     valueMustBeUniqueError
-} from "../domain/imageReference/constants/Strings";
-import {validatorService} from "../domain/imageReference/service/Validator/ValidatorService";
+} from "../domain/utils/exception/DomainException";
+import {validatorService} from "../domain/imageReference/service/validator/ValidatorService";
 
 
 const {

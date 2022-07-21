@@ -1,4 +1,4 @@
-import {data, fileName} from "../service/Downloader/type";
+import {data, fileName} from "../service/downloader/type";
 
 export interface IDownloaderService {
     downloadDockerCompose: (filename: fileName, data: data) => void

@@ -11,7 +11,7 @@ import {
     mustBePathError,
     mustBeInUpperCaseError,
     mustNotContainsSpecialCharactersExceptUnderscoreError
-} from "../domain/imageReference/constants/Strings";
+} from "../domain/utils/exception/DomainException";
 import {ValidatorRepository} from "../infrastructure/repositories/ValidatorRepository";
 
 const {

@@ -1,5 +1,5 @@
 import {IDownloaderRepository} from "../../domain/imageReference/ports/DownloaderPorts";
-import {data, fileName} from "../../domain/imageReference/service/Downloader/type";
+import {data, fileName} from "../../domain/imageReference/service/downloader/type";
 
 const inBrowser = (filename: fileName, data: data, option) => {
     const blob = new Blob([data], option);
