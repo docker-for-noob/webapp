@@ -2,5 +2,5 @@ commonLabels:
   app: docker-for-noob
 resources:
   - deployment.yaml
-  - services.yaml
+  - service.yaml
   
