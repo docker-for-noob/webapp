@@ -6,6 +6,7 @@ import {useAppDispatch} from './hooks/storeHooks';
 import {useGetAllArticlesQuery} from "@domain/api/apiSlice";
 import {DownloaderService} from "@domain/imageReference/service/downloader/DownloaderService";
 import {getError, getResult, isSuccess} from "@domain/utils/maybe/Maybe";
+import { HomePage } from './pages/HomePage';
 
 
 
@@ -35,7 +36,7 @@ export function App() {
     return (
         <div className="App">   
             <Routes>
-                <Route path="/" element={<Test />} />
+                <Route path="/" element={<HomePage />} />
             </Routes>  
         </div>
     );
