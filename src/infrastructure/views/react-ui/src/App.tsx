@@ -1,53 +1,31 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import {HelloWorldService} from "@domain/services/helloWorldServices";
-import {articleService} from "@domain/services/articlesServices";
-import {articleRepository} from "@infrastructure/repositories/articleRepository";
-import {httpAxios} from "@infrastructure/http/helpers/httpAxios";
-import {Article} from "@domain/models/Article";
-import {HelloWorldRepository} from "@infrastructure/repositories/helloWorldRepository";
+import {useAppDispatch} from './hooks/storeHooks';
+import {useGetAllArticlesQuery} from "@domain/api/apiSlice";
+import {DownloaderService} from "@domain/imageReference/service/downloader/DownloaderService";
+import {getError, getResult, isSuccess} from "@domain/utils/maybe/Maybe";
 
+export function App() {
+    const dispatchStore = useAppDispatch();
+    const {data} = useGetAllArticlesQuery()
+    const {downloadDockerCompose} = DownloaderService
 
-type AppState = {
-    articles: Article[];
-    count : number;
-}
-
-function App() {
-    const articleServices = articleService({
-        articlesRepository: articleRepository(httpAxios)
-    });
-    const helloWorldServices = new HelloWorldService(
-        new HelloWorldRepository()
-    );
-
-    const [state,setState] = useState<AppState>({
-        articles: [],
-        count: 0
-    });
-
-    const getArticles = async () => {
-        const responseArticles = await articleServices.fetchArticles();
-        setState({...state, articles: responseArticles});
-    };
-
-    useEffect(() => {
-        getArticles();
-    });
-
+    const download = async () => {
+        const result = await downloadDockerCompose("test43", "")
+        console.log(result)
+        if (isSuccess(result)) console.log(getResult(result))
+        if (getError(result)) console.log(getError(result))
+    }
 
     return (
         <div className="App">
             <header className="App-header">
-
-                {helloWorldServices.getHelloWorld()}
-                <button onClick={() => setState({...state, count: state.count + 1})}>Increment</button>
-                <p>Increment : {state.count}</p>
-
-                {JSON.stringify(state.articles)}
+                <button onClick={() => download()}>Download
+                    YAMLssdgsd
+                </button>
+                {JSON.stringify(data)}
             </header>
         </div>
     );
 }
 
-export default App;

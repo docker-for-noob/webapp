@@ -7,9 +7,10 @@ module.exports = {
   globals: { 'ts-jest': { diagnostics: false } },
   transform: {},
   coveragePathIgnorePatterns: [
-    "src/domain/constants",
-    "src/domain/ports",
-    "src/domain/models",
+    "src/domain/imageReference/constants",
+    "src/domain/imageReference/ports",
+    "src/domain/imageReference/models",
+    "src/domain/utils",
     "src/infrastructure",
     "coverage",
     "src/mocks",
@@ -17,7 +18,7 @@ module.exports = {
     '/node_modules/'
   ],
   coverageThreshold: {
-    "./src/domain/services": {
+    "./src/domain/imageReference/service": {
       branches: 100,
       functions: 100,
       lines: 100,
