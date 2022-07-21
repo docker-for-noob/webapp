@@ -7,16 +7,7 @@ import {useGetAllArticlesQuery} from "@domain/api/apiSlice";
 import {DownloaderService} from "@domain/imageReference/service/downloader/DownloaderService";
 import {getError, getResult, isSuccess} from "@domain/utils/maybe/Maybe";
 
-function Test() {
-    return (
-        <div>
-            <button onClick={() => download()}>Download
-                YAMLssdgsd
-            </button>
-            {JSON.stringify(data)}
-        </div>
-    )
-}
+
 
 export function App() {
     const dispatchStore = useAppDispatch();
@@ -28,6 +19,17 @@ export function App() {
         console.log(result)
         if (isSuccess(result)) console.log(getResult(result))
         if (getError(result)) console.log(getError(result))
+    }
+
+    function Test() {
+        return (
+            <div>
+                <button onClick={() => download()}>Download
+                    YAMLssdgsd
+                </button>
+                {JSON.stringify(data)}
+            </div>
+        )
     }
 
     return (
