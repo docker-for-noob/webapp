@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import './App.css';
 import {useAppDispatch} from './hooks/storeHooks';
 import {useGetAllArticlesQuery} from "@domain/api/apiSlice";
 import {DownloaderService} from "@domain/imageReference/service/downloader/DownloaderService";
 import {getError, getResult, isSuccess} from "@domain/utils/maybe/Maybe";
+import {BackendSeed} from "@domain/imageReference/constants/backendSeed";
 
 export function App() {
     const dispatchStore = useAppDispatch();
@@ -11,8 +12,8 @@ export function App() {
     const {downloadDockerCompose} = DownloaderService
 
     const download = async () => {
-        const result = await downloadDockerCompose("test43", "")
-        console.log(result)
+        const result = await downloadDockerCompose("test43", BackendSeed)
+
         if (isSuccess(result)) console.log(getResult(result))
         if (getError(result)) console.log(getError(result))
     }
@@ -28,4 +29,5 @@ export function App() {
         </div>
     );
 }
+
 
