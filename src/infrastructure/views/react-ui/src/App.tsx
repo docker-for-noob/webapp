@@ -1,21 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import {useAppDispatch, useAppSelector} from './hooks/storeHooks';
-import {getImageReferences} from "@domain/imageReference/store/imageReference/selectors";
-import {RootState} from "@domain/utils/store/type";
+import {useAppDispatch} from './hooks/storeHooks';
 import {useGetAllArticlesQuery} from "@domain/api/apiSlice";
 import {DownloaderService} from "@domain/imageReference/service/downloader/DownloaderService";
-import {imageReferences} from "@domain/imageReference/constants/seed";
+import {getError, getResult, isSuccess} from "@domain/utils/maybe/Maybe";
 
 export function App() {
     const dispatchStore = useAppDispatch();
     const {data} = useGetAllArticlesQuery()
-    const imageReference = useAppSelector((state: RootState) => (getImageReferences(state)));
+    const {downloadDockerCompose} = DownloaderService
+
+    const download = async () => {
+        const result = await downloadDockerCompose("test43", "")
+        console.log(result)
+        if (isSuccess(result)) console.log(getResult(result))
+        if (getError(result)) console.log(getError(result))
+    }
 
     return (
         <div className="App">
             <header className="App-header">
-                <button onClick={() => DownloaderService.downloadDockerCompose("test43", imageReferences)}>Download
+                <button onClick={() => download()}>Download
                     YAMLssdgsd
                 </button>
                 {JSON.stringify(data)}

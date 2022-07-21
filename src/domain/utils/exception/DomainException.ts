@@ -1,17 +1,21 @@
 import {DomainException} from "./type";
+import {error, Error} from "../maybe/Maybe";
 
-const requiredError: DomainException = 'This field is required';
-const mustBeNumberError: DomainException = 'Must be a number';
-const mustBePositiveError: DomainException = 'Must be a positive number';
-const mustBeStringError: DomainException = 'Must be a string';
-const mustNotContainsWhiteSpaceError: DomainException = 'Must not contain white space';
-const mustNotContainsUppercaseError: DomainException = 'Must not contain uppercase';
-const mustBePathError: DomainException = 'Must be a path';
-const mustBeInUpperCaseError: DomainException = 'Must be in uppercase';
-const valueMustBeUniqueError: DomainException = 'Value must be unique';
-const mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError: DomainException = 'Must not contain special characters except underscore slash and point';
-const mustNotContainsSpecialCharactersExceptUnderscoreError: DomainException = 'Must not contain special characters except underscore';
-const mustNotContainsSpecialCharactersExceptEqualsError: DomainException = 'Must not contain special characters except equal';
+const requiredError: Error<DomainException> = error('This field is required');
+const mustBeNumberError: Error<DomainException> = error('Must be a number');
+const mustBePositiveError: Error<DomainException> = error('Must be a positive number');
+const mustBeStringError: Error<DomainException> = error('Must be a string');
+const mustNotContainsWhiteSpaceError: Error<DomainException> = error('Must not contain white space');
+const mustNotContainsUppercaseError: Error<DomainException> = error('Must not contain uppercase');
+const mustBePathError: Error<DomainException> = error('Must be a path');
+const mustBeInUpperCaseError: Error<DomainException> = error('Must be in uppercase');
+const valueMustBeUniqueError: Error<DomainException> = error('Value must be unique');
+const mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError: Error<DomainException> =
+    error('Must not contain special characters except underscore slash and point');
+const mustNotContainsSpecialCharactersExceptUnderscoreError: Error<DomainException> =
+    error('Must not contain special characters except underscore');
+const mustNotContainsSpecialCharactersExceptEqualsError: Error<DomainException> =
+    error('Must not contain special characters except equal');
 
 
 export {

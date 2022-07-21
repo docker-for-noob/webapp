@@ -7,12 +7,9 @@ import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist/e
 import {setupListeners} from '@reduxjs/toolkit/query'
 import requestReducer from '../request/slicer'
 import {apiSlice }   from '../../api/apiSlice'
-import imageReferenceReducer    from '../../imageReference/store/imageReference/slicer'
-
 
 export const store = configureStore({
     reducer: {
-        imageReferenceReducer: imageReferenceReducer,
         requestReducer: requestReducer,
         [apiSlice.reducerPath]:  apiSlice.reducer,
     },

@@ -1,2 +1,2 @@
 export type fileName = string;
-export type data = any;
+export type dataToDownload = any;

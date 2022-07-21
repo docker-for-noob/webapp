@@ -1,9 +1,11 @@
-import YAML from "yaml";
+import {Maybe} from "../../utils/maybe/Maybe";
+import {dataToParse} from "../service/format/type";
 
 export interface IFormatService {
-    formatDockerCompose: (imageReference: string) => string
+    formatDockerCompose: (data: dataToParse) => Promise<Maybe<dataToParse>>
 }
 
 export interface IFormatRepository {
-    toYaml: (data: any) => string
+    toYaml: (data: dataToParse) => Promise<Maybe<dataToParse>>
+    yamlTO:(data: dataToParse) => Promise<Maybe<dataToParse>>
 }
