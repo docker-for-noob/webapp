@@ -1,10 +1,10 @@
 import { IFormatService } from "../../ports/FormatPorts";
 import { FormatRepository } from "../../../../infrastructure/repositories/FormatRepository";
 
-const { toYaml } = FormatRepository;
+const { dockerComposeToYaml } = FormatRepository;
 
 const formatDockerCompose = (data) => {
-  return toYaml(data);
+  return dockerComposeToYaml(data);
 };
 
 export const FormatService: IFormatService = {
