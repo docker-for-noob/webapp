@@ -1,1 +1,3 @@
-export const TypeApplicationYaml : BlobPropertyBag = {type: 'application/x-yaml'}
+export const TypeApplicationYaml: BlobPropertyBag = {
+  type: "application/x-yaml",
+};
