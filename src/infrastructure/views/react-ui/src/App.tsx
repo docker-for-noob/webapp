@@ -12,14 +12,14 @@ import { HomePage } from './pages/HomePage';
 
 export function App() {
     const dispatchStore = useAppDispatch();
-    const {data} = useGetAllArticlesQuery()
-    const {downloadDockerCompose} = DownloaderService
+    const {data} = useGetAllArticlesQuery();
+    const {downloadDockerCompose} = DownloaderService;
 
     const download = async () => {
-        const result = await downloadDockerCompose("test43", "")
+        const result = await downloadDockerCompose("test43", "");
         console.log(result)
-        if (isSuccess(result)) console.log(getResult(result))
-        if (getError(result)) console.log(getError(result))
+        if (isSuccess(result)) console.log(getResult(result));
+        if (getError(result)) console.log(getError(result));
     }
 
     function Test() {
@@ -37,6 +37,7 @@ export function App() {
         <div className="App">   
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/test" element={<Test />} />
             </Routes>  
         </div>
     );
