@@ -1,23 +1,25 @@
 import { IDownloaderService } from "../../ports/DownloaderPorts";
 import { DownloaderRepository } from "../../../../infrastructure/repositories/DownloaderRepository";
-import { dataToDownload, fileName } from "./type";
+import { fileName } from "./type";
 import { FormatService } from "../format/FormatService";
 import { TypeApplicationYaml } from "./DownloaderHelpers";
-import { isError } from "../../../utils/maybe/Maybe";
+import { getResult, isError, Maybe } from "../../../utils/maybe/Maybe";
+import { DockerCompose } from "../../models/DockerImage";
 
 const { inBrowser } = DownloaderRepository;
-
-const { formatDockerCompose } = FormatService;
+const { formatDockerComposeToYaml } = FormatService;
 
 const downloadDockerCompose = async (
   filename: fileName,
-  data: dataToDownload
-) => {
-  const FormattedYaml = await formatDockerCompose(data);
+  data: DockerCompose
+): Promise<Maybe<DockerCompose>> => {
+  const FormattedYaml: Maybe<DockerCompose> = await formatDockerComposeToYaml(
+    data
+  );
 
-  if (isError<string>(FormattedYaml)) return FormattedYaml;
+  if (isError<DockerCompose>(FormattedYaml)) return FormattedYaml;
 
-  return inBrowser(filename, FormattedYaml, TypeApplicationYaml);
+  return inBrowser(filename, getResult(FormattedYaml), TypeApplicationYaml);
 };
 
 export const DownloaderService: IDownloaderService = {

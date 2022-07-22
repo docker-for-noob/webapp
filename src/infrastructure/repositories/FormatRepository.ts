@@ -9,12 +9,11 @@ const toYaml = async (data: dataToParse) => {
   if (!data || data.toString().length === 0)
     return error<InfrastructureException>(DATA_IS_EMPTY);
 
-  const result = YAML.stringify(data)
-    .replaceAll(`'"`, '"')
-    .replaceAll(`"'`, `"`);
+  const yaml = new YAML.Document(data);
 
-  return success(result);
+  return success(yaml);
 };
+
 const yamlTO = async (data: dataToParse) => {
   if (!data || data.toString().length === 0)
     return error<InfrastructureException>(DATA_IS_EMPTY);
