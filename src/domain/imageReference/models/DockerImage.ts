@@ -13,17 +13,18 @@ import {
 } from "../constants/InputName";
 
 export type InternalExternal<T> = {
-  external: T;
-  internal: T;
-};
-type kvp<T> = {
-  key: string;
-  value: T;
-};
+    internal: T,
+    external: T,
+}
+export type kvp<T> = {
+    key: string,
+    value: T
+}
 
-export type port = InternalExternal<string>;
-type volumes = InternalExternal<string>;
-type env = kvp<string>;
+export type port = InternalExternal<string>
+export type volumes = InternalExternal<string>
+export type env = kvp<string>
+export type envArray = env[] | undefined
 
 export type DockerCompose = {
   [DockerComposeVersion]: string;
@@ -31,13 +32,13 @@ export type DockerCompose = {
 };
 
 export type DockerContainer = {
-  [serviceName]: string;
-  [containerName]?: string;
-  [restart]?: string;
-  [ImageName]: string;
-  [Tag]?: string;
-  [Ports]?: port[];
-  [Volumes]?: volumes[];
-  [Link]?: string[];
-  [Env]?: env[];
+    [serviceName]: string,
+    [containerName]?: string;
+    [restart]?: string,
+    [ImageName]: string;
+    [Tag]?: string;
+    [Ports]?: port[];
+    [Volumes]?: volumes[];
+    [Link]?: string[];
+    [Env]?: envArray;
 };

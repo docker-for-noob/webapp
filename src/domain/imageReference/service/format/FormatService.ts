@@ -3,42 +3,43 @@ import { FormatRepository } from "../../../../infrastructure/repositories/Format
 import { DockerCompose, DockerContainer } from "../../models/DockerImage";
 import { Maybe } from "../../../utils/maybe/Maybe";
 import {
-  formatImageName,
-  formatEnvVarToKVPObject,
-  formatIEToStringArray,
+    formatImageName,
+    formatEnvVarToKVPObject,
+    formatIEArrayToStringArray,
 } from "./FormatHelpers";
 import {
-  container,
-  containerName,
-  DockerComposeVersion,
-  Link,
-  Ports,
-  restart,
-  Volumes,
+    container,
+    containerName,
+    DockerComposeVersion,
+    Env,
+    Link,
+    Ports,
+    restart,
+    Volumes
 } from "../../constants/InputName";
+import {noContainerFoundError} from "../../../utils/exception/DomainException";
 
 const { toYaml } = FormatRepository;
 
-// TODO refacto formatIEToStringArray for passing only 1 args
-const formatDockerComposeToYaml = (
-  data: DockerCompose
-): Promise<Maybe<DockerCompose>> => {
-  const FormattedData = {
-    version: data[DockerComposeVersion],
-    services: data[container].reduce((acc: {}, container: DockerContainer) => {
-      acc[container.serviceName] = {
-        container_name: container[containerName],
-        image: formatImageName(container),
-        ports: formatIEToStringArray(container[Ports]),
-        volumes: formatIEToStringArray(container[Volumes]),
-        environment: formatEnvVarToKVPObject(container),
-        link: container[Link],
-        restart: container[restart],
-      };
-      return acc;
-    }, {}),
-  };
-  return toYaml(FormattedData);
+const formatDockerComposeToYaml = async (data: DockerCompose): Promise<Maybe<DockerCompose>> => {
+    const FormattedData = {
+        version: data[DockerComposeVersion],
+        services: data[container].reduce((acc: {}, container: DockerContainer) => {
+            acc[container.serviceName] = {
+                "container_name": container[containerName],
+                "image": formatImageName(container),
+                "ports": formatIEArrayToStringArray(container[Ports]),
+                "volumes": formatIEArrayToStringArray(container[Volumes]),
+                "environment": formatEnvVarToKVPObject(container[Env]),
+                "link": container[Link],
+                "restart": container[restart]
+            }
+            return acc;
+        }, {})
+    }
+    if (FormattedData.services === {}) return noContainerFoundError;
+
+    return toYaml(FormattedData);
 };
 
 export const FormatService: IFormatService = {

@@ -28,6 +28,9 @@ const mustNotContainsSpecialCharactersExceptUnderscoreError: Error<DomainExcepti
   error("Must not contain special characters except underscore");
 const mustNotContainsSpecialCharactersExceptEqualsError: Error<DomainException> =
   error("Must not contain special characters except equal");
+const noContainerFoundError: Error<DomainException> = error(
+    "No container found"
+);
 
 export {
   requiredError,
@@ -42,4 +45,5 @@ export {
   mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError,
   mustNotContainsSpecialCharactersExceptUnderscoreError,
   mustNotContainsSpecialCharactersExceptEqualsError,
+  noContainerFoundError,
 };

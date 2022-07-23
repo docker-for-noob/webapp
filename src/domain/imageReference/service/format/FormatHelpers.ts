@@ -1,23 +1,36 @@
-import { DockerContainer, InternalExternal } from "../../models/DockerImage";
-import { Env, ImageName, Tag } from "../../constants/InputName";
+import {
+    DockerContainer,
+    env,
+    InternalExternal
+} from "../../models/DockerImage";
+import {
+    ImageName,
+    Tag
+} from "../../constants/InputName";
+
+//todo handle domain error in all format functions
+
 
 const formatImageName = (data: DockerContainer): string => {
-  if (data[Tag] != undefined) return [data[ImageName], data[Tag]].join(":");
-  return data[ImageName];
-};
+    if (data[Tag] != undefined) return [data[ImageName], data[Tag]].join(":")
+    return data[ImageName]
+}
+const formatIEArrayToStringArray = <T>(data?: InternalExternal<T>[]): string[] | undefined =>
+    data?.map(formatPrimitiveIEToString<T>)
+const formatPrimitiveIEToString = <T>(e: InternalExternal<T>): string =>
+    [e.internal, e.external].join(":")
 
-const formatIEToStringArray = <T>(
-  data?: InternalExternal<T>[]
-): string[] | undefined => data?.map(formatIEToString<T>);
-const formatIEToString = <T>(e: InternalExternal<T>): string =>
-  [e.internal, e.external].join(":");
-
-const formatEnvVarToKVPObject = (data: DockerContainer): any =>
-  data[Env] && {
-    ...data[Env]?.reduce((acc, env) => {
-      acc[env.key] = env.value;
-      return acc;
+const formatEnvVarToKVPObject = (data?: env[]): any => data && {
+    ...data?.reduce((acc, env) => {
+        acc[env.key] = env.value;
+        return acc;
     }, {}),
   };
 
-export { formatImageName, formatEnvVarToKVPObject, formatIEToStringArray };
+
+export {
+    formatImageName,
+    formatEnvVarToKVPObject,
+    formatIEArrayToStringArray,
+    formatPrimitiveIEToString,
+}
