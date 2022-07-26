@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux';
 import {store} from "@domain/utils/store/store";
 import {PersistGate} from "redux-persist/integration/react";
+import { ThemeProvider } from '@mui/material';
+import { defaultTheme } from './assets/themes/defaultTheme';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -15,9 +17,11 @@ root.render(
     <React.StrictMode>
         <BrowserRouter>
             <Provider store={store}>
+                <ThemeProvider theme={defaultTheme}>
                 {/*<PersistGate loading={null} persistor={persistor}>*/}
                     <App/>
                 {/*</PersistGate>*/}
+                </ThemeProvider>
             </Provider>
         </BrowserRouter>
     </React.StrictMode>

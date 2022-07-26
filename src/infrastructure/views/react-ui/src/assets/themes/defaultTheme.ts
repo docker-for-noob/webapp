@@ -1,30 +1,12 @@
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
+import { createTheme, Theme } from '@mui/material';
 
-export const themeOptions: ThemeOptions = {
+export const defaultTheme: Theme = createTheme({
   palette: {
-    type: 'light',
     primary: {
       main: '#6563ff',
     },
     secondary: {
-      main: 'rgba(11, 36, 251, 1)',
+      main: '#D8D8FF',
     },
   },
-  typography: {
-    h1: {
-      fontSize: 34,
-      fontWeight: 700,
-      lineHeight: 1.32,
-    },
-    h2: {
-      fontFamily: 'Roboto',
-      fontSize: 27,
-      fontWeight: 700,
-    },
-    h3: {
-      fontFamily: 'Roboto',
-      fontSize: 25,
-      fontWeight: 600,
-    },
-  },
-};
+});

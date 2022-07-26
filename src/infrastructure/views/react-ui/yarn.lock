@@ -1578,6 +1578,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@manaflair/redux-batch@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@manaflair/redux-batch/-/redux-batch-1.0.0.tgz#3af65dc3ac4ba81cf115c96f9759a6d4077b49f5"
+  integrity sha512-99bfmZ7xX3c8CWQ4C9iFm7Pte0pDfW/XJ3p1KEmjlJjf8nDUbW22n+FhO3buZKhgjoKKB2XGM46SaZFvNeL3QA==
+
 "@mui/base@5.0.0-alpha.90":
   version "5.0.0-alpha.90"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.90.tgz#73700ba74e5c75096ee5d0bfe3ba4a3b3b81beef"
@@ -2194,7 +2199,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.0.0":
+"@types/react@*", "@types/react@^18.0.15":
   version "18.0.15"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.15.tgz#d355644c26832dc27f3e6cbf0c4f4603fc4ab7fe"
   integrity sha512-iz3BtLuIYH1uWdsv6wXYdhozhqj20oD4/Hk2DNXIn1kFsmp9x8d9QB6FnPhfkbhd2PgEONt9Q1x/ebkwjfFLow==
