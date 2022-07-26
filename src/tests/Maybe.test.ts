@@ -8,7 +8,7 @@ import {
     Maybe,
     Success,
     success
-} from "../domain/utils/maybe/Maybe";
+} from "../core/application/commons/maybe/Maybe";
 
 const isInLowerCase = (expr: string): Maybe<boolean> => {
     if (expr.toLowerCase() !== expr) {
