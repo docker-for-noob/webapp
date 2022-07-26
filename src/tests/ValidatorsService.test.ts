@@ -18,9 +18,8 @@ import {
   serviceNameUIValidator,
   tagsUIValidator,
   versionUIValidator,
-  volumesUIValidator
+  volumesUIValidator,
 } from "../infrastructure/validators/InputValidator";
-
 
 test("no ports has been sent and return an error", () => {
   const initial = undefined;
@@ -222,7 +221,9 @@ test("a correct tag has been sent and return undefined", () => {
 
 test("a tag with white space has been sent and return an error", () => {
   const initial = "9 0 0";
-  expect(tagsUIValidator(initial)).toStrictEqual(mustNotContainsWhiteSpaceError);
+  expect(tagsUIValidator(initial)).toStrictEqual(
+    mustNotContainsWhiteSpaceError
+  );
 });
 
 test("a tag as int has been sent and return an error", () => {
