@@ -21,7 +21,16 @@ export interface EnvType {
   value: string
 }
 
-export function ServiceFormStep1() {
+interface ServiceFormStepProps {
+  setDisableNext: (disable: boolean) => void
+}
+
+interface Step3Props {
+  setDisableNext: (disabled: boolean) => void,
+  setSubstep: (substep: number) => void
+}
+
+export function ServiceFormStep1(props: ServiceFormStepProps) {
 
   const languages = [
     {
@@ -39,6 +48,15 @@ export function ServiceFormStep1() {
   const [alias, setAlias] = useState("");
 
   const [hasAlias, setHasAlias] = useState(false);
+
+  const nextStepIsDisabled = () => {
+    return !serviceName || !language || (hasAlias && !alias);
+  }
+
+  useEffect(() => {
+    props.setDisableNext(nextStepIsDisabled());
+    console.log(nextStepIsDisabled());
+  }, [serviceName, language, alias, hasAlias]);
 
   const handleServiceNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setServiceName(event.target.value);
@@ -77,6 +95,7 @@ export function ServiceFormStep1() {
           id="language-select"
           label="Language"
           onChange={handleLanguage}
+          value={language}
         >
           {languages.map((language) => (
             <MenuItem key={language.value} value={language.value}>
@@ -89,7 +108,7 @@ export function ServiceFormStep1() {
   );
 }
 
-export function ServiceFormStep2() {
+export function ServiceFormStep2(props: ServiceFormStepProps) {
 
   const defaultImage = {
     id: 0,
@@ -104,9 +123,9 @@ export function ServiceFormStep2() {
   const [searchInput, setSearchInput] = useState("");
 
   const chooseImage = (image: ImageType) => {
-      console.log(image);
       setChosenImage(image);
       setSearchInput(image.name + ' ' + image.version);
+      setImageList([]);
   };
 
   const handleSwitch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +150,7 @@ export function ServiceFormStep2() {
 
   const ImageCard = (image: ImageType) => {
     return (
-      <Card sx={{ minWidth: 275 }}>
+      <Card sx={{ backgroundColor: "#F0F0F0", margin: "0 0.5rem" }}>
         <CardContent>
           <Typography variant="h5" component="div">
             {image.name}
@@ -145,7 +164,7 @@ export function ServiceFormStep2() {
             variant="contained"
             size="medium"
             sx={{ margin: '0.5rem 1rem' }}
-            onClick={() => console.log(image)}
+            onClick={() => chooseImage(image)}
           >
             Choisir
           </Button>
@@ -160,14 +179,7 @@ export function ServiceFormStep2() {
         control={<Switch checked={isDockerhubSearch} onChange={handleSwitch} />}
         label="Search on Docker Hub"
       />
-      <FormControl variant="filled" fullWidth>
-        <TextField
-          id="image-search"
-          label="Search for an image"
-          variant="standard"
-          onChange={handleImageFilterInput}
-        />
-      </FormControl>
+      <InputTextForm variant="filled" label="Search for an image" value={searchInput} onChange={handleImageFilterInput} />
       <Grid container spacing={2}>
         {imageList.map((image) => (
           <Grid item xs={4} key={image.id}>
@@ -177,173 +189,185 @@ export function ServiceFormStep2() {
       </Grid>
     </form>
   );
+} 
+
+const AccordionDetailsVersion = (props: ServiceFormStepProps) => {
+
+  const [version, setVersion] = useState("");
+
+  const nextStepIsDisabled = () => {
+    return !version;
+  }
+
+  useEffect(() => {
+    props.setDisableNext(nextStepIsDisabled());
+  }, [version]);
+
+  const handleImageVersionChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setVersion(event.target.value);
+  }
+  
+  return (
+    <InputTextForm label="Image version" value={version} onChange={handleImageVersionChange} key="editor1" />
+  );
 }
 
-export function ServiceFormStep3() {
+const AccordionDetailsVolumes = (props: ServiceFormStepProps) => {
 
+  const [volumesList, setVolumesList] = useState<Array<VolumeType>>([]);
+
+  const [machineRoute, setMachineRoute] = useState("");
+  const [dockerRoute, setDockerRoute] = useState("");
+
+  const handleMachineRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setMachineRoute(event.target.value);
+  }
+
+  const handleDockerRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setDockerRoute(event.target.value);
+  }
+
+  const handleVolumesChange = () => {
+    setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
+  }
+
+  const handleVolumesDelete = (index: number) => {
+    setVolumesList(volumesList.filter((_, i) => i !== index));
+  }
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <InputTextForm label="Route on your machine" value={machineRoute} onChange={handleMachineRouteChange} />
+      <InputTextForm label="Route on the Docker container" value={dockerRoute} onChange={handleDockerRouteChange} />
+      <Button variant='contained' onClick={handleVolumesChange} sx={{ margin: '0.5rem 1rem' }}>Add</Button>
+      <Table sx={{ margin: '1rem 0' }}>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{width: '4rem'}}></TableCell>
+            <TableCell>Machine route</TableCell>
+            <TableCell>Docker route</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {volumesList.map((volume, index) => (
+            <TableRow key={volume.machineRoute}>
+              <IconButton onClick={() => handleVolumesDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
+                <DeleteIcon />
+              </IconButton>
+              <TableCell>{volume.machineRoute}</TableCell>
+              <TableCell>{volume.dockerRoute}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Box>
+  );
+} 
+
+const AccordionDetailsEnvVariables = (props: ServiceFormStepProps) => {
+
+  const [envList, setEnvList] = useState<Array<EnvType>>([]);
+
+  const [key, setKey] = useState("");
+  const [value, setValue] = useState("");
+
+  const handleKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setKey(event.target.value);
+  }
+
+  const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  }
+
+  const handleEnvChange = () => {
+    setEnvList([...envList, { key, value }]);
+  }
+
+  const handleEnvDelete = (index: number) => {
+    setEnvList(envList.filter((_, i) => i !== index));
+  }
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <InputTextForm label="Key" value={key} onChange={handleKeyChange} />
+      <InputTextForm label="Value" value={value} onChange={handleValueChange} />
+      <Button variant='contained' onChange={handleEnvChange} size="medium" sx={{ margin: '0.5rem 1rem' }}>Add</Button>
+      <Table sx={{ margin: '1rem 0' }}>
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell>Key</TableCell>
+            <TableCell>Value</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {envList.map((env, index) => (
+            <TableRow key={env.key}>
+              <IconButton onClick={() => handleEnvDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
+                <DeleteIcon />
+              </IconButton>
+              <TableCell>{env.key}</TableCell>
+              <TableCell>{env.value}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Box>
+  );
+} 
+
+const AccordionDetailsImage = (props: ServiceFormStepProps) => {
+
+  const [internalPort, setInternalPort] = useState(0);
+  const [externalPort, setExternalPort] = useState(0);
+  
+  const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInternalPort(parseInt(event.target.value));
+  }
+
+  const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setExternalPort(parseInt(event.target.value));
+  }
+  
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <InputTextForm label="Internal port" type="number" value={internalPort} onChange={handleInternalPortChange} />
+      <InputTextForm label="External port" type="number" value={externalPort} onChange={handleExternalPortChange} />
+    </Box>
+  );
+} 
+
+export function ServiceFormStep3(props: Step3Props) {
 
   const [step, setStep] = useState(1);
-  
-  const AccordionDetailsVersion = () => {
 
-    const [version, setVersion] = useState("");
-
-    const handleImageVersionChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setVersion(event.target.value);
-    }
-    
-    return (
-      <InputTextForm label="Image version" value={version} onChange={handleImageVersionChange} />
-    );
-  } 
-
-  const AccordionDetailsImage = () => {
-
-    const [internalPort, setInternalPort] = useState(0);
-    const [externalPort, setExternalPort] = useState(0);
-    
-    const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setInternalPort(parseInt(event.target.value));
-      console.log(internalPort);
-    }
-
-    const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setExternalPort(parseInt(event.target.value));
-    }
-    
-    return (
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Internal port" type="number" value={internalPort} onChange={handleInternalPortChange} />
-        <InputTextForm label="External port" type="number" value={externalPort} onChange={handleExternalPortChange} />
-      </Box>
-    );
-  } 
-
-  const AccordionDetailsVolumes = () => {
-
-    const [volumesList, setVolumesList] = useState<Array<VolumeType>>([]);
-
-    const [machineRoute, setMachineRoute] = useState("");
-    const [dockerRoute, setDockerRoute] = useState("");
-
-    const handleMachineRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setMachineRoute(event.target.value);
-    }
-
-    const handleDockerRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setDockerRoute(event.target.value);
-    }
-
-    const handleVolumesChange = () => {
-      setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
-    }
-
-    const handleVolumesDelete = (index: number) => {
-      setVolumesList(volumesList.filter((_, i) => i !== index));
-    }
-
-    return (
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Route on your machine" value={machineRoute} onChange={handleMachineRouteChange} />
-        <InputTextForm label="Route on the Docker container" value={dockerRoute} onChange={handleDockerRouteChange} />
-        <Button variant='contained' onClick={handleVolumesChange} sx={{ margin: '0.5rem 1rem' }}>Add</Button>
-        <Table sx={{ margin: '1rem 0' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{width: '4rem'}}></TableCell>
-              <TableCell>Machine route</TableCell>
-              <TableCell>Docker route</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {volumesList.map((volume, index) => (
-              <TableRow key={volume.machineRoute}>
-                <IconButton onClick={() => handleVolumesDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
-                  <DeleteIcon />
-                </IconButton>
-                <TableCell>{volume.machineRoute}</TableCell>
-                <TableCell>{volume.dockerRoute}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Box>
-    );
-  } 
-
-  const AccordionDetailsEnvVariables = () => {
-
-    const [envList, setEnvList] = useState<Array<EnvType>>([]);
-
-    const [key, setKey] = useState("");
-    const [value, setValue] = useState("");
-
-    const handleKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setKey(event.target.value);
-    }
-
-    const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setValue(event.target.value);
-    }
-
-    const handleEnvChange = () => {
-      setEnvList([...envList, { key, value }]);
-    }
-
-    const handleEnvDelete = (index: number) => {
-      setEnvList(envList.filter((_, i) => i !== index));
-    }
-
-    return (
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-
-        <InputTextForm label="Key" value={key} onChange={handleKeyChange} />
-        <InputTextForm label="Value" value={value} onChange={handleValueChange} />
-        <Button variant='contained' onChange={handleEnvChange} sx={{ margin: '0.5rem 1rem' }}>Add</Button>
-        <Button variant='contained' sx={{ margin: '0.5rem 1rem' }}>Import file</Button>
-        <Table sx={{ margin: '1rem 0' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Key</TableCell>
-              <TableCell>Value</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {envList.map((env, index) => (
-              <TableRow key={env.key}>
-                <IconButton onClick={() => handleEnvDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
-                  <DeleteIcon />
-                </IconButton>
-                <TableCell>{env.key}</TableCell>
-                <TableCell>{env.value}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Box>
-    );
-  } 
+  useEffect(() => {
+    props.setSubstep(step);
+  }, [step]);
 
   const accordionDetails = [
     {
-      title: "Version",
-      content: <AccordionDetailsVersion />,
+      title: "Ports",
+      content: <AccordionDetailsImage 
+      setDisableNext={props.setDisableNext} />,
       step: 1,
     },
     {
-      title: "Ports",
-      content: <AccordionDetailsImage />,
+      title: "Tag",
+      content: <AccordionDetailsVersion
+      setDisableNext={props.setDisableNext} />,
       step: 2,
     },
     {
       title: `Volumes`,
-      content: <AccordionDetailsVolumes />,
+      content: <AccordionDetailsVolumes 
+      setDisableNext={props.setDisableNext} />,
       step: 3,
     },
     {
       title: `Environnement variables`,
-      content: <AccordionDetailsEnvVariables />,
+      content: <AccordionDetailsEnvVariables  
+      setDisableNext={props.setDisableNext} />,
       step: 4,
     }
   ]
