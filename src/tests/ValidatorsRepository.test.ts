@@ -1,20 +1,4 @@
 import {
-  mustBeNumberError,
-  mustBePositiveError,
-  mustBeStringError,
-  mustNotContainsSpecialCharactersExceptEqualsError,
-  mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError,
-  mustNotContainsUppercaseError,
-  mustNotContainsWhiteSpaceError,
-  requiredError,
-  valueMustBeUniqueError,
-  mustBePathError,
-  mustBeInUpperCaseError,
-  mustNotContainsSpecialCharactersExceptUnderscoreError,
-} from "../domain/utils/exception/DomainException";
-import { ValidatorRepository } from "../infrastructure/repositories/ValidatorRepository";
-
-const {
   mustBeNumber,
   mustBePositive,
   mustBeString,
@@ -27,7 +11,21 @@ const {
   mustBePath,
   mustBeInUpperCase,
   mustNotContainsSpecialCharactersExceptUnderscore,
-} = ValidatorRepository;
+} from "../infrastructure/validators/ValidatorDependance";
+import {
+  mustBeInUpperCaseError,
+  mustBeNumberError,
+  mustBePathError,
+  mustBePositiveError,
+  mustBeStringError,
+  mustNotContainsSpecialCharactersExceptEqualsError,
+  mustNotContainsSpecialCharactersExceptUnderscoreError,
+  mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError,
+  mustNotContainsUppercaseError,
+  mustNotContainsWhiteSpaceError,
+  requiredError,
+  valueMustBeUniqueError,
+} from "../infrastructure/validators/ValidatorException";
 
 test("A value is required and should return an error message", () => {
   const initial = undefined;
