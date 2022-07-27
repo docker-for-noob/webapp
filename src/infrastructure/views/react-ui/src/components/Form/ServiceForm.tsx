@@ -88,22 +88,6 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
       {hasAlias && (
         <InputTextForm variant="filled" label="Alias" value={alias} onChange={handleAliasChange} />
       )}
-
-      {/*<FormControl variant="filled" fullWidth>
-        <InputLabel htmlFor="language-select">Language</InputLabel>
-        <Select
-          id="language-select"
-          label="Language"
-          onChange={handleLanguage}
-          value={language}
-        >
-          {languages.map((language) => (
-            <MenuItem key={language.value} value={language.value}>
-              {language.label}
-            </MenuItem>
-          ))}
-          </Select>
-      </FormControl>*/}
     </form>
   );
 }
