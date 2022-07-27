@@ -59,13 +59,13 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
 
   return (
     <form style={{display: "flex", flexDirection: "column", padding: '1rem'}}>
-      <InputTextForm label="Service Name" variant="filled" value={serviceName} onChange={handleServiceNameChange} />
+      <InputTextForm label="Nom du service" variant="filled" value={serviceName} onChange={handleServiceNameChange} />
 
       <FormControlLabel control={
       <Switch
        checked={hasAlias} onChange={handleSwitch} />
       }
-       label="Add Alias"
+       label="Ajouter un alias"
       />
 
       {hasAlias && (
@@ -136,7 +136,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
 
   return (
     <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
-      <InputTextForm variant="filled" label="Search for an image" value={searchInput} onChange={handleImageFilterInput} />
+      <InputTextForm variant="filled" label="Rechercher une image" value={searchInput} onChange={handleImageFilterInput} />
       <Grid container spacing={2}>
         {imageList.map((image) => (
           <Grid item xs={4} key={image.id}>
@@ -173,15 +173,15 @@ const AccordionDetailsVolumes = (props: ServiceFormStepProps) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <InputTextForm label="Route on your machine" value={machineRoute} onChange={handleMachineRouteChange} />
-      <InputTextForm label="Route on the Docker container" value={dockerRoute} onChange={handleDockerRouteChange} />
+      <InputTextForm label="Chemin sur votre machine" value={machineRoute} onChange={handleMachineRouteChange} />
+      <InputTextForm label="Chemin dans le container" value={dockerRoute} onChange={handleDockerRouteChange} />
       <Button variant='contained' onClick={handleVolumesChange} sx={{ margin: '0.5rem 1rem' }}>Add</Button>
       <Table sx={{ margin: '1rem 0' }}>
         <TableHead>
           <TableRow>
             <TableCell sx={{width: '4rem'}}></TableCell>
-            <TableCell>Machine route</TableCell>
-            <TableCell>Docker route</TableCell>
+            <TableCell>Chemin local</TableCell>
+            <TableCell>Chemin container</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -225,15 +225,15 @@ const AccordionDetailsEnvVariables = (props: ServiceFormStepProps) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <InputTextForm label="Key" value={key} onChange={handleKeyChange} />
-      <InputTextForm label="Value" value={value} onChange={handleValueChange} />
+      <InputTextForm label="Clé" value={key} onChange={handleKeyChange} />
+      <InputTextForm label="Valeur" value={value} onChange={handleValueChange} />
       <Button variant='contained' onChange={handleEnvChange} size="medium" sx={{ margin: '0.5rem 1rem' }}>Add</Button>
       <Table sx={{ margin: '1rem 0' }}>
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
-            <TableCell>Key</TableCell>
-            <TableCell>Value</TableCell>
+            <TableCell>Clé</TableCell>
+            <TableCell>Valeur</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -267,8 +267,8 @@ const AccordionDetailsImage = (props: ServiceFormStepProps) => {
   
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <InputTextForm label="Internal port" type="number" value={internalPort} onChange={handleInternalPortChange} />
-      <InputTextForm label="External port" type="number" value={externalPort} onChange={handleExternalPortChange} />
+      <InputTextForm label="Port interne" type="number" value={internalPort} onChange={handleInternalPortChange} />
+      <InputTextForm label="Port externe" type="number" value={externalPort} onChange={handleExternalPortChange} />
     </Box>
   );
 } 
@@ -295,7 +295,7 @@ export function ServiceFormStep3(props: Step3Props) {
       step: 2,
     },
     {
-      title: `Environment variables`,
+      title: `Variables d'environnement`,
       content: <AccordionDetailsEnvVariables  
       setDisableNext={props.setDisableNext} />,
       step: 3,
@@ -317,7 +317,7 @@ export function ServiceFormStep3(props: Step3Props) {
           <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', backgroundColor: '#F0F0F0',  padding: '0 1rem' }}>
             {accordionDetail.content}
             <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-              <Button color="secondary" variant='contained' onClick={() => setStep(accordionDetail.step+1)} sx={{ margin: '0.5rem 1rem' }}>Next Step</Button>
+              <Button color="secondary" variant='contained' onClick={() => setStep(accordionDetail.step+1)} sx={{ margin: '0.5rem 1rem' }}>Étape suivante</Button>
             </Box>
           </AccordionDetails>
         </Accordion>

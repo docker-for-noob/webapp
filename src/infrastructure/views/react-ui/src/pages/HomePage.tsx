@@ -20,9 +20,9 @@ interface ServiceFormData {
 }
 
 const steps = [
-  'Create new service',
-  'Select image type',
-  'Configure image',
+  'Créer un nouveau service',
+  'Sélectionner une image',
+  "Configurer l'image",
 ];
 
 export function HomePage() {
@@ -30,33 +30,28 @@ export function HomePage() {
   const helpers: Array<HelperData> = [
     {
       title: 'Services',
-      content: 'Enter the service name',
+      content: 'Entrer un nom de service',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
-      title: 'Image types',
-      content: 'Search for the type of image you need',
+      title: "Choix de l'image",
+      content: 'Rechercher une image et choisir les tags',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
       title: 'Ports',
-      content: 'Define ports',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
-    {
-      title: 'Tags',
-      content: 'Add tags',
+      content: 'Définir les ports',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
       title: 'Volumes',
-      content: 'Add volumes',
+      content: 'Ajouter des volumes',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
-      title: 'Environment variables',
-      content: 'Define environment variables',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
+      title: "Variables d'environnement",
+      content: "Définir les variables d'environnement",
+      link: 'https://docs.docker.com/engine/userguide/dockervolumes/'
     }
   ]
 
@@ -111,7 +106,7 @@ export function HomePage() {
       case 2:
         return <ServiceFormStep3 setDisableNext={setDisableNext} setSubstep={setSubstep} />;
       default:
-        return <div>Finish</div>;
+        return <div>Terminé</div>;
     }
   }
 
@@ -135,16 +130,16 @@ export function HomePage() {
         <Grid item xs={7}>
           {renderStep(activeStep)}
           {activeStep !== 0 && 
-            <Button variant='contained' onClick={handleBack}>Previous Step</Button>
+            <Button variant='contained' onClick={handleBack}>Précédent</Button>
           }
-          <Button variant='contained' onClick={handleNext} disabled={disableNext}>Next Step</Button>
+          <Button variant='contained' onClick={handleNext} disabled={disableNext}>Suivant</Button>
         </Grid>
         <Grid item xs={5}>
-          <FormControlLabel control={<Switch onChange={handleFilePreview} checked={isFilePreviewEnabled}/>} label="Enable file preview" />
+          <FormControlLabel control={<Switch onChange={handleFilePreview} checked={isFilePreviewEnabled}/>} label="Prévisualiser le fichier" />
           {isFilePreviewEnabled 
           ? 
           <Paper>
-            File preview
+            Lorem Ipsum
           </Paper> 
           : 
           <Helper {...currentHelper} /> 

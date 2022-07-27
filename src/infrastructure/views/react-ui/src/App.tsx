@@ -50,9 +50,7 @@ export function App() {
     function Test() {
         return (
             <div>
-                <button onClick={() => download()}>Download
-                    YAMLssdgsd
-                </button>
+                <button onClick={() => download()}>Télécharger YAML </button>
                 {JSON.stringify(data)}
             </div>
         )
