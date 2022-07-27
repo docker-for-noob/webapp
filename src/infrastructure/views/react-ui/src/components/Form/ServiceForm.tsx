@@ -7,7 +7,6 @@ import { InputTextForm } from "./InputForm";
 export interface ImageType {
     id: number,
     name: string,
-    version: string,
     isUtils: boolean
 }
 
@@ -91,7 +90,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
 
   const chooseImage = (image: ImageType) => {
       setChosenImage(image);
-      setSearchInput(image.name + ' ' + image.version);
+      setSearchInput(image.name);
       setImageList([]);
   };
 
@@ -101,7 +100,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
     if(event.target.value != '') {
       setImageList(
         listToFilter.filter((image) =>
-          (image.name + ' ' + image.version).toLowerCase().startsWith(event.target.value.toLowerCase())
+          (image.name).toLowerCase().startsWith(event.target.value.toLowerCase())
         ).slice(0,9)
       );
     } else {
@@ -115,9 +114,6 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
         <CardContent>
           <Typography variant="h5" component="div">
             {image.name}
-          </Typography>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {image.version}
           </Typography>
         </CardContent>
         <CardActions>
@@ -136,7 +132,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
 
   return (
     <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
-      <InputTextForm variant="filled" label="Rechercher une image" value={searchInput} onChange={handleImageFilterInput} />
+      <InputTextForm variant="filled" label="Rechercher un type d'image" value={searchInput} onChange={handleImageFilterInput} />
       <Grid container spacing={2}>
         {imageList.map((image) => (
           <Grid item xs={4} key={image.id}>
@@ -144,6 +140,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
           </Grid>
         ))}
       </Grid>
+      
     </form>
   );
 }

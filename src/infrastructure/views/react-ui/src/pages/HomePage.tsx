@@ -41,7 +41,6 @@ export function HomePage() {
     image: {
       id: 0,
       name: '',
-      version: '',
       isUtils: false
     },
     version: '',
