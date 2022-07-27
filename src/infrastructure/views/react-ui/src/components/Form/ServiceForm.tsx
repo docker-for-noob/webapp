@@ -89,7 +89,7 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
         <InputTextForm variant="filled" label="Alias" value={alias} onChange={handleAliasChange} />
       )}
 
-      <FormControl variant="filled" fullWidth>
+      {/*<FormControl variant="filled" fullWidth>
         <InputLabel htmlFor="language-select">Language</InputLabel>
         <Select
           id="language-select"
@@ -102,8 +102,8 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
               {language.label}
             </MenuItem>
           ))}
-        </Select>
-      </FormControl>
+          </Select>
+      </FormControl>*/}
     </form>
   );
 }

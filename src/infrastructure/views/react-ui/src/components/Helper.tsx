@@ -10,7 +10,7 @@ export interface HelperData {
 export function Helper(props: HelperData) {
 
     return (
-        <Card>
+        <Card variant="outlined">
             <CardContent>
                 <Typography variant="h5" component="div">
                     {props.title}
@@ -20,7 +20,7 @@ export function Helper(props: HelperData) {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Link href={props.link} underline="hover">Learn More</Link>
+                <Link href={props.link} underline="hover" target="_blank" rel="noreferrer">Learn More</Link>
             </CardActions>
         </Card>
     )

@@ -29,45 +29,35 @@ export function HomePage() {
 
   const helpers: Array<HelperData> = [
     {
-      title: 'How to create a new service?111',
-      content: 'You can create a new service by clicking the button below.',
+      title: 'Services',
+      content: 'Enter the service name',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
-      title: 'How to configure a new service?222',
-      content: 'You can configure a new service by clicking the button below.',
+      title: 'Image types',
+      content: 'Search for the type of image you need',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
-      title: 'How to configure a new service?333',
-      content: 'You can configure a new service by clicking the button below.',
+      title: 'Ports',
+      content: 'Define ports',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
-      title: 'How to configure a new service?444',
-      content: 'You can configure a new service by clicking the button below.',
+      title: 'Tags',
+      content: 'Add tags',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
-      title: 'How to configure a new service?555',
-      content: 'You can configure a new service by clicking the button below.',
+      title: 'Volumes',
+      content: 'Add volumes',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
     },
     {
-      title: 'How to configure a new service?666',
-      content: 'You can configure a new service by clicking the button below.',
+      title: 'Environment variables',
+      content: 'Define environment variables',
       link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
-    {
-      title: 'How to configure a new service?777',
-      content: 'You can configure a new service by clicking the button below.',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
-    {
-      title: 'How to configure a new service?888',
-      content: 'You can configure a new service by clicking the button below.',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
+    }
   ]
 
   const [activeStep, setActiveStep] = useState(0);
