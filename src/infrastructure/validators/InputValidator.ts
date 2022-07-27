@@ -7,7 +7,7 @@ import {
   mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPoint,
   mustNotContainsWhiteSpace,
   required,
-} from "./ValidatorDependance";
+} from "./ValidatorDependency";
 import { combineValidator } from "../../core/application/validators/CombineValidators";
 
 const envVariableNameUIValidator: Validator = (value) =>

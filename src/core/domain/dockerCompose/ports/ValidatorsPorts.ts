@@ -1,5 +1,7 @@
-import { Validator } from "../../../application/validators/type/type";
+import {defaultPorts, HostContainer, port} from "../models/DockerImage";
+import {Validator} from "../../../application/validators/type/type";
 
 export interface IValidatorService {
-  portMustBeUnique: Validator;
+    isDefaultPort: (defaultPort?: defaultPorts) => Validator
+    hostPortMustBeUnique: (usedPort?: HostContainer<string>[]) => Validator
 }

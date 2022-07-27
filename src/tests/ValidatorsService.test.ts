@@ -26,7 +26,7 @@ import {
   required,
 } from "../infrastructure/validators/ValidatorDependance";
 
-test("no ports has been sent and return an error", () => {
+test("no networking has been sent and return an error", () => {
   const initial = undefined;
   const actual = ["8080", "192.168.172.1"];
   expect(portUIValidator(initial)).toStrictEqual(requiredError);
