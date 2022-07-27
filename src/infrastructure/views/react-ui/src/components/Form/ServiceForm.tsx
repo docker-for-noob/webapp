@@ -32,39 +32,22 @@ interface Step3Props {
 
 export function ServiceFormStep1(props: ServiceFormStepProps) {
 
-  const languages = [
-    {
-      value: "en",
-      label: "English"
-    },
-    {
-      value: "fr",
-      label: "French"
-    }
-  ];
-
   const [serviceName, setServiceName] = useState("");
-  const [language, setLanguage] = useState("en");
   const [alias, setAlias] = useState("");
 
   const [hasAlias, setHasAlias] = useState(false);
 
   const nextStepIsDisabled = () => {
-    return !serviceName || !language || (hasAlias && !alias);
+    return !serviceName || (hasAlias && !alias);
   }
 
   useEffect(() => {
     props.setDisableNext(nextStepIsDisabled());
-    console.log(nextStepIsDisabled());
-  }, [serviceName, language, alias, hasAlias]);
+  }, [serviceName, alias, hasAlias]);
 
   const handleServiceNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setServiceName(event.target.value);
   }
-
-  const handleLanguage = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value);
-  };
 
   const handleAliasChange = (event: ChangeEvent<HTMLInputElement>) => {
     setAlias(event.target.value);
