@@ -175,7 +175,7 @@ const AccordionDetailsVolumes = (props: ServiceFormStepProps) => {
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <InputTextForm label="Chemin sur votre machine" value={machineRoute} onChange={handleMachineRouteChange} />
       <InputTextForm label="Chemin dans le container" value={dockerRoute} onChange={handleDockerRouteChange} />
-      <Button variant='contained' onClick={handleVolumesChange} sx={{ margin: '0.5rem 1rem' }}>Add</Button>
+      <Button variant='contained' onClick={handleVolumesChange} sx={{ margin: '0.5rem 1rem' }}>Ajouter</Button>
       <Table sx={{ margin: '1rem 0' }}>
         <TableHead>
           <TableRow>
@@ -227,7 +227,7 @@ const AccordionDetailsEnvVariables = (props: ServiceFormStepProps) => {
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <InputTextForm label="Clé" value={key} onChange={handleKeyChange} />
       <InputTextForm label="Valeur" value={value} onChange={handleValueChange} />
-      <Button variant='contained' onChange={handleEnvChange} size="medium" sx={{ margin: '0.5rem 1rem' }}>Add</Button>
+      <Button variant='contained' onChange={handleEnvChange} size="medium" sx={{ margin: '0.5rem 1rem' }}>Ajouter</Button>
       <Table sx={{ margin: '1rem 0' }}>
         <TableHead>
           <TableRow>
