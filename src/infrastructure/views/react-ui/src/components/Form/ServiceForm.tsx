@@ -146,27 +146,6 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
       </Grid>
     </form>
   );
-} 
-
-const AccordionDetailsVersion = (props: ServiceFormStepProps) => {
-
-  const [version, setVersion] = useState("");
-
-  const nextStepIsDisabled = () => {
-    return !version;
-  }
-
-  useEffect(() => {
-    props.setDisableNext(nextStepIsDisabled());
-  }, [version]);
-
-  const handleImageVersionChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setVersion(event.target.value);
-  }
-  
-  return (
-    <InputTextForm label="Image version" value={version} onChange={handleImageVersionChange} key="editor1" />
-  );
 }
 
 const AccordionDetailsVolumes = (props: ServiceFormStepProps) => {
@@ -310,22 +289,16 @@ export function ServiceFormStep3(props: Step3Props) {
       step: 1,
     },
     {
-      title: "Tag",
-      content: <AccordionDetailsVersion
+      title: `Volumes`,
+      content: <AccordionDetailsVolumes 
       setDisableNext={props.setDisableNext} />,
       step: 2,
     },
     {
-      title: `Volumes`,
-      content: <AccordionDetailsVolumes 
-      setDisableNext={props.setDisableNext} />,
-      step: 3,
-    },
-    {
-      title: `Environnement variables`,
+      title: `Environment variables`,
       content: <AccordionDetailsEnvVariables  
       setDisableNext={props.setDisableNext} />,
-      step: 4,
+      step: 3,
     }
   ]
 
