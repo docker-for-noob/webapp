@@ -95,12 +95,6 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
       setImageList([]);
   };
 
-  const handleSwitch = (event: ChangeEvent<HTMLInputElement>) => {
-    setDockerhubSearch(event.target.checked);
-    setImageList([]);
-    setSearchInput('');
-  };
-
   const handleImageFilterInput = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
     const listToFilter = isDockerhubSearch ? [] : mockImages;
@@ -142,10 +136,6 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
 
   return (
     <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
-      <FormControlLabel
-        control={<Switch checked={isDockerhubSearch} onChange={handleSwitch} />}
-        label="Search on Docker Hub"
-      />
       <InputTextForm variant="filled" label="Search for an image" value={searchInput} onChange={handleImageFilterInput} />
       <Grid container spacing={2}>
         {imageList.map((image) => (
