@@ -6,6 +6,7 @@ import { Button, Container, StepButton, Grid, Switch, FormControlLabel, Paper } 
 import { ServiceFormStep1, ServiceFormStep2, ServiceFormStep3 } from '../components';
 import { ImageType, VolumeType, EnvType } from '../components/Form/ServiceForm';
 import { Helper, HelperData } from '../components/Helper';
+import { mockHelpers } from 'src/mock/HelperMock';
 
 interface ServiceFormData {
   name: string;
@@ -27,34 +28,7 @@ const steps = [
 
 export function HomePage() {
 
-  const helpers: Array<HelperData> = [
-    {
-      title: 'Services',
-      content: 'Entrer un nom de service',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
-    {
-      title: "Choix de l'image",
-      content: 'Rechercher une image et choisir les tags',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
-    {
-      title: 'Ports',
-      content: 'Définir les ports',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
-    {
-      title: 'Volumes',
-      content: 'Ajouter des volumes',
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/',
-    },
-    {
-      title: "Variables d'environnement",
-      content: "Définir les variables d'environnement",
-      link: 'https://docs.docker.com/engine/userguide/dockervolumes/'
-    }
-  ]
-
+  const helpers = mockHelpers;
   const [activeStep, setActiveStep] = useState(0);
   const [disableNext, setDisableNext] = useState(false);
   const [substep, setSubstep] = useState(0);
