@@ -7,6 +7,7 @@ interface InputTextFormProps {
     type?: string;
     variant?: "standard" | "outlined" | "filled" | undefined;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
 }
 
 export function InputTextForm(props: InputTextFormProps) {
@@ -14,9 +15,9 @@ export function InputTextForm(props: InputTextFormProps) {
         <FormControl sx={{ margin: '1rem 0' }}>
           <InputLabel htmlFor="version">{props.label}</InputLabel>
           {props.variant === "filled" ?
-           (<FilledInput type={props.type ?? 'text'} id="version" value={props.value} onChange={props.onChange} />)
+           (<FilledInput type={props.type ?? 'text'} id="version" value={props.value} onChange={props.onChange} disabled={props.disabled ?? false}/>)
            :
-           (<Input type={props.type ?? 'text'} id="version" value={props.value} onChange={props.onChange} />)
+           (<Input type={props.type ?? 'text'} id="version" value={props.value} onChange={props.onChange} disabled={props.disabled ?? false}/>)
            }
         </FormControl>
     );

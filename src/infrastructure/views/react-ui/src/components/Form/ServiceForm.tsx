@@ -3,11 +3,19 @@ import React, { ComponentProps, useEffect, useState, SyntheticEvent, ChangeEvent
 import DeleteIcon from '@mui/icons-material/Delete';
 import { mockImages } from "../../mock/ServiceFormMock";
 import { InputTextForm } from "./InputForm";
+import { versions } from "process";
+import { version } from "os";
 
 export interface ImageType {
     id: number,
     name: string,
+    versions: Array<VersionType>,
     isUtils: boolean
+}
+
+export interface VersionType {
+  version: string,
+  tags: Array<string>
 }
 
 export interface VolumeType {
@@ -79,24 +87,61 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
   const defaultImage = {
     id: 0,
     name: "",
-    version: "",
+    versions: [],
     isUtils: false,
   };
+  
+  const defaultVersion = {version: '', tags: []};
 
   const [chosenImage, setChosenImage] = useState<ImageType>(defaultImage);
+  const [chosenVersion, setChosenVersion] = useState<VersionType>(defaultVersion);
+  const [chosenTag, setChosenTag] = useState("");
   const [imageList, setImageList] = useState<Array<ImageType>>([]);
-  const [isDockerhubSearch, setDockerhubSearch] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
+  const [versionList, setVersionList] = useState<Array<VersionType>>([]);
+  const [tagList, setTagList] = useState<Array<string>>([]);
+  const [imageSearchInput, setImageSearchInput] = useState("");
+  const [versionSearchInput, setVersionSearchInput] = useState("");
+  const [tagSearchInput, setTagSearchInput] = useState("");
+  const [isImageInputActive, setImageInputActive] = useState(true);
+  const [isVersionInputActive, setVersionInputActive] = useState(false);
+  const [isTagInputActive, setTagInputActive] = useState(false);
+
 
   const chooseImage = (image: ImageType) => {
       setChosenImage(image);
-      setSearchInput(image.name);
+      setImageSearchInput(image.name);
       setImageList([]);
+      setVersionList(image.versions);
+      setChosenVersion(defaultVersion);
+      setVersionInputActive(true);
+      setImageInputActive(false);
   };
 
+  const handleChangeVersion = (version: VersionType | null) => {
+    if(version !== null && version.version !== "") {
+      setVersionSearchInput(version.version);
+      setChosenVersion(version);
+      setTagList(version.tags);
+      setTagInputActive(true);
+      setVersionInputActive(false);
+    } else {
+      setVersionSearchInput("");
+      setChosenVersion(defaultVersion);
+      setTagList([]);
+      setTagInputActive(false);
+    }
+  };
+
+  const handleChangeTag = (tag: string | null) => {
+    if(tag !== null && tag !== "") {
+      setTagSearchInput(tag);
+      setChosenTag(tag);
+    }
+  }
+
   const handleImageFilterInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
-    const listToFilter = isDockerhubSearch ? [] : mockImages;
+    setImageSearchInput(event.target.value);
+    const listToFilter = mockImages;
     if(event.target.value != '') {
       setImageList(
         listToFilter.filter((image) =>
@@ -107,6 +152,30 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
       setImageList([]);
     }
   };
+
+  const handleNextStep = (step: number) => {
+    if(step === 1) {
+      setImageInputActive(false);
+      setVersionInputActive(true);
+    } else if(step === 2) {
+      setVersionInputActive(false);
+      setTagInputActive(true);
+    }
+  }
+
+  const handlePreviousStep = (step: number) => {
+    if (step === 1) {
+      setImageInputActive(true);
+      setVersionInputActive(false);
+      setChosenVersion(defaultVersion);
+      setVersionSearchInput("");
+    } else if (step === 2) {
+      setVersionInputActive(true);
+      setTagInputActive(false);
+      setChosenTag("");
+      setTagSearchInput("");
+    }
+  }
 
   const ImageCard = (image: ImageType) => {
     return (
@@ -132,7 +201,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
 
   return (
     <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
-      <InputTextForm variant="filled" label="Rechercher un type d'image" value={searchInput} onChange={handleImageFilterInput} />
+      <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive}/>
       <Grid container spacing={2}>
         {imageList.map((image) => (
           <Grid item xs={4} key={image.id}>
@@ -140,7 +209,68 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
           </Grid>
         ))}
       </Grid>
-      
+      <Autocomplete
+        id="version-select"
+        options={versionList}
+        autoHighlight
+        getOptionLabel={(option) => option.version}
+        renderOption={(props, option) => (
+          <Box component="li" {...props}>
+            {option.version}
+          </Box>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Choisissez une version"
+            inputProps={{
+              ...params.inputProps,
+              autoComplete: 'new-password', // disable autocomplete and autofill
+            }}
+          />
+        )}
+        value={chosenVersion}
+        onChange={(event: any, newValue: VersionType | null) => {
+          handleChangeVersion(newValue);
+        }}
+        disabled={!isVersionInputActive}
+      />
+      {isVersionInputActive && 
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(1)} sx={{ margin: '0.5rem 1rem' }}>Précédent</Button>
+        </Box>
+      }
+      <Autocomplete
+        id="tag-select"
+        options={tagList}
+        autoHighlight
+        getOptionLabel={(option) => option}
+        renderOption={(props, option) => (
+          <Box component="li" {...props}>
+            {option}
+          </Box>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Choisissez vos tags"
+            inputProps={{
+              ...params.inputProps,
+              autoComplete: 'new-password', // disable autocomplete and autofill
+            }}
+          />
+        )}
+        value={chosenTag}
+        onChange={(event: any, newValue: string | null) => {
+          handleChangeTag(newValue);
+        }}
+        disabled={!isTagInputActive}
+      />
+      {isTagInputActive &&
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(2)} sx={{ margin: '0.5rem 1rem' }}>Précédent</Button>
+        </Box>
+      }
     </form>
   );
 }

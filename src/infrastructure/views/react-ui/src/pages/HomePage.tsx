@@ -6,7 +6,7 @@ import { Button, Container, StepButton, Grid, Switch, FormControlLabel, Paper } 
 import { ServiceFormStep1, ServiceFormStep2, ServiceFormStep3 } from '../components';
 import { ImageType, VolumeType, EnvType } from '../components/Form/ServiceForm';
 import { Helper, HelperData } from '../components/Helper';
-import { mockHelpers } from 'src/mock/HelperMock';
+import { mockHelpers } from '../mock/HelperMock';
 
 interface ServiceFormData {
   name: string;
@@ -41,6 +41,7 @@ export function HomePage() {
     image: {
       id: 0,
       name: '',
+      versions: [],
       isUtils: false
     },
     version: '',
