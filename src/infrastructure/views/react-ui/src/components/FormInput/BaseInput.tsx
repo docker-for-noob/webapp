@@ -1,5 +1,5 @@
-import { FormControl, InputLabel, Input, FilledInput } from '@mui/material';
 import React from 'react';
+import { FormControl, InputLabel, FilledInput, Input } from "@mui/material";
 
 interface InputTextFormProps {
     label: string;
@@ -15,7 +15,7 @@ export function InputTextForm(props: InputTextFormProps) {
         <FormControl sx={{ margin: '1rem 0' }}>
           <InputLabel htmlFor="version">{props.label}</InputLabel>
           {props.variant === "filled" ?
-           (<FilledInput type={props.type ?? 'text'} id="version" value={props.value} onChange={props.onChange} disabled={props.disabled ?? false}/>)
+           (<FilledInput type={props.type ?? 'text'} id="version" value={props.value} onChange={props.onChange} disabled={props.disabled ?? false} />)
            :
            (<Input type={props.type ?? 'text'} id="version" value={props.value} onChange={props.onChange} disabled={props.disabled ?? false}/>)
            }

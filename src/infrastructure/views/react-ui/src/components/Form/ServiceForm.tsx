@@ -1,10 +1,29 @@
-import { Card, CardContent, CardActions, FormControlLabel, Radio, MenuItem, FormControl, FilledInput, InputLabel, Switch, SelectChangeEvent, Select, Autocomplete, TextField, Box, Checkbox, Button, FormGroup, Accordion, AccordionDetails, AccordionSummary, Typography, Grid, Input, List, Table, TableBody, TableCell, TableHead, TableRow, IconButton } from "@mui/material";
-import React, { ComponentProps, useEffect, useState, SyntheticEvent, ChangeEvent } from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  Card,
+  CardContent,
+  CardActions,
+  FormControlLabel,
+  Switch,
+  Box,
+  Button,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+  Grid,
+  Step,
+  StepButton,
+  Stepper,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { mockImages } from "../../mock/ServiceFormMock";
-import { InputTextForm } from "./InputForm";
-import { versions } from "process";
-import { version } from "os";
+import { mockHelpers } from "../../mock/HelperMock";
+import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../FormInput/ImageInput";
+import { HelperData, Helper } from "../Helper";
+import { Previzualizer } from "../Previzualizer";
+import { InputTextForm } from "../FormInput/BaseInput";
 
 export interface ImageType {
     id: number,
@@ -19,26 +38,25 @@ export interface VersionType {
 }
 
 export interface VolumeType {
-  machineRoute: string,
-  dockerRoute: string
+  machineRoute: string;
+  dockerRoute: string;
 }
 
 export interface EnvType {
-  key: string,
-  value: string
+  key: string;
+  value: string;
 }
 
 interface ServiceFormStepProps {
-  setDisableNext: (disable: boolean) => void
+  setDisableNext: (disable: boolean) => void;
 }
 
-interface Step3Props {
-  setDisableNext: (disabled: boolean) => void,
-  setSubstep: (substep: number) => void
+interface ServiceFormStep3Props {
+  setDisableNext: (disabled: boolean) => void;
+  setSubstep: (substep: number) => void;
 }
 
 export function ServiceFormStep1(props: ServiceFormStepProps) {
-
   const [serviceName, setServiceName] = useState("");
   const [alias, setAlias] = useState("");
 
@@ -46,7 +64,7 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
 
   const nextStepIsDisabled = () => {
     return !serviceName || (hasAlias && !alias);
-  }
+  };
 
   useEffect(() => {
     props.setDisableNext(nextStepIsDisabled());
@@ -54,36 +72,43 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
 
   const handleServiceNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setServiceName(event.target.value);
-  }
+  };
 
   const handleAliasChange = (event: ChangeEvent<HTMLInputElement>) => {
     setAlias(event.target.value);
-  }
+  };
 
   const handleSwitch = (event: ChangeEvent<HTMLInputElement>) => {
     setHasAlias(event.target.checked);
   };
 
   return (
-    <form style={{display: "flex", flexDirection: "column", padding: '1rem'}}>
-      <InputTextForm label="Nom du service" variant="filled" value={serviceName} onChange={handleServiceNameChange} />
+    <form style={{ display: "flex", flexDirection: "column", padding: "1rem" }}>
+      <InputTextForm
+        label="Nom du service"
+        variant="filled"
+        value={serviceName}
+        onChange={handleServiceNameChange}
+      />
 
-      <FormControlLabel control={
-      <Switch
-       checked={hasAlias} onChange={handleSwitch} />
-      }
-       label="Ajouter un alias"
+      <FormControlLabel
+        control={<Switch checked={hasAlias} onChange={handleSwitch} />}
+        label="Ajouter un alias"
       />
 
       {hasAlias && (
-        <InputTextForm variant="filled" label="Alias" value={alias} onChange={handleAliasChange} />
+        <InputTextForm
+          variant="filled"
+          label="Alias"
+          value={alias}
+          onChange={handleAliasChange}
+        />
       )}
     </form>
   );
 }
 
 export function ServiceFormStep2(props: ServiceFormStepProps) {
-
   const defaultImage = {
     id: 0,
     name: "",
@@ -144,9 +169,13 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
     const listToFilter = mockImages;
     if(event.target.value != '') {
       setImageList(
-        listToFilter.filter((image) =>
-          (image.name).toLowerCase().startsWith(event.target.value.toLowerCase())
-        ).slice(0,9)
+        listToFilter
+          .filter((image) =>
+            image.name
+              .toLowerCase()
+              .startsWith(event.target.value.toLowerCase())
+          )
+          .slice(0, 9)
       );
     } else {
       setImageList([]);
@@ -189,7 +218,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
           <Button
             variant="contained"
             size="medium"
-            sx={{ margin: '0.5rem 1rem' }}
+            sx={{ margin: "0.5rem 1rem" }}
             onClick={() => chooseImage(image)}
           >
             Choisir
@@ -204,25 +233,23 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
       <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive}/>
       <Grid container spacing={2}>
         {imageList.map((image) => (
-          <Grid item xs={4} key={image.id}>
+          <Grid item xs={6} key={image.id}>
             <ImageCard {...image} />
           </Grid>
         ))}
       </Grid>
+      
       <Autocomplete
         id="version-select"
         options={versionList}
         autoHighlight
         getOptionLabel={(option) => option.version}
-        renderOption={(props, option) => (
-          <Box component="li" {...props}>
-            {option.version}
-          </Box>
-        )}
         renderInput={(params) => (
           <TextField
             {...params}
+            sx={{ margin: '1rem 0' }}
             label="Choisissez une version"
+            variant="filled"
             inputProps={{
               ...params.inputProps,
               autoComplete: 'new-password', // disable autocomplete and autofill
@@ -240,20 +267,18 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
           <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(1)} sx={{ margin: '0.5rem 1rem' }}>Précédent</Button>
         </Box>
       }
+
       <Autocomplete
         id="tag-select"
         options={tagList}
         autoHighlight
         getOptionLabel={(option) => option}
-        renderOption={(props, option) => (
-          <Box component="li" {...props}>
-            {option}
-          </Box>
-        )}
         renderInput={(params) => (
           <TextField
             {...params}
+            sx={{ margin: '0 0 1rem 0' }}
             label="Choisissez vos tags"
+            variant="filled"
             inputProps={{
               ...params.inputProps,
               autoComplete: 'new-password', // disable autocomplete and autofill
@@ -266,6 +291,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
         }}
         disabled={!isTagInputActive}
       />
+
       {isTagInputActive &&
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(2)} sx={{ margin: '0.5rem 1rem' }}>Précédent</Button>
@@ -275,133 +301,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
   );
 }
 
-const AccordionDetailsVolumes = (props: ServiceFormStepProps) => {
-
-  const [volumesList, setVolumesList] = useState<Array<VolumeType>>([]);
-
-  const [machineRoute, setMachineRoute] = useState("");
-  const [dockerRoute, setDockerRoute] = useState("");
-
-  const handleMachineRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setMachineRoute(event.target.value);
-  }
-
-  const handleDockerRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setDockerRoute(event.target.value);
-  }
-
-  const handleVolumesChange = () => {
-    setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
-  }
-
-  const handleVolumesDelete = (index: number) => {
-    setVolumesList(volumesList.filter((_, i) => i !== index));
-  }
-
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <InputTextForm label="Chemin sur votre machine" value={machineRoute} onChange={handleMachineRouteChange} />
-      <InputTextForm label="Chemin dans le container" value={dockerRoute} onChange={handleDockerRouteChange} />
-      <Button variant='contained' onClick={handleVolumesChange} sx={{ margin: '0.5rem 1rem' }}>Ajouter</Button>
-      <Table sx={{ margin: '1rem 0' }}>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{width: '4rem'}}></TableCell>
-            <TableCell>Chemin local</TableCell>
-            <TableCell>Chemin container</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {volumesList.map((volume, index) => (
-            <TableRow key={volume.machineRoute}>
-              <IconButton onClick={() => handleVolumesDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
-                <DeleteIcon />
-              </IconButton>
-              <TableCell>{volume.machineRoute}</TableCell>
-              <TableCell>{volume.dockerRoute}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Box>
-  );
-} 
-
-const AccordionDetailsEnvVariables = (props: ServiceFormStepProps) => {
-
-  const [envList, setEnvList] = useState<Array<EnvType>>([]);
-
-  const [key, setKey] = useState("");
-  const [value, setValue] = useState("");
-
-  const handleKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setKey(event.target.value);
-  }
-
-  const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  }
-
-  const handleEnvChange = () => {
-    setEnvList([...envList, { key, value }]);
-  }
-
-  const handleEnvDelete = (index: number) => {
-    setEnvList(envList.filter((_, i) => i !== index));
-  }
-
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <InputTextForm label="Clé" value={key} onChange={handleKeyChange} />
-      <InputTextForm label="Valeur" value={value} onChange={handleValueChange} />
-      <Button variant='contained' onChange={handleEnvChange} size="medium" sx={{ margin: '0.5rem 1rem' }}>Ajouter</Button>
-      <Table sx={{ margin: '1rem 0' }}>
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell>Clé</TableCell>
-            <TableCell>Valeur</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {envList.map((env, index) => (
-            <TableRow key={env.key}>
-              <IconButton onClick={() => handleEnvDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
-                <DeleteIcon />
-              </IconButton>
-              <TableCell>{env.key}</TableCell>
-              <TableCell>{env.value}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Box>
-  );
-} 
-
-const AccordionDetailsImage = (props: ServiceFormStepProps) => {
-
-  const [internalPort, setInternalPort] = useState(0);
-  const [externalPort, setExternalPort] = useState(0);
-  
-  const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInternalPort(parseInt(event.target.value));
-  }
-
-  const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setExternalPort(parseInt(event.target.value));
-  }
-  
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <InputTextForm label="Port interne" type="number" value={internalPort} onChange={handleInternalPortChange} />
-      <InputTextForm label="Port externe" type="number" value={externalPort} onChange={handleExternalPortChange} />
-    </Box>
-  );
-} 
-
-export function ServiceFormStep3(props: Step3Props) {
-
+export function ServiceFormStep3(props: ServiceFormStep3Props) {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
@@ -411,44 +311,174 @@ export function ServiceFormStep3(props: Step3Props) {
   const accordionDetails = [
     {
       title: "Ports",
-      content: <AccordionDetailsImage 
-      setDisableNext={props.setDisableNext} />,
+      content: <InputImagePorts setDisableNext={props.setDisableNext} />,
       step: 1,
     },
     {
       title: `Volumes`,
-      content: <AccordionDetailsVolumes 
-      setDisableNext={props.setDisableNext} />,
+      content: <InputImageVolumes setDisableNext={props.setDisableNext} />,
       step: 2,
     },
     {
       title: `Variables d'environnement`,
-      content: <AccordionDetailsEnvVariables  
-      setDisableNext={props.setDisableNext} />,
+      content: <InputImageEnvVariables setDisableNext={props.setDisableNext} />,
       step: 3,
-    }
-  ]
+    },
+  ];
 
   const handleChange =
-  (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-    setStep((old) => newExpanded ? step : old);
-  };
+    (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+      setStep((old) => (newExpanded ? step : old));
+    };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
+    <form style={{ display: "flex", flexDirection: "column", padding: "1rem" }}>
       {accordionDetails.map((accordionDetail) => (
-        <Accordion key={accordionDetail.step} expanded={step == accordionDetail.step} onChange={handleChange(accordionDetail.step)}>
-          <AccordionSummary sx={{ backgroundColor: '#F0F0F0' }}>
-            <Typography variant="h6">{accordionDetail.step}. {accordionDetail.title}</Typography>
+        <Accordion
+          key={accordionDetail.step}
+          expanded={step == accordionDetail.step}
+          onChange={handleChange(accordionDetail.step)}
+        >
+          <AccordionSummary sx={{ backgroundColor: "#F0F0F0" }}>
+            <Typography variant="h6">
+              {accordionDetail.step}. {accordionDetail.title}
+            </Typography>
           </AccordionSummary>
-          <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', backgroundColor: '#F0F0F0',  padding: '0 1rem' }}>
+          <AccordionDetails
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor: "#F0F0F0",
+              padding: "0 1rem",
+            }}
+          >
             {accordionDetail.content}
-            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-              <Button color="secondary" variant='contained' onClick={() => setStep(accordionDetail.step+1)} sx={{ margin: '0.5rem 1rem' }}>Étape suivante</Button>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => setStep(accordionDetail.step + 1)}
+                sx={{ margin: "0.5rem 1rem" }}
+              >
+                Étape suivante
+              </Button>
             </Box>
           </AccordionDetails>
         </Accordion>
       ))}
     </form>
+  );
+}
+
+interface ServiceFormProps {
+  handleFinish: () => void;
+}
+
+export function ServiceForm(props: ServiceFormProps) {
+  const helpers = mockHelpers;
+  const [activeStep, setActiveStep] = useState(0);
+  const [disableNext, setDisableNext] = useState(false);
+  const [substep, setSubstep] = useState(0);
+  const [currentHelper, setCurrentHelper] = useState<HelperData>(helpers[0]);
+  const [isFilePreviewEnabled, setFilePreviewEnabled] = useState(false);
+
+  const steps = [
+    "Créer un nouveau service",
+    "Sélectionner une image",
+    "Configurer l'image",
+  ];
+
+  const handleNext = () => {
+    if (activeStep + 1 > 2) {
+      props.handleFinish();
+    }
+    setActiveStep(activeStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleStep = (step: number) => () => {
+    setActiveStep(step);
+  };
+
+  const disablePrev = () => {
+    return activeStep === 0;
+  };
+
+  const handleFilePreview = () => {
+    setFilePreviewEnabled((old) => !old);
+  };
+
+  const renderStep = (step: number) => {
+    switch (step) {
+      case 0:
+        return <ServiceFormStep1 setDisableNext={setDisableNext} />;
+      case 1:
+        return <ServiceFormStep2 setDisableNext={setDisableNext} />;
+      case 2:
+        return (
+          <ServiceFormStep3
+            setDisableNext={setDisableNext}
+            setSubstep={setSubstep}
+          />
+        );
+      default:
+        return <div>Terminé</div>;
+    }
+  };
+
+  useEffect(() => {
+    const tmpSubstep = substep == 0 ? substep : substep - 1;
+    setCurrentHelper(helpers[activeStep + tmpSubstep]);
+  }, [activeStep, substep]);
+
+  return (
+    <Box>
+      <Stepper activeStep={activeStep} alternativeLabel>
+        {steps.map((label, index) => (
+          <Step key={label}>
+            <StepButton color="inherit" onClick={handleStep(index)}>
+              {label}
+            </StepButton>
+          </Step>
+        ))}
+      </Stepper>
+
+      <Grid container spacing={4}>
+        <Grid item xs={7}>
+          {renderStep(activeStep)}
+          {activeStep !== 0 && (
+            <Button variant="contained" onClick={handleBack}>
+              Précédent
+            </Button>
+          )}
+          <Button
+            variant="contained"
+            onClick={handleNext}
+            disabled={disableNext}
+          >
+            Suivant
+          </Button>
+        </Grid>
+        <Grid item xs={5}>
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={handleFilePreview}
+                checked={isFilePreviewEnabled}
+              />
+            }
+            label="Prévisualiser le fichier"
+          />
+          {isFilePreviewEnabled ? (
+            <Previzualizer services={[]} />
+            ) : (
+            <Helper {...currentHelper} />
+          )}
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
