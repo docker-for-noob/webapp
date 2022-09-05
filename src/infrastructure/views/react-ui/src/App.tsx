@@ -1,14 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import { Routes, Route, Link, Search, NavLink } from "react-router-dom";
+import React from 'react';
+import { Routes, Route, NavLink } from "react-router-dom";
 
 import './App.css';
 
-import {useAppDispatch} from './hooks/storeHooks';
-import {useGetAllArticlesQuery} from "@domain/api/apiSlice";
-import {DownloaderService} from "@domain/imageReference/service/downloader/DownloaderService";
-import {getError, getResult, isSuccess} from "@domain/utils/maybe/Maybe";
 import { HomePage } from './pages/HomePage';
-import { Box, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
+import { Box, Toolbar, Typography, Button } from '@mui/material';
 import logo from './assets/images/logo.png';
 import { LandingPage } from './pages/LandingPage';
 
@@ -46,36 +42,12 @@ function TopBar() {
 }
 
 export function App() {
-    const dispatchStore = useAppDispatch();
-    const {data} = useGetAllArticlesQuery()
-    const {downloadDockerCompose} = DownloaderService
-
-    const download = async () => {
-        const result = await downloadDockerCompose("test43", "")
-        console.log(result)
-        if (isSuccess(result)) console.log(getResult(result))
-        if (getError(result)) console.log(getError(result))
-    }
-
-    function Test() {
-        return (
-            <div>
-                <button onClick={() => download()}>Download
-                    YAML
-                </button>
-                {JSON.stringify(data)}
-            </div>
-        )
-    }
-
     return (
         <div className="App">
              <TopBar />
-            <Routes>
-               
+            <Routes>     
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/configurateur" element={<HomePage />} />
-                <Route path="/test" element={<Test />} />
             </Routes>  
  
         </div>

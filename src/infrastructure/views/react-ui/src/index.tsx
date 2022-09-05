@@ -5,8 +5,7 @@ import './index.css';
 import {App} from './App';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux';
-import {store} from "@domain/utils/store/store";
-import {PersistGate} from "redux-persist/integration/react";
+import {store} from "@infrastructure/redux/config/store";
 import { ThemeProvider } from '@mui/material';
 import { defaultTheme } from './assets/themes/defaultTheme';
 
