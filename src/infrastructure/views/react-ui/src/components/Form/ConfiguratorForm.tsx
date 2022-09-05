@@ -26,6 +26,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
 
   const services: ServiceReference[] = [
     {
+      key: 1,
       name: "Golang",
       alias: "go",
       image: {
@@ -42,6 +43,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       },
     },
     {
+      key: 2,
       name: "Service 2",
       alias: "service-2",
       image: {
@@ -61,16 +63,19 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
 
   const accordionDetails = [
     {
+      key: 1,
       title: "Ports",
       content: <InputImagePorts setDisableNext={() => {}} />,
       step: 1,
     },
     {
+      key: 2,
       title: `Volumes`,
       content: <InputImageVolumes setDisableNext={() => {}} />,
       step: 2,
     },
     {
+      key: 3,
       title: `Variables d'environnement`,
       content: <InputImageEnvVariables setDisableNext={() => {}} />,
       step: 3,
@@ -89,7 +94,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
           Create Service
         </Button>
         {services.map((service) => (
-          <Accordion>
+          <Accordion key={service.key}>
             <AccordionSummary sx={{ backgroundColor: "#F0F0F0" }}>
               <Typography>{service.name}</Typography>
             </AccordionSummary>

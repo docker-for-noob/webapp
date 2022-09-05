@@ -14,20 +14,20 @@ export function Previzualizer(props: PrevizualizerProps) {
                 services:
             </Typography>
             {props.services.map((service) => (
-                <Box>
-                    <Typography key={service.name}>
+                <Box key={service.key}>
+                    <Typography>
                         {"  container_name: "+service.name}
                     </Typography>
-                    <Typography key={service.alias}>
+                    <Typography>
                         {"  alias: "+service.alias}
                     </Typography>
                     <Typography key="image">
                         {"  image:"}
                     </Typography>
-                    <Typography key={service.image.id}>
+                    <Typography>
                         {"    id: "+service.image.id}
                     </Typography>
-                    <Typography key={service.image.name}>
+                    <Typography>
                         {"    name: "+service.image.name}
                     </Typography>
                 </Box>
