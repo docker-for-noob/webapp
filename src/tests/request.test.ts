@@ -3,7 +3,7 @@ import reducer, {
   requestError,
   requestCompleted,
   RequestState,
-} from "../domain/utils/request/slicer";
+} from "../infrastructure/redux/store/request/slicer";
 
 const initialState: RequestState = {
   isLoading: false,

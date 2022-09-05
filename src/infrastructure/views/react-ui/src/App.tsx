@@ -47,21 +47,21 @@ function TopBar() {
 
 export function App() {
     const dispatchStore = useAppDispatch();
-    const {data} = useGetAllArticlesQuery();
-    const {downloadDockerCompose} = DownloaderService;
+    const {data} = useGetAllArticlesQuery()
+    const {downloadDockerCompose} = DownloaderService
 
     const download = async () => {
-        const result = await downloadDockerCompose("test43", "");
+        const result = await downloadDockerCompose("test43", "")
         console.log(result)
-        if (isSuccess(result)) console.log(getResult(result));
-        if (getError(result)) console.log(getError(result));
+        if (isSuccess(result)) console.log(getResult(result))
+        if (getError(result)) console.log(getError(result))
     }
 
     function Test() {
         return (
             <div>
                 <button onClick={() => download()}>Download
-                    YAMLssdgsd
+                    YAML
                 </button>
                 {JSON.stringify(data)}
             </div>
@@ -81,4 +81,5 @@ export function App() {
         </div>
     );
 }
+
 
