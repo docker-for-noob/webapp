@@ -20,10 +20,12 @@ import {
   versionUIValidator,
   volumesUIValidator,
 } from "../infrastructure/validators/InputValidator";
-import {ValidatorService} from "../core/domain/dockerCompose/service/validator/ValidatorService"
+import { ValidatorService } from "../core/domain/dockerCompose/service/validator/ValidatorService";
 
-
-import {mustBeString, required} from "../infrastructure/validators/ValidatorDependance";
+import {
+  mustBeString,
+  required,
+} from "../infrastructure/validators/ValidatorDependance";
 
 test("no ports has been sent and return an error", () => {
   const initial = undefined;
@@ -254,9 +256,6 @@ test("an unvalid volume path has been sent and return an error message", () => {
   const initial = "C:/hel**o";
   expect(envVariablePathUIValidator(initial)).toStrictEqual(mustBePathError);
 });
-
-
-
 
 test("a service name with Special Character has been sent and return an error", () => {
   const initial = "test";
