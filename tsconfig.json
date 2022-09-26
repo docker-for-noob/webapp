@@ -17,7 +17,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "forceConsistentCasingInFileNames": true,
@@ -36,7 +36,8 @@
     "checkJs": false
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*",
+    "./node_modules/redux-persist/types"
   ],
   "exclude": [
     "node_modules",

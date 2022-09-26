@@ -10,10 +10,12 @@ import {
   REHYDRATE,
 } from "redux-persist/es/constants";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import requestReducer from "../store/request/slicer";
 import { apiSlice } from "../api/apiSlice";
 
 export const store = configureStore({
   reducer: {
+    requestReducer: requestReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

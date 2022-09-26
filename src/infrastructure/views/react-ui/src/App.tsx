@@ -1,87 +1,55 @@
 import React from 'react';
+import { Routes, Route, NavLink } from "react-router-dom";
+
 import './App.css';
-import {BackendSeed} from "@infrastructure/mock/backendSeed";
-import {getError, getResult, isSuccess} from "@core/application/commons/maybe/Maybe";
-import {downloadDockerCompose} from "@core/application/downloader/Downloader";
-import {
-    usePopulateTagQuery,
-    usePopulateImageQuery,
-    usePopulateVersionQuery, useFetchImageReferenceQuery
-} from "@infrastructure/redux/api/apiSlice";
+
+import { HomePage } from './pages/HomePage';
+import { Box, Toolbar, Typography, Button } from '@mui/material';
+import logo from './assets/images/logo.png';
+import { LandingPage } from './pages/LandingPage';
+
+function TopBar() {
+    return (
+      <Box sx={{ flexGrow: 1, margin: '1.5rem 0' }}>
+        <Box position="static">
+          <Toolbar sx={{ backgroundColor: 'white' , display:'flex', justifyContent:'space-between'}}>
+            <Box sx={{display:'flex', alignItems:'center'}} >
+                <Box
+                component="img"
+                sx={{width: '4rem', height: '4rem', margin: '0 1rem'}}
+                alt="logo"
+                src={logo}
+                />
+                <Typography
+                variant="h4"
+                fontWeight="bold"
+                noWrap
+                textAlign="initial"      
+                >
+                Docker for noobs
+                </Typography>
+            </Box>
+
+            <Box>
+                <NavLink to="/"><Button>Formulaire</Button></NavLink>
+                <NavLink to="/configurateur" ><Button>Configuration</Button></NavLink>
+            </Box> 
+
+          </Toolbar>
+        </Box>
+      </Box>
+    );
+}
 
 export function App() {
-    const {
-        data: populatedImage,
-        error: PopulatedError,
-        isLoading: PopulatedLoading
-    } = usePopulateImageQuery();  // mock de data du backend
-    const {
-        data: populatedVersion,
-        error: versionError,
-        isLoading: VersionLoading
-    } = usePopulateVersionQuery({image: "php"}); // mock de data du backend
-    const {
-        data: PopulatedTags,
-        error: populatedTagsError,
-        isLoading: PopulatedTagsLoading
-    } = usePopulateTagQuery({image: 'php', version: '7.4'}); // mock de data du backend
-    const {
-        data: imageReference,
-        error : imageReferenceError,
-        isLoading : imageReferenceLoading
-    } = useFetchImageReferenceQuery({image: 'mysql:8'}); // Data du MongoDB
-
-    //{
-    //   "Name": "mysql:8",
-    //   "Workdir": [
-    //     "[/var/lib/mysql]"
-    //   ],
-    //   "Port": [
-    //     "3306",
-    //     "33060"
-    //   ],
-    //   "Env": null
-    // }
-
-    const download = async () => {
-        const result = await downloadDockerCompose("test43", BackendSeed)
-        if (isSuccess(result)) console.log(getResult(result))
-        if (getError(result)) console.log(getError(result))
-    }
-
     return (
         <div className="App">
-            <header className="App-header">
-                <button onClick={() => download()}>Download
-                    YAML
-                </button>
-                <div>
-                    <p>Populated Image: </p>
-                    {PopulatedLoading && <p>Loading...</p>}
-                    {JSON.stringify(populatedImage)}
-                    {PopulatedError && "Error :" + JSON.stringify(PopulatedError)}
-                </div>
-
-                <div>
-                    <p>Version :</p>
-                    {VersionLoading && <p>Loading...</p>}
-                    {JSON.stringify(populatedVersion)}
-                    {versionError && "Error :" + JSON.stringify(versionError)}
-                </div>
-                <div>
-                    <p>Tags : </p>
-                    {PopulatedTagsLoading && <p>Loading...</p>}
-                    {JSON.stringify(PopulatedTags)}
-                    {populatedTagsError && "Error :" + JSON.stringify(populatedTagsError)}
-                </div>
-
-                <div>
-                    <p>Image Details  : </p>
-                    {imageReferenceLoading && <p>Loading...</p>}
-                    {JSON.stringify(imageReference)}
-                    {imageReferenceError && "Error :" + JSON.stringify(imageReferenceError)}
-                </div>
-            </header>
+             <TopBar />
+            <Routes>     
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/configurateur" element={<HomePage />} />
+            </Routes>  
+ 
         </div>
     );
 }
