@@ -71,7 +71,7 @@ yarn format
 ```
 > A savoir, si vous ne formattez pas votre code vous même. Lors d'un pull request, la pipeline créera automatiqument un commit mettant au bon format votre code si cela n'a pas été fait en avant. Donc il faudra remettre à jour votre branche. Voir [ici](./GIT.md) pour les commandes git pour vous aider.  
 
-### **Pour lancer le linter**
+## **Pour lancer le linter**
 
 Dans le dossier du projet :
 ```
@@ -79,3 +79,15 @@ yarn lint-project
 ```
 >*Script personnalisé correspondant à*  
 `yarn run lint; cd src/infrastructure/views/react-ui; yarn run lint;`
+
+## **Pour lancer le coverage**
+```
+yarn run coverage
+```
+
+## **Production**
+Pour tester si votre code va se déployer en prod exécuter cette commande :
+```
+yarn run build
+```
+

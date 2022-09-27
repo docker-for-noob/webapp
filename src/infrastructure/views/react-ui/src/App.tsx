@@ -1,53 +1,57 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import { Routes, Route, NavLink } from "react-router-dom";
+
 import './App.css';
-import {HelloWorldService} from "@domain/services/helloWorldServices";
-import {articleService} from "@domain/services/articlesServices";
-import {articleRepository} from "@infrastructure/repositories/articleRepository";
-import {httpAxios} from "@infrastructure/http/helpers/httpAxios";
-import {Article} from "@domain/models/Article";
-import {HelloWorldRepository} from "@infrastructure/repositories/helloWorldRepository";
 
+import { HomePage } from './pages/HomePage';
+import { Box, Toolbar, Typography, Button } from '@mui/material';
+import logo from './assets/images/logo.png';
+import { LandingPage } from './pages/LandingPage';
 
-type AppState = {
-    articles: Article[];
-    count : number;
+function TopBar() {
+    return (
+      <Box sx={{ flexGrow: 1, margin: '1.5rem 0' }}>
+        <Box position="static">
+          <Toolbar sx={{ backgroundColor: 'white' , display:'flex', justifyContent:'space-between'}}>
+            <Box sx={{display:'flex', alignItems:'center'}} >
+                <Box
+                component="img"
+                sx={{width: '4rem', height: '4rem', margin: '0 1rem'}}
+                alt="logo"
+                src={logo}
+                />
+                <Typography
+                variant="h4"
+                fontWeight="bold"
+                noWrap
+                textAlign="initial"      
+                >
+                Docker for noobs
+                </Typography>
+            </Box>
+
+            <Box>
+                <NavLink to="/"><Button>Formulaire</Button></NavLink>
+                <NavLink to="/configurateur" ><Button>Configuration</Button></NavLink>
+            </Box> 
+
+          </Toolbar>
+        </Box>
+      </Box>
+    );
 }
 
-function App() {
-    const articleServices = articleService({
-        articlesRepository: articleRepository(httpAxios)
-    });
-    const helloWorldServices = new HelloWorldService(
-        new HelloWorldRepository()
-    );
-
-    const [state,setState] = useState<AppState>({
-        articles: [],
-        count: 0
-    });
-
-    const getArticles = async () => {
-        const responseArticles = await articleServices.fetchArticles();
-        setState({...state, articles: responseArticles});
-    };
-
-    useEffect(() => {
-        getArticles();
-    });
-
-
+export function App() {
     return (
         <div className="App">
-            <header className="App-header">
-
-                {helloWorldServices.getHelloWorld()}
-                <button onClick={() => setState({...state, count: state.count + 1})}>Increment</button>
-                <p>Increment : {state.count}</p>
-
-                {JSON.stringify(state.articles)}
-            </header>
+             <TopBar />
+            <Routes>     
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/configurateur" element={<HomePage />} />
+            </Routes>  
+ 
         </div>
     );
 }
 
-export default App;
+
