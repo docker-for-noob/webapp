@@ -26,7 +26,7 @@ function TopBar() {
                 noWrap
                 textAlign="initial"      
                 >
-                Docker for noobs
+                Docker for noob
                 </Typography>
             </Box>
 

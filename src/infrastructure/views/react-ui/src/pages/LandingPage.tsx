@@ -9,7 +9,7 @@ export function LandingPage() {
   return (
     <Container maxWidth="xl">
       <Grid container spacing={4}>
-        <Grid item xs={7} align="left" sx={{ alignItems: "center" }}>
+        <Grid item xs={7} alignContent="left" sx={{ alignItems: "center" }}>
           <Box>
             <Typography variant="h2" align="left">
               Configure ton <span>Docker Compose</span> facilement et
@@ -17,7 +17,7 @@ export function LandingPage() {
             </Typography>
             <Box mt={2}>
                 <Typography>
-                Tu ne maitrise pas encore Docker ? Notre application
+                Tu ne maitrises pas encore Docker ? Notre application
                 t’accompagne dans la création de ton fichier de configuration
                 Docker avec une interface graphique et un accès a toutes les
                 images disponibles de DockerHub.
