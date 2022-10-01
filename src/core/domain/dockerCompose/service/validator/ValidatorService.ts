@@ -1,6 +1,6 @@
 import {IValidatorService} from "../../ports/ValidatorsPorts";
 
-import {suggest, error, Suggest} from "../../../../application/commons/maybe/Maybe";
+import {suggest, error, Suggest, warning} from "../../../../application/commons/maybe/Maybe";
 import {defaultPorts, HostContainer, port} from "../../models/DockerImage";
 import {Validator} from "../../../../application/validators/type/type";
 import {formatPrimitiveHCToString} from "../../../../application/downloader/format/FormatHelpers";
@@ -24,23 +24,47 @@ const hostPortMustBeUnique = (usedPort?: HostContainer<string>[]): Validator => 
     return undefined;
 }
 
-const ServiceNameNeedAnAlias = (actual: string) => (value?: string []) => {
-    // if(ServiceMustBeUnique(actual)(value) ) return;
-    if(!value) error(`The service ${actual} must have an alias`);
+const ServiceNameNeedAnAlias = (value?: string []): Validator => (actual: string) => {
+    if (IsServiceUnique(actual)(value)) {
+        return undefined;
+    } else {
+        if (!value) warning(`The service ${actual} must have an alias`);
+    }
 }
 
-
-
-
-const ServiceMustBeUnique = (actual: string) => (value?: string [])   => {
-    if(value) {
+const IsServiceUnique = (actual: string) => (value?: string []): boolean => {
+    if (value) {
         const result = value.find(p => p === actual);
-        if (result) error(`The service ${actual} is already used`);
+        return result === undefined
     }
+    return true
+}
+
+const ensureDBRootEnvVariable = (actual: { userName: string, password: string }) => {
+    if (!isDefaultRootPassword(actual.password)) {
+        return warning(`The Database Root Password is the default password, its it is preferable to change it`);
+    }
+    if (!isDefaultRootUsername(actual.userName)) {
+        return warning(`The Database Rot username is the default password, its it is preferable to change it`);
+    }
+
+
+const isDefaultRootPassword = (actual: string) => {
+    const defaultPassword = ["root", "password", "admin"]
+    const result = defaultPassword.find(p => p === actual)
+    return result === undefined
+}
+
+const isDefaultRootUsername = (actual: string) => {
+    const defaultUsername = ["root", "admin"]
+    const result = defaultUsername.find(p => p === actual)
+    return result === undefined
 }
 
 
 export const ValidatorService: IValidatorService = {
     isDefaultPort,
-    hostPortMustBeUnique
+    hostPortMustBeUnique,
+    ServiceNameNeedAnAlias,
+    ensureDBRootEnvVariable
 };

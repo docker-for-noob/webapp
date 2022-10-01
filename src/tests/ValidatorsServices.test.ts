@@ -2,13 +2,15 @@ import {
     getError,
     getSuggest,
     isError,
-    isSuggest
+    isSuggest, isWarning
 } from "../core/application/commons/maybe/Maybe";
 import {ValidatorService} from "../core/domain/dockerCompose/service/validator/ValidatorService";
 
 const {
     isDefaultPort,
-    hostPortMustBeUnique
+    hostPortMustBeUnique,
+    ServiceNameNeedAnAlias,
+    ensureDBRootEnvVariable
 } = ValidatorService
 
 test("default value was not changed and return a warning", () => {
@@ -68,4 +70,39 @@ test("new container ports are use and return undefined", () => {
     expect(result).toBeUndefined();
 });
 
+
+test("Service name is unique and return undefined", () => {
+    const allServiceName = ["Service1", "Service2"];
+
+    const result = ServiceNameNeedAnAlias(allServiceName)("Service3")
+
+    expect(result).toBeUndefined()
+});
+
+test("Service name isnt  unique and return a warning", () => {
+    const allServiceName = ["Service1", "Service2"];
+
+    const result = ServiceNameNeedAnAlias(allServiceName)("Service1")
+
+    if (result) {
+        expect(isWarning(result)).toStrictEqual(true);
+        expect(getError(result)).toStrictEqual("`The service Service1 must have an alias`");
+    }});
+
+test("Service name is the only service  unique and return undefined", () => {
+    const result = ServiceNameNeedAnAlias()("Service1")
+
+    expect(result).toBeUndefined()
+});
+
+
+test("Database Root username is default and return a warning", () => {
+    const DbCredentials = {username:"root", password : "root"};
+
+    const result = ensureDBRootEnvVariable(DbCredentials)
+
+    if (result) {
+        expect(isWarning(result)).toStrictEqual(true);
+        expect(getError(result)).toStrictEqual("The Database Root Password is the default password, its it is preferable to change it");
+    }});
 
