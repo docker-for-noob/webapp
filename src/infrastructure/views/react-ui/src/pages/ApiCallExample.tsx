@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {BackendSeed} from "@infrastructure/mock/backendSeed";
 import {getError, getResult, isSuccess} from "@core/application/commons/maybe/Maybe";
 import {downloadDockerCompose} from "@core/application/downloader/Downloader";
