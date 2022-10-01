@@ -7,6 +7,7 @@ import { HomePage } from './pages/HomePage';
 import { Box, Toolbar, Typography, Button } from '@mui/material';
 import logo from './assets/images/logo.png';
 import { LandingPage } from './pages/LandingPage';
+import {ApiCallExample} from "@infrastructure/views/react-ui/src/pages/ApiCallExample";
 
 function TopBar() {
     return (
@@ -24,7 +25,7 @@ function TopBar() {
                 variant="h4"
                 fontWeight="bold"
                 noWrap
-                textAlign="initial"      
+                textAlign="initial"
                 >
                 Docker for noob
                 </Typography>
@@ -33,7 +34,7 @@ function TopBar() {
             <Box>
                 <NavLink to="/"><Button>Formulaire</Button></NavLink>
                 <NavLink to="/configurateur" ><Button>Configuration</Button></NavLink>
-            </Box> 
+            </Box>
 
           </Toolbar>
         </Box>
@@ -45,11 +46,12 @@ export function App() {
     return (
         <div className="App">
              <TopBar />
-            <Routes>     
+            <Routes>
                 <Route path="/" element={<LandingPage />} />
+                <Route path="/ApiCall" element={<ApiCallExample />} />
                 <Route path="/configurateur" element={<HomePage />} />
-            </Routes>  
- 
+            </Routes>
+
         </div>
     );
 }
