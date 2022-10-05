@@ -1,6 +1,6 @@
 import { Box, Paper, Typography } from '@mui/material';
 import React from 'react';
-import { ServiceReference } from "@core/domain/serviceReference/models/service/service";
+import { ServiceReference } from "@core/domain/serviceReference/models/service";
 
 interface PrevizualizerProps {
     services: ServiceReference[];
