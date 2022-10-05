@@ -1,4 +1,4 @@
-import { ImageReference } from "../../../imageReference/models/image";
+import { ImageReference } from "../../imageReference/models/image";
 
 export type ServiceReference = {
   key: number;
