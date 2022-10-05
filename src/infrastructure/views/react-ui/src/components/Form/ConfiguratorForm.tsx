@@ -14,7 +14,7 @@ import {
   InputImageVolumes,
 } from "../FormInput/ImageInput";
 import { Previzualizer } from "../Previzualizer";
-import { ServiceReference } from "@core/domain/serviceReference/models/service/service";
+import { ServiceReference } from "@core/domain/serviceReference/models/service";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface ConfiguratorFormProps {
