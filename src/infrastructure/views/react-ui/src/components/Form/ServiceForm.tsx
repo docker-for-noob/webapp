@@ -24,6 +24,7 @@ import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../F
 import { HelperData, Helper } from "../Helper";
 import { Previzualizer } from "../Previzualizer";
 import { InputTextForm } from "../FormInput/BaseInput";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export interface ImageType {
     id: number,
@@ -83,7 +84,7 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", padding: "1rem" }}>
+    <form style={{ display: "flex", flexDirection: "column"}}>
       <InputTextForm
         label="Nom du service"
         variant="filled"
@@ -229,7 +230,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
+    <form style={{ display: "flex", flexDirection: "column" }}>
       <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive}/>
       <Grid container spacing={2}>
         {imageList.map((image) => (
@@ -311,16 +312,19 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
   const accordionDetails = [
     {
       title: "Ports",
+      fullTitle : "Choix des ports",
       content: <InputImagePorts setDisableNext={props.setDisableNext} />,
       step: 1,
     },
     {
       title: `Volumes`,
+      fullTitle : "Choix des volumes",
       content: <InputImageVolumes setDisableNext={props.setDisableNext} />,
       step: 2,
     },
     {
-      title: `Variables d'environnement`,
+      title: `Variables d'environnements`,
+      fullTitle : "Choix des variables d'environnements",
       content: <InputImageEnvVariables setDisableNext={props.setDisableNext} />,
       step: 3,
     },
@@ -332,16 +336,24 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
     };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", padding: "1rem" }}>
+    <form style={{ display: "flex", flexDirection: "column" }}>
       {accordionDetails.map((accordionDetail) => (
         <Accordion
           key={accordionDetail.step}
+          
           expanded={step == accordionDetail.step}
           onChange={handleChange(accordionDetail.step)}
+          sx={{
+            marginBottom:2,
+            border:'none',  
+            boxShadow:'none',
+
+
+          }}
         >
-          <AccordionSummary sx={{ backgroundColor: "#F0F0F0" }}>
-            <Typography variant="h6">
-              {accordionDetail.step}. {accordionDetail.title}
+          <AccordionSummary sx={{ backgroundColor: "#F0F0F0",paddingX:3} } expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h3">
+             {step == accordionDetail.step ? accordionDetail.fullTitle  : accordionDetail.step+'. '+accordionDetail.title} 
             </Typography>
           </AccordionSummary>
           <AccordionDetails
@@ -349,16 +361,16 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
               display: "flex",
               flexDirection: "column",
               backgroundColor: "#F0F0F0",
-              padding: "0 1rem",
+              paddingX:3,
+              paddingY:1,
             }}
           >
             {accordionDetail.content}
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Box sx={{ display: "flex", justifyContent: "start" }}>
               <Button
-                color="secondary"
                 variant="contained"
                 onClick={() => setStep(accordionDetail.step + 1)}
-                sx={{ margin: "0.5rem 1rem" }}
+                sx={{marginY:1}}
               >
                 Étape suivante
               </Button>
@@ -448,7 +460,9 @@ export function ServiceForm(props: ServiceFormProps) {
 
       <Grid container spacing={4}>
         <Grid item xs={7}>
-          {renderStep(activeStep)}
+          <Box sx={{paddingX:2}}>
+            {renderStep(activeStep)}
+          </Box>
           {activeStep !== 0 && (
             <Button variant="contained" onClick={handleBack}>
               Précédent

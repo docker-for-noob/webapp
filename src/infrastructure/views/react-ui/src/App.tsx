@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route, NavLink } from "react-router-dom";
+import { styled } from '@mui/system';
 
 import './App.css';
 
@@ -9,11 +10,12 @@ import logo from './assets/images/logo.png';
 import { LandingPage } from './pages/LandingPage';
 import {ApiCallExample} from "@infrastructure/views/react-ui/src/pages/ApiCallExample";
 
+
 function TopBar() {
     return (
       <Box sx={{ flexGrow: 1, margin: '1.5rem 0' }}>
         <Box position="static">
-          <Toolbar sx={{ backgroundColor: 'white' , display:'flex', justifyContent:'space-between'}}>
+          <Toolbar sx={{ backgroundColor: 'white' , display:'flex', justifyContent:'space-between', maxWidth:'1480px',width:'90%',margin:'auto'}}>
             <Box sx={{display:'flex', alignItems:'center'}} >
                 <Box
                 component="img"
@@ -31,15 +33,38 @@ function TopBar() {
                 </Typography>
             </Box>
 
-            <Box>
-                <NavLink to="/"><Button>Formulaire</Button></NavLink>
-                <NavLink to="/configurateur" ><Button>Configuration</Button></NavLink>
+            <Box sx={{display:'flex',gap:2}}>
+                <NavLink style={({ isActive }) => ({textDecoration:'none', opacity: isActive ? '1' : '0.6', fontWeight:isActive ? '600' : '400'})} to="/">
+                  <LinkStyled>Formulaire</LinkStyled>
+                </NavLink>         
+                <NavLink style={({ isActive }) => ({textDecoration:'none', opacity: isActive ? '1' : '0.6', fontWeight: isActive ? '600' : '400'})} to="/configurateur" >
+                  <LinkStyled>Configurateur</LinkStyled>
+                </NavLink>
             </Box>
 
           </Toolbar>
         </Box>
       </Box>
     );
+}
+
+
+const LinkStyled = styled('span')({
+  textTransform:'uppercase',
+  textDecoration:'none !important',
+  color:'black',
+  fontSize:'17.5px'
+})
+
+
+const Footer = () => {
+
+  return (
+    <Box sx={{width:'100%',display:'flex',justifyContent:'center',marginTop:3,padding:2}}>
+      @2022 Tous droits reservés - Docker for Noobs
+    </Box>
+  )
+
 }
 
 export function App() {
@@ -51,6 +76,7 @@ export function App() {
                 <Route path="/ApiCall" element={<ApiCallExample />} />
                 <Route path="/configurateur" element={<HomePage />} />
             </Routes>
+            <Footer />
 
         </div>
     );

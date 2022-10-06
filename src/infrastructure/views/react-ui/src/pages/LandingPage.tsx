@@ -7,16 +7,16 @@ import { Link } from "react-router-dom";
 
 export function LandingPage() {
   return (
-    <Container maxWidth="xl">
+    <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'70vh', margin:'auto',display:'flex',alignItems:'center'}} >
       <Grid container spacing={4}>
-        <Grid item xs={7} alignContent="left" sx={{ alignItems: "center" }}>
-          <Box>
-            <Typography variant="h2" align="left">
-              Configure ton <span>Docker Compose</span> facilement et
+        <Grid item xs={12} md={7} sx={{ display:'flex',alignItems:'center'}}>
+          <Box sx={{maxWidth:'500px'}}>
+            <Typography variant="h1" align="left">
+              Configure ton <span style={{color:'#6563FF'}}>Docker Compose</span> facilement et
               visuellement
             </Typography>
             <Box mt={2}>
-                <Typography>
+                <Typography variant="body1">
                 Tu ne maitrises pas encore Docker ? Notre application
                 t’accompagne dans la création de ton fichier de configuration
                 Docker avec une interface graphique et un accès a toutes les
@@ -24,16 +24,16 @@ export function LandingPage() {
                 </Typography>
             </Box>
             <Box mt={2} mb={2}>
-              <Link to="/configurateur">
+              <Link to="/configurateur" style={{textDecoration:'none'}}>
                 <Button variant="contained">Je me fais accompagner</Button>
               </Link>
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={5} sx={{justifyContent:'center',alignItems:'center'}}>
+        <Grid item xs={12} md={5} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
           <img src={fusee} alt="fusée" />
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 }
