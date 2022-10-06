@@ -1,4 +1,4 @@
-''.App-header {
+.App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -15,4 +15,8 @@
 
 .MuiPaper-root.MuiAccordion-root::before{
   display: none;
+}
+
+html,body{
+  overflow-x: hidden;
 }

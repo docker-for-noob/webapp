@@ -1,140 +1,36 @@
-import React, {useRef, useState, useEffect} from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import { Button, Container, StepButton, Grid, Switch, FormControlLabel, Paper, Typography } from '@mui/material';
-import { ServiceFormStep1, ServiceFormStep2, ServiceFormStep3 } from '../components';
-import { ImageType, VolumeType, EnvType } from '../components/Form/ServiceForm';
-import { Helper, HelperData } from '../components/Helper';
-import { mockHelpers } from '../mock/HelperMock';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-interface ServiceFormData {
-  name: string;
-  alias?: string;
-  language: string;
-  image: ImageType;
-  version: string;
-  internalPort: number;
-  externalPort: number;
-  volumes: VolumeType[];
-  environments: EnvType[];
-}
-
-const steps = [
-  'Créer un nouveau service',
-  'Sélectionner une image',
-  "Configurer l'image",
-];
+import React from 'react';
+import { Button, Box, Typography } from '@mui/material';
+import { ServiceForm } from '../components/Form/ServiceForm';
+import { ConfiguratorForm } from '../components/Form/ConfiguratorForm';
 
 export function HomePage() {
 
-  const helpers = mockHelpers;
-  const [activeStep, setActiveStep] = useState(0);
-  const [disableNext, setDisableNext] = useState(false);
-  const [substep, setSubstep] = useState(0);
-  const [currentHelper, setCurrentHelper] = useState<HelperData>(helpers[0]);
-  const [isFilePreviewEnabled, setFilePreviewEnabled] = useState(false);
-
-  const [serviceFormData, setServiceFormData] = useState<ServiceFormData>({
-    name: '',
-    language: '',
-    image: {
-      id: 0,
-      name: '',
-      versions: [],
-      isUtils: false
+  const forms = [
+    {
+      title: 'Configuration',
+      content: <ConfiguratorForm
+        handleAddService={() => changeForms(1)}
+      />
     },
-    version: '',
-    internalPort: 0,
-    externalPort: 0,
-    volumes: [],
-    environments: [],
-  });
-
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  }
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
-
-  const disablePrev = () => {
-    return activeStep === 0;
-  }
-
-  const handleFilePreview = () => {
-    setFilePreviewEnabled((old) => (!old));
-  }
-
-  const renderStep = (step: number) => {
-    switch (step) {
-      case 0:
-        return <ServiceFormStep1 setDisableNext={setDisableNext} />;
-      case 1:
-        return <ServiceFormStep2 setDisableNext={setDisableNext} />;
-      case 2:
-        return <ServiceFormStep3 setDisableNext={setDisableNext} setSubstep={setSubstep} />;
-      default:
-        return <div>Terminé</div>;
+    {
+      title: 'Service',
+      content: <ServiceForm
+        handleFinish={() => changeForms(0)}
+      />
     }
+  ];
+
+  const [form, setForm] = React.useState(forms[0]);
+
+
+  const changeForms = (index: number) => {
+    setForm(forms[index]);
   }
 
-  useEffect(() => {
-    const tmpSubstep = (substep == 0) ? substep : substep - 1;
-    setCurrentHelper(helpers[activeStep + tmpSubstep]);
-  }, [activeStep, substep]);
-    
-  
   return (
     <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'80vh', margin:'auto'}}>
-      <Box sx={{marginBottom:4}}>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label, index) => (
-            <Step key={label}>
-              <StepButton color="inherit" onClick={handleStep(index)}>{label}</StepButton>
-            </Step>
-          ))}
-        </Stepper>
-      </Box>
-      
-      <Grid container spacing={4}>
-        <Grid item xs={7}>
-          <Box sx={{paddingX:2,height:'70px'}}>
-            <Typography variant="h1">{steps[activeStep]}</Typography>
-          </Box>
-          <Box  sx={{paddingX:2}}>
-            {renderStep(activeStep)}
-          </Box>
-          <Box sx={{paddingX:2,display:'flex',gap:1,marginTop:1}}>
-
-            {activeStep !== 0 && 
-              <Button variant='contained' startIcon={<ArrowBackIosNewIcon />} onClick={handleBack}>Précédent</Button>
-            }
-            <Button variant='contained'endIcon={<ArrowForwardIosIcon />} onClick={handleNext} disabled={disableNext}>Suivant</Button>
-          </Box>
-        </Grid>
-        <Grid item xs={5}>
-          <Box sx={{display:'flex',justifyContent:'flex-end',height:'70px'}}>
-            <FormControlLabel control={<Switch onChange={handleFilePreview} checked={isFilePreviewEnabled}/>} label="Prévisualiser le fichier" />
-          </Box>
-          {isFilePreviewEnabled 
-          ? 
-          <Paper>
-            Lorem Ipsum
-          </Paper> 
-          : 
-          <Helper {...currentHelper} /> 
-          }
-          
-        </Grid>
-      </Grid>
+      {form.content}
     </Box>
   );
 }
