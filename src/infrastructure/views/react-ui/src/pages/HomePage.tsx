@@ -46,4 +46,4 @@ const ContainerCustom = ({ children }:  ContainerCustomProps) => (
   </Box>
 )
 
-export default ContainerCustom;
+export ContainerCustom;
