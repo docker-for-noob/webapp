@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Button, Container, Typography } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { ServiceForm } from '../components/Form/ServiceForm';
 import { ConfiguratorForm } from '../components/Form/ConfiguratorForm';
 import { DockerCompose, DockerContainer } from '@core/domain/dockerCompose/models/DockerImage';
@@ -50,8 +51,20 @@ export function HomePage() {
   const [form, setForm] = React.useState(forms[0]);
 
   return (
-    <Container>
+    <ContainerCustom>
       {form.content}
-    </Container>
+    </ContainerCustom>
   );
 }
+
+
+type ContainerCustomProps = {
+  children: JSX.Element
+}
+
+export const ContainerCustom = ({ children }:  ContainerCustomProps) => (
+  <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'80vh', margin:'auto'}}>
+      {children}
+  </Box>
+)
+
