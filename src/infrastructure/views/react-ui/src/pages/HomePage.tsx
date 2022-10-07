@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Button, Container, Typography } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { ServiceForm } from '../components/Form/ServiceForm';
 import { ConfiguratorForm } from '../components/Form/ConfiguratorForm';
 
@@ -28,8 +29,16 @@ export function HomePage() {
   }
 
   return (
-    <Container>
+    <ContainerCustom>
       {form.content}
-    </Container>
+    </ContainerCustom>
   );
 }
+
+const ContainerCustom = (props) => (
+  <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'80vh', margin:'auto'}}>
+      {props.children}
+  </Box>
+)
+
+export default ContainerCustom;

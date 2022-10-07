@@ -24,6 +24,9 @@ import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../F
 import { HelperData, Helper } from "../Helper";
 import { Previzualizer } from "../Previzualizer";
 import { InputTextForm } from "../FormInput/BaseInput";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export interface ImageType {
     id: number,
@@ -83,7 +86,7 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", padding: "1rem" }}>
+    <form style={{ display: "flex", flexDirection: "column"}}>
       <InputTextForm
         label="Nom du service"
         variant="filled"
@@ -229,7 +232,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
+    <form style={{ display: "flex", flexDirection: "column" }}>
       <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive}/>
       <Grid container spacing={2}>
         {imageList.map((image) => (
@@ -311,16 +314,19 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
   const accordionDetails = [
     {
       title: "Ports",
+      fullTitle : "Choix des ports",
       content: <InputImagePorts setDisableNext={props.setDisableNext} />,
       step: 1,
     },
     {
       title: `Volumes`,
+      fullTitle : "Choix des volumes",
       content: <InputImageVolumes setDisableNext={props.setDisableNext} />,
       step: 2,
     },
     {
-      title: `Variables d'environnement`,
+      title: `Variables d'environnements`,
+      fullTitle : "Choix des variables d'environnements",
       content: <InputImageEnvVariables setDisableNext={props.setDisableNext} />,
       step: 3,
     },
@@ -332,16 +338,24 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
     };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", padding: "1rem" }}>
+    <form style={{ display: "flex", flexDirection: "column" }}>
       {accordionDetails.map((accordionDetail) => (
         <Accordion
           key={accordionDetail.step}
+          
           expanded={step == accordionDetail.step}
           onChange={handleChange(accordionDetail.step)}
+          sx={{
+            marginBottom:2,
+            border:'none',  
+            boxShadow:'none',
+
+
+          }}
         >
-          <AccordionSummary sx={{ backgroundColor: "#F0F0F0" }}>
-            <Typography variant="h6">
-              {accordionDetail.step}. {accordionDetail.title}
+          <AccordionSummary sx={{ backgroundColor: "#F0F0F0",paddingX:3} } expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h3">
+             {step == accordionDetail.step ? accordionDetail.fullTitle  : accordionDetail.step+'. '+accordionDetail.title} 
             </Typography>
           </AccordionSummary>
           <AccordionDetails
@@ -349,16 +363,16 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
               display: "flex",
               flexDirection: "column",
               backgroundColor: "#F0F0F0",
-              padding: "0 1rem",
+              paddingX:3,
+              paddingY:1,
             }}
           >
             {accordionDetail.content}
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Box sx={{ display: "flex", justifyContent: "start" }}>
               <Button
-                color="secondary"
                 variant="contained"
                 onClick={() => setStep(accordionDetail.step + 1)}
-                sx={{ margin: "0.5rem 1rem" }}
+                sx={{marginY:1}}
               >
                 Étape suivante
               </Button>
@@ -367,6 +381,7 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
         </Accordion>
       ))}
     </form>
+    
   );
 }
 
@@ -436,49 +451,47 @@ export function ServiceForm(props: ServiceFormProps) {
 
   return (
     <Box>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-
+      <Box sx={{marginBottom:4}}>
+        <Stepper activeStep={activeStep} alternativeLabel>
+          {steps.map((label, index) => (
+            <Step key={label}>
+              <StepButton color="inherit" onClick={handleStep(index)}>{label}</StepButton>
+            </Step>
+          ))}
+        </Stepper>
+      </Box>
+      
       <Grid container spacing={4}>
         <Grid item xs={7}>
-          {renderStep(activeStep)}
-          {activeStep !== 0 && (
-            <Button variant="contained" onClick={handleBack}>
-              Précédent
-            </Button>
-          )}
-          <Button
-            variant="contained"
-            onClick={handleNext}
-            disabled={disableNext}
-          >
-            Suivant
-          </Button>
+          <Box sx={{paddingX:2,height:'70px'}}>
+            <Typography variant="h1">{steps[activeStep]}</Typography>
+          </Box>
+          <Box  sx={{paddingX:2}}>
+            {renderStep(activeStep)}
+          </Box>
+          <Box sx={{paddingX:2,display:'flex',gap:1,marginTop:1}}>
+
+            {activeStep !== 0 && 
+              <Button variant='contained' startIcon={<ArrowBackIosNewIcon />} onClick={handleBack}>Précédent</Button>
+            }
+            <Button variant='contained'endIcon={<ArrowForwardIosIcon />} onClick={handleNext} disabled={disableNext}>Suivant</Button>
+          </Box>
         </Grid>
         <Grid item xs={5}>
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={handleFilePreview}
-                checked={isFilePreviewEnabled}
-              />
-            }
-            label="Prévisualiser le fichier"
-          />
-          {isFilePreviewEnabled ? (
-            <Previzualizer services={[]} />
-            ) : (
-            <Helper {...currentHelper} />
-          )}
+          <Box sx={{display:'flex',justifyContent:'flex-end',height:'70px'}}>
+            <FormControlLabel control={<Switch onChange={handleFilePreview} checked={isFilePreviewEnabled}/>} label="Prévisualiser le fichier" />
+          </Box>
+          {isFilePreviewEnabled 
+          ? 
+        
+            'Lorem Ipsum'
+    
+          : 
+          <Helper {...currentHelper} /> 
+          }
+          
         </Grid>
       </Grid>
-    </Box>
+    </ Box>
   );
 }
