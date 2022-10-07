@@ -15,7 +15,7 @@ import { TypeFormatFlags } from 'typescript';
 
 
 type NavLinkTopBarProps = {
-  children: JSX.Element
+  children: string
   to:string
 }
 
