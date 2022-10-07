@@ -12,16 +12,20 @@ import {ApiCallExample} from "@infrastructure/views/react-ui/src/pages/ApiCallEx
 import { TypeFormatFlags } from 'typescript';
 
 
-const NavLinkTopBar = (props) => {
-  
-  
-  return (
-  <NavLink style={({ isActive }) => ({textDecoration:'none', opacity: isActive ? '1' : '0.6', fontWeight:isActive ? '600' : '400'})} {...props} >
-    <Typography sx={{textTransform:'uppercase',textDecoration:'none !important',color:'black',fontSize:'17.5px'}}>
-      {props.children}
-    </Typography>
-  </NavLink>)
+
+
+type NavLinkTopBarProps = {
+  children: string
+  to:string
 }
+
+const NavLinkTopBar =  ({children,to}:NavLinkTopBarProps) => (
+  <NavLink style={({ isActive }) => ({textDecoration:'none', opacity: isActive ? '1' : '0.6', fontWeight:isActive ? '600' : '400'})} to={to}>
+    <Typography sx={{textTransform:'uppercase',textDecoration:'none !important',color:'black',fontSize:'17.5px'}}>
+      {children}
+    </Typography>
+  </NavLink>
+)
   
 
 function TopBar() {
