@@ -6,6 +6,8 @@ import {
   Box,
   Button,
   Grid,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,6 +18,9 @@ import {
 import { Previzualizer } from "../Previzualizer";
 import { ServiceReference } from "@core/domain/serviceReference/models/service";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import HelpIcon from '@mui/icons-material/Help';
 
 interface ConfiguratorFormProps {
   handleAddService: () => void;
@@ -82,6 +87,10 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     },
   ];
 
+  const TooltipTextH1 = () => {
+    return `Configure ton application Docker grâce à l'interface`;
+  }
+
   const handleChange =
     (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setStep((old) => (newExpanded ? step : old));
@@ -90,13 +99,35 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
   return (
     <Grid container spacing={4}>
       <Grid item xs={7}>
-        <Button variant="contained" onClick={props.handleAddService}>
-          Create Service
-        </Button>
+        <Box sx={{marginBottom:2,display:'flex',gap:1,alignItems:'start'}}>
+          <Typography variant="h1">Configurateur</Typography>
+          <Tooltip placement="right" title={TooltipTextH1()}>
+            <IconButton aria-label="help" size="small">
+              <HelpIcon fontSize="small"/>
+            </IconButton>
+          </Tooltip>
+        </Box>
+        
         {services.map((service) => (
-          <Accordion key={service.key}>
-            <AccordionSummary sx={{ backgroundColor: "#F0F0F0" }}>
-              <Typography>{service.name}</Typography>
+          <Accordion key={service.key}  
+          sx={{
+            marginBottom:2,
+            border:'none',  
+            boxShadow:'none'}}>
+            <AccordionSummary sx={{ backgroundColor: "#F0F0F0" }}  expandIcon={<EditIcon/>}>
+
+              <Box sx={{display:'flex', gap : 2}}>
+                <Box>
+                 <img src='https://via.placeholder.com/60' alt={`logo de ${service.name}`} />
+                </Box>
+                <Box sx={{display:'flex',alignItems:'center'}}>
+                    <Box>
+                      <Typography variant="h3" sx={{fontSize:'17px'}}>{service.name}</Typography>
+                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.image.port?.join(':')}</Typography>
+                    </Box>
+                </Box>
+
+              </Box>
             </AccordionSummary>
             <AccordionDetails sx={{ backgroundColor: "#F0F0F0" }}>
               {accordionDetails.map((accordionDetail) => (
@@ -136,6 +167,12 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
             </AccordionDetails>
           </Accordion>
         ))}
+
+          <Box sx={{marginTop:2}}>
+            <Button variant="contained" startIcon={<AddIcon />}onClick={props.handleAddService}>
+              Ajouter un service
+            </Button>
+          </Box>
       </Grid>
       <Grid item xs={5}>
         <Previzualizer services={services} />

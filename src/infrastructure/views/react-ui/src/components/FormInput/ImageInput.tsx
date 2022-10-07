@@ -1,8 +1,9 @@
 import React, { ChangeEvent, useState } from 'react';
-import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { VolumeType, EnvType } from '../Form/ServiceForm';
 import { InputTextForm } from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 interface InputImageProps {
     setDisableNext: (disable: boolean) => void
@@ -25,6 +26,8 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     const handleVolumesChange = () => {
       setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
+      setMachineRoute('')
+      setDockerRoute('')
     }
   
     const handleVolumesDelete = (index: number) => {
@@ -35,21 +38,25 @@ export const InputImageVolumes = (props: InputImageProps) => {
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <InputTextForm label="Chemin sur votre machine" value={machineRoute} onChange={handleMachineRouteChange} />
         <InputTextForm label="Chemin dans le container" value={dockerRoute} onChange={handleDockerRouteChange} />
-        <Button variant='contained' onClick={handleVolumesChange} sx={{ margin: '0.5rem 1rem' }}>Ajouter</Button>
+        <Box>
+          <Button startIcon={<AddIcon />} variant='outlined' onClick={handleVolumesChange}>Ajouter</Button>
+        </Box>
         <Table sx={{ margin: '1rem 0' }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{width: '4rem'}}></TableCell>
-              <TableCell>Chemin local</TableCell>
-              <TableCell>Chemin container</TableCell>
+              <TableCell  sx={{width:'20px'}}></TableCell>
+              <TableCell><Typography sx={{fontWeight:600}}>Chemin local</Typography></TableCell>
+              <TableCell><Typography sx={{fontWeight:600}}>Chemin container</Typography></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {volumesList.map((volume, index) => (
               <TableRow key={volume.machineRoute}>
-                <IconButton onClick={() => handleVolumesDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
-                  <DeleteIcon />
-                </IconButton>
+                <TableCell  sx={{width:'20px'}}>
+                  <IconButton onClick={() => handleVolumesDelete(index)} component="label">
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
                 <TableCell>{volume.machineRoute}</TableCell>
                 <TableCell>{volume.dockerRoute}</TableCell>
               </TableRow>
@@ -77,6 +84,8 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     const handleEnvChange = () => {
       setEnvList([...envList, { key, value }]);
+      setKey('')
+      setValue('')
     }
   
     const handleEnvDelete = (index: number) => {
@@ -87,21 +96,25 @@ export const InputImageVolumes = (props: InputImageProps) => {
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <InputTextForm label="Clé" value={key} onChange={handleKeyChange} />
         <InputTextForm label="Valeur" value={value} onChange={handleValueChange} />
-        <Button variant='contained' onChange={handleEnvChange} size="medium" sx={{ margin: '0.5rem 1rem' }}>Ajouter</Button>
+        <Box>
+          <Button startIcon={<AddIcon />} variant='outlined' onClick={handleEnvChange}>Ajouter</Button>
+        </Box>
         <Table sx={{ margin: '1rem 0' }}>
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Clé</TableCell>
-              <TableCell>Valeur</TableCell>
+              <TableCell sx={{width:'20px'}}></TableCell>
+              <TableCell><Typography sx={{fontWeight:600}}>Clé</Typography></TableCell>
+              <TableCell><Typography sx={{fontWeight:600}}>Valeur</Typography></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {envList.map((env, index) => (
               <TableRow key={env.key}>
-                <IconButton onClick={() => handleEnvDelete(index)} sx={{ margin: '0.5rem 1rem' }} component="label">
-                  <DeleteIcon />
-                </IconButton>
+                <TableCell sx={{width:'20px'}}>
+                  <IconButton onClick={() => handleEnvDelete(index)}  component="label">
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
                 <TableCell>{env.key}</TableCell>
                 <TableCell>{env.value}</TableCell>
               </TableRow>
