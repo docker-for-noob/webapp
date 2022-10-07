@@ -9,7 +9,20 @@ import { Box, Toolbar, Typography, Button } from '@mui/material';
 import logo from './assets/images/logo.png';
 import { LandingPage } from './pages/LandingPage';
 import {ApiCallExample} from "@infrastructure/views/react-ui/src/pages/ApiCallExample";
+import { TypeFormatFlags } from 'typescript';
 
+
+const NavLinkTopBar = (props) => {
+  
+  
+  return (
+  <NavLink style={({ isActive }) => ({textDecoration:'none', opacity: isActive ? '1' : '0.6', fontWeight:isActive ? '600' : '400'})} {...props} >
+    <Typography sx={{textTransform:'uppercase',textDecoration:'none !important',color:'black',fontSize:'17.5px'}}>
+      {props.children}
+    </Typography>
+  </NavLink>)
+}
+  
 
 function TopBar() {
     return (
@@ -34,14 +47,14 @@ function TopBar() {
             </Box>
 
             <Box sx={{display:'flex',gap:2}}>
-                <NavLink style={({ isActive }) => ({textDecoration:'none', opacity: isActive ? '1' : '0.6', fontWeight:isActive ? '600' : '400'})} to="/">
-                  <LinkStyled>Formulaire</LinkStyled>
-                </NavLink>         
-                <NavLink style={({ isActive }) => ({textDecoration:'none', opacity: isActive ? '1' : '0.6', fontWeight: isActive ? '600' : '400'})} to="/configurateur" >
-                  <LinkStyled>Configurateur</LinkStyled>
-                </NavLink>
+              <NavLinkTopBar to="/" >
+                Home
+              </NavLinkTopBar>
+              <NavLinkTopBar to="/configurateur">
+                Configurateur
+              </NavLinkTopBar>
             </Box>
-
+   
           </Toolbar>
         </Box>
       </Box>
@@ -49,12 +62,6 @@ function TopBar() {
 }
 
 
-const LinkStyled = styled('span')({
-  textTransform:'uppercase',
-  textDecoration:'none !important',
-  color:'black',
-  fontSize:'17.5px'
-})
 
 
 const Footer = () => {

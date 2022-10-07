@@ -29,8 +29,16 @@ export function HomePage() {
   }
 
   return (
-    <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'80vh', margin:'auto'}}>
+    <ContainerCustom>
       {form.content}
-    </Box>
+    </ContainerCustom>
   );
 }
+
+const ContainerCustom = (props) => (
+  <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'80vh', margin:'auto'}}>
+      {props.children}
+  </Box>
+)
+
+export default ContainerCustom;

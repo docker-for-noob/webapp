@@ -1,18 +1,22 @@
 import React, { useRef, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { Container } from "@mui/system";
-import { Button, Grid, Paper, Typography } from "@mui/material";
+import { Button, Grid, Paper, Typography, useTheme } from "@mui/material";
 import fusee from "../assets/images/fusee.svg";
 import { Link } from "react-router-dom";
+import ContainerCustom from "./HomePage";
 
 export function LandingPage() {
+
+  const theme = useTheme()
+
   return (
-    <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'70vh', margin:'auto',display:'flex',alignItems:'center'}} >
+    <ContainerCustom>
       <Grid container spacing={4}>
         <Grid item xs={12} md={7} sx={{ display:'flex',alignItems:'center'}}>
           <Box sx={{maxWidth:'500px'}}>
             <Typography variant="h1" align="left">
-              Configure ton <span style={{color:'#6563FF'}}>Docker Compose</span> facilement et
+              Configure ton <span style={{color:theme.palette.primary.main}}>Docker Compose</span> facilement et
               visuellement
             </Typography>
             <Box mt={2}>
@@ -34,6 +38,6 @@ export function LandingPage() {
           <img src={fusee} alt="fusée" />
         </Grid>
       </Grid>
-    </Box>
+    </ContainerCustom>
   );
 }
