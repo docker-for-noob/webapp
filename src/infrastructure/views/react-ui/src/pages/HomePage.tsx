@@ -35,9 +35,14 @@ export function HomePage() {
   );
 }
 
-const ContainerCustom = (props) => (
+
+type ContainerCustomProps = {
+  children: JSX.Element
+}
+
+const ContainerCustom = ({ children }:  ContainerCustomProps) => (
   <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'80vh', margin:'auto'}}>
-      {props.children}
+      {children}
   </Box>
 )
 
