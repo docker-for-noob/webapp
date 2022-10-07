@@ -347,27 +347,6 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
     props.setSubstep(step);
   }, [step]);
 
-  const accordionDetails = [
-    {
-      title: "Ports",
-      fullTitle : "Choix des ports",
-      content: <InputImagePorts setDisableNext={props.setDisableNext} />,
-      step: 1,
-    },
-    {
-      title: `Volumes`,
-      fullTitle : "Choix des volumes",
-      content: <InputImageVolumes setDisableNext={props.setDisableNext} />,
-      step: 2,
-    },
-    {
-      title: `Variables d'environnements`,
-      fullTitle : "Choix des variables d'environnements",
-      content: <InputImageEnvVariables setDisableNext={props.setDisableNext} />,
-      step: 3,
-    },
-  ];
-
   const handleChange =
     (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setStep((old) => (newExpanded ? step : old));
@@ -410,6 +389,7 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
   const accordionDetails = [
     {
       title: "Ports",
+      fullTitle: "Choix des ports",
       content: <InputImagePorts
         setDisableNext={props.setDisableNext}
         handlePortsChange={handleAddPort}
@@ -418,6 +398,7 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
     },
     {
       title: `Volumes`,
+      fullTitle: "Choix des volumes",
       content: <InputImageVolumes
         setDisableNext={props.setDisableNext}
         handleAddVolume={handleAddVolume}
@@ -426,6 +407,7 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
     },
     {
       title: `Variables d'environnement`,
+      fullTitle: "Choix des variables d'environnements",
       content: <InputImageEnvVariables
        setDisableNext={props.setDisableNext}
        handleAddEnvVariable={handleAddEnvVariable}
