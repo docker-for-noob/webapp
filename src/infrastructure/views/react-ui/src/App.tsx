@@ -4,7 +4,7 @@ import { Routes, Route, NavLink } from "react-router-dom";
 import './App.css';
 
 import { HomePage } from './pages/HomePage';
-import { Box, Toolbar, Typography, Button } from '@mui/material';
+import { Box, Toolbar, Typography, Button, Link } from '@mui/material';
 import logo from './assets/images/logo.png';
 import { LandingPage } from './pages/LandingPage';
 import {ApiCallExample} from "@infrastructure/views/react-ui/src/pages/ApiCallExample";
@@ -21,14 +21,16 @@ function TopBar() {
                 alt="logo"
                 src={logo}
                 />
+              <Link href="/" sx={{ textDecoration: 'none', color: '#6563ff'}}>
                 <Typography
-                variant="h4"
-                fontWeight="bold"
-                noWrap
-                textAlign="initial"
+                  variant="h4"
+                  fontWeight="bold"
+                  noWrap
+                  textAlign="initial"
                 >
-                Docker for noob
+                  Docker for noobs
                 </Typography>
+                </Link>    
             </Box>
 
             <Box>

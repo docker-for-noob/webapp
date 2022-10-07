@@ -65,19 +65,28 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     {
       key: 1,
       title: "Ports",
-      content: <InputImagePorts setDisableNext={() => {}} />,
+      content: <InputImagePorts
+        setDisableNext={() => { }}
+        handlePortsChange={() => { }}
+      />,
       step: 1,
     },
     {
       key: 2,
       title: `Volumes`,
-      content: <InputImageVolumes setDisableNext={() => {}} />,
+      content: <InputImageVolumes
+        setDisableNext={() => { }}
+        handleAddVolume={() => { }}
+      />,
       step: 2,
     },
     {
       key: 3,
       title: `Variables d'environnement`,
-      content: <InputImageEnvVariables setDisableNext={() => {}} />,
+      content: <InputImageEnvVariables
+        setDisableNext={() => { }}
+        handleAddEnvVariable={() => { }}
+      />,
       step: 3,
     },
   ];

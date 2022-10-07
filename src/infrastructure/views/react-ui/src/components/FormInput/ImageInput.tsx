@@ -1,14 +1,16 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { VolumeType, EnvType } from '../Form/ServiceForm';
 import { InputTextForm } from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 
-interface InputImageProps {
-    setDisableNext: (disable: boolean) => void
+interface InputImageVolumesProps {
+    setDisableNext: (disable: boolean) => void;
+    handleAddVolume: (volume: volumes) => void;
   }
 
-export const InputImageVolumes = (props: InputImageProps) => {
+export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
     const [volumesList, setVolumesList] = useState<Array<VolumeType>>([]);
   
@@ -25,6 +27,7 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     const handleVolumesChange = () => {
       setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
+      props.handleAddVolume({ internal: dockerRoute, external: machineRoute });
     }
   
     const handleVolumesDelete = (index: number) => {
@@ -59,8 +62,13 @@ export const InputImageVolumes = (props: InputImageProps) => {
       </Box>
     );
   } 
+
+  interface InputImageEnvVariablesProps {
+    setDisableNext: (disable: boolean) => void;
+    handleAddEnvVariable: (envVariable: EnvType) => void;
+  }
   
-  export const InputImageEnvVariables = (props: InputImageProps) => {
+  export const InputImageEnvVariables = (props: InputImageEnvVariablesProps) => {
   
     const [envList, setEnvList] = useState<Array<EnvType>>([]);
   
@@ -77,6 +85,7 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     const handleEnvChange = () => {
       setEnvList([...envList, { key, value }]);
+      props.handleAddEnvVariable({ key, value });
     }
   
     const handleEnvDelete = (index: number) => {
@@ -111,8 +120,13 @@ export const InputImageVolumes = (props: InputImageProps) => {
       </Box>
     );
   } 
+
+  interface InputImagePortsProps {
+    setDisableNext: (disable: boolean) => void;
+    handlePortsChange: (port: port) => void;
+  }
   
-  export const InputImagePorts = (props: InputImageProps) => {
+  export const InputImagePorts = (props: InputImagePortsProps) => {
   
     const [internalPort, setInternalPort] = useState(0);
     const [externalPort, setExternalPort] = useState(0);
@@ -124,6 +138,11 @@ export const InputImageVolumes = (props: InputImageProps) => {
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
       setExternalPort(parseInt(event.target.value));
     }
+
+    useEffect(() => {
+      console.log(props);
+      props.handlePortsChange({ internal: String(internalPort ?? 0), external: String(externalPort ?? 0) });
+    }, [internalPort, externalPort]);
     
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>

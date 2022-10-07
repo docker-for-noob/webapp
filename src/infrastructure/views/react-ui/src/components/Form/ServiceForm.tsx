@@ -17,19 +17,22 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, Dispatch, SetStateAction } from "react";
 import { mockImages } from "../../mock/ServiceFormMock";
 import { mockHelpers } from "../../mock/HelperMock";
 import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../FormInput/ImageInput";
 import { HelperData, Helper } from "../Helper";
 import { Previzualizer } from "../Previzualizer";
 import { InputTextForm } from "../FormInput/BaseInput";
+import { DockerCompose, DockerContainer, port, volumes, env } from '@core/domain/dockerCompose/models/DockerImage';
+import { apiSlice } from "../../../../../redux/api/apiSlice";
+
 
 export interface ImageType {
-    id: number,
-    name: string,
-    versions: Array<VersionType>,
-    isUtils: boolean
+  id: number,
+  name: string,
+  versions: Array<VersionType>,
+  isUtils: boolean
 }
 
 export interface VersionType {
@@ -47,13 +50,22 @@ export interface EnvType {
   value: string;
 }
 
+interface ServiceFormProps {
+  handleFinish: () => void;
+  dockerCompose: DockerCompose;
+  addContainer: (container: DockerContainer) => void;
+}
+
 interface ServiceFormStepProps {
   setDisableNext: (disable: boolean) => void;
+  setContainer: Dispatch<SetStateAction<DockerContainer>>
 }
 
 interface ServiceFormStep3Props {
   setDisableNext: (disabled: boolean) => void;
   setSubstep: (substep: number) => void;
+  container: DockerContainer;
+  setContainer: Dispatch<SetStateAction<DockerContainer>>
 }
 
 export function ServiceFormStep1(props: ServiceFormStepProps) {
@@ -69,6 +81,16 @@ export function ServiceFormStep1(props: ServiceFormStepProps) {
   useEffect(() => {
     props.setDisableNext(nextStepIsDisabled());
   }, [serviceName, alias, hasAlias]);
+
+  useEffect(() => {
+    props.setContainer((prev: DockerContainer) => {
+      return {
+        ...prev,
+        ServiceName: serviceName,
+        ContainerName: alias
+      }
+    })
+  }, [serviceName, alias]);
 
   const handleServiceNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setServiceName(event.target.value);
@@ -115,12 +137,12 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
     versions: [],
     isUtils: false,
   };
-  
-  const defaultVersion = {version: '', tags: []};
+
+  const defaultVersion = { version: '', tags: [] };
 
   const [chosenImage, setChosenImage] = useState<ImageType>(defaultImage);
   const [chosenVersion, setChosenVersion] = useState<VersionType>(defaultVersion);
-  const [chosenTag, setChosenTag] = useState("");
+  const [chosenTags, setChosenTags] = useState<Array<string>>([]);
   const [imageList, setImageList] = useState<Array<ImageType>>([]);
   const [versionList, setVersionList] = useState<Array<VersionType>>([]);
   const [tagList, setTagList] = useState<Array<string>>([]);
@@ -130,20 +152,36 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
   const [isImageInputActive, setImageInputActive] = useState(true);
   const [isVersionInputActive, setVersionInputActive] = useState(false);
   const [isTagInputActive, setTagInputActive] = useState(false);
+  const { data } = apiSlice.usePopulateImageQuery();
+  console.log(data);
+
+  useEffect(() => {
+    console.log(data);
+  }, []);
+
+  useEffect(() => {
+    props.setContainer((prev: DockerContainer) => {
+      return {
+        ...prev,
+        ImageName: chosenImage.name + ':' + chosenVersion.version,
+        Tag: chosenTags.join('-')
+      }
+    })
+  }, [chosenImage, chosenVersion, chosenTags]);
 
 
   const chooseImage = (image: ImageType) => {
-      setChosenImage(image);
-      setImageSearchInput(image.name);
-      setImageList([]);
-      setVersionList(image.versions);
-      setChosenVersion(defaultVersion);
-      setVersionInputActive(true);
-      setImageInputActive(false);
+    setChosenImage(image);
+    setImageSearchInput(image.name);
+    setImageList([]);
+    setVersionList(image.versions);
+    setChosenVersion(defaultVersion);
+    setVersionInputActive(true);
+    setImageInputActive(false);
   };
 
   const handleChangeVersion = (version: VersionType | null) => {
-    if(version !== null && version.version !== "") {
+    if (version !== null && version.version !== "") {
       setVersionSearchInput(version.version);
       setChosenVersion(version);
       setTagList(version.tags);
@@ -157,17 +195,14 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
     }
   };
 
-  const handleChangeTag = (tag: string | null) => {
-    if(tag !== null && tag !== "") {
-      setTagSearchInput(tag);
-      setChosenTag(tag);
-    }
+  const handleChangeTags = (tags: string[]) => {
+    setChosenTags(tags);
   }
 
   const handleImageFilterInput = (event: ChangeEvent<HTMLInputElement>) => {
     setImageSearchInput(event.target.value);
     const listToFilter = mockImages;
-    if(event.target.value != '') {
+    if (event.target.value != '') {
       setImageList(
         listToFilter
           .filter((image) =>
@@ -183,10 +218,10 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
   };
 
   const handleNextStep = (step: number) => {
-    if(step === 1) {
+    if (step === 1) {
       setImageInputActive(false);
       setVersionInputActive(true);
-    } else if(step === 2) {
+    } else if (step === 2) {
       setVersionInputActive(false);
       setTagInputActive(true);
     }
@@ -201,7 +236,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
     } else if (step === 2) {
       setVersionInputActive(true);
       setTagInputActive(false);
-      setChosenTag("");
+      setChosenTags([]);
       setTagSearchInput("");
     }
   }
@@ -230,7 +265,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
 
   return (
     <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
-      <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive}/>
+      <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive} />
       <Grid container spacing={2}>
         {imageList.map((image) => (
           <Grid item xs={6} key={image.id}>
@@ -238,7 +273,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
           </Grid>
         ))}
       </Grid>
-      
+
       <Autocomplete
         id="version-select"
         options={versionList}
@@ -262,7 +297,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
         }}
         disabled={!isVersionInputActive}
       />
-      {isVersionInputActive && 
+      {isVersionInputActive &&
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(1)} sx={{ margin: '0.5rem 1rem' }}>Précédent</Button>
         </Box>
@@ -273,6 +308,7 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
         options={tagList}
         autoHighlight
         getOptionLabel={(option) => option}
+        multiple
         renderInput={(params) => (
           <TextField
             {...params}
@@ -285,9 +321,9 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
             }}
           />
         )}
-        value={chosenTag}
-        onChange={(event: any, newValue: string | null) => {
-          handleChangeTag(newValue);
+        value={chosenTags}
+        onChange={(event: any, newValue: string[]) => {
+          handleChangeTags(newValue);
         }}
         disabled={!isTagInputActive}
       />
@@ -304,32 +340,71 @@ export function ServiceFormStep2(props: ServiceFormStepProps) {
 export function ServiceFormStep3(props: ServiceFormStep3Props) {
   const [step, setStep] = useState(1);
 
-  useEffect(() => {
-    props.setSubstep(step);
-  }, [step]);
-
-  const accordionDetails = [
-    {
-      title: "Ports",
-      content: <InputImagePorts setDisableNext={props.setDisableNext} />,
-      step: 1,
-    },
-    {
-      title: `Volumes`,
-      content: <InputImageVolumes setDisableNext={props.setDisableNext} />,
-      step: 2,
-    },
-    {
-      title: `Variables d'environnement`,
-      content: <InputImageEnvVariables setDisableNext={props.setDisableNext} />,
-      step: 3,
-    },
-  ];
-
   const handleChange =
     (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setStep((old) => (newExpanded ? step : old));
     };
+
+  useEffect(() => {
+    props.setSubstep(step);
+  }, [step]);
+
+  const handleAddPort = (port: port) => {
+    props.setContainer((prev: DockerContainer) => {
+      return {
+        ...prev,
+        ports: [port],
+      }
+    })
+  }
+
+  const handleAddVolume = (volume: volumes) => {
+    props.setContainer((prev: DockerContainer) => {
+      const volumes = prev.Volumes ?? [];
+      console.log(volumes);
+      return {
+        ...prev,
+        Volumes: [...volumes, volume],
+      }
+    })
+  }
+
+  const handleAddEnvVariable = (envVariable: env) => {
+    props.setContainer((prev: DockerContainer) => {
+      const envVariables = prev.Env ?? [];
+      return {
+        ...prev,
+        Env: [...envVariables, envVariable],
+      }
+    })
+  }
+
+  const accordionDetails = [
+    {
+      title: "Ports",
+      content: <InputImagePorts
+        setDisableNext={props.setDisableNext}
+        handlePortsChange={handleAddPort}
+      />,
+      step: 1,
+    },
+    {
+      title: `Volumes`,
+      content: <InputImageVolumes
+        setDisableNext={props.setDisableNext}
+        handleAddVolume={handleAddVolume}
+      />,
+      step: 2,
+    },
+    {
+      title: `Variables d'environnement`,
+      content: <InputImageEnvVariables
+       setDisableNext={props.setDisableNext}
+       handleAddEnvVariable={handleAddEnvVariable}
+        />,
+      step: 3,
+    },
+  ];
 
   return (
     <form style={{ display: "flex", flexDirection: "column", padding: "1rem" }}>
@@ -370,17 +445,21 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
   );
 }
 
-interface ServiceFormProps {
-  handleFinish: () => void;
-}
-
 export function ServiceForm(props: ServiceFormProps) {
   const helpers = mockHelpers;
+
   const [activeStep, setActiveStep] = useState(0);
-  const [disableNext, setDisableNext] = useState(false);
   const [substep, setSubstep] = useState(0);
-  const [currentHelper, setCurrentHelper] = useState<HelperData>(helpers[0]);
+
+  const [disableNext, setDisableNext] = useState(false);
   const [isFilePreviewEnabled, setFilePreviewEnabled] = useState(false);
+
+  const [currentHelper, setCurrentHelper] = useState<HelperData>(helpers[0]);
+  const [container, setContainer] = useState<DockerContainer>({
+    ServiceName: "",
+    ImageName: "",
+    Tag: "",
+  });
 
   const steps = [
     "Créer un nouveau service",
@@ -390,6 +469,7 @@ export function ServiceForm(props: ServiceFormProps) {
 
   const handleNext = () => {
     if (activeStep + 1 > 2) {
+      props.addContainer(container);
       props.handleFinish();
     }
     setActiveStep(activeStep + 1);
@@ -414,14 +494,22 @@ export function ServiceForm(props: ServiceFormProps) {
   const renderStep = (step: number) => {
     switch (step) {
       case 0:
-        return <ServiceFormStep1 setDisableNext={setDisableNext} />;
+        return <ServiceFormStep1
+          setDisableNext={setDisableNext}
+          setContainer={setContainer}
+        />;
       case 1:
-        return <ServiceFormStep2 setDisableNext={setDisableNext} />;
+        return <ServiceFormStep2
+          setDisableNext={setDisableNext}
+          setContainer={setContainer}
+        />;
       case 2:
         return (
           <ServiceFormStep3
             setDisableNext={setDisableNext}
             setSubstep={setSubstep}
+            setContainer={setContainer}
+            container={container}
           />
         );
       default:
@@ -433,6 +521,10 @@ export function ServiceForm(props: ServiceFormProps) {
     const tmpSubstep = substep == 0 ? substep : substep - 1;
     setCurrentHelper(helpers[activeStep + tmpSubstep]);
   }, [activeStep, substep]);
+
+  useEffect(() => {
+    console.log(container);
+  }, [container]);
 
   return (
     <Box>
@@ -474,7 +566,7 @@ export function ServiceForm(props: ServiceFormProps) {
           />
           {isFilePreviewEnabled ? (
             <Previzualizer services={[]} />
-            ) : (
+          ) : (
             <Helper {...currentHelper} />
           )}
         </Grid>
