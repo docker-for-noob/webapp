@@ -31,7 +31,7 @@ interface ServiceFormStep3Props {
       props.setContainer((prev: DockerContainer) => {
         return {
           ...prev,
-          ports: [port],
+          Ports: [port],
         }
       })
     }

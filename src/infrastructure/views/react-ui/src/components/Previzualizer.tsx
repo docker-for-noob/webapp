@@ -1,37 +1,28 @@
 import { Box, Paper, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ServiceReference } from "@core/domain/serviceReference/models/service";
+import { DockerCompose,  } from '@core/domain/dockerCompose/models/DockerImage';
+import { yamlAdapter } from '../../../../format/yaml/YamlAdapter';
 
 interface PrevizualizerProps {
-    services: ServiceReference[];
+    dockerCompose?: DockerCompose;
+    rerender?: number;
 }
 
 export function Previzualizer(props: PrevizualizerProps) {
 
     return (
-        <Paper sx={{padding: '1rem', backgroundColor: '#5D5D5D', color: '#fff'}}>
+        <Paper sx={{ padding: '1rem', backgroundColor: '#5D5D5D', color: '#fff' }}>
             <Typography>
-                services:
+                <pre>
+                    {props.dockerCompose ?
+
+                        JSON.stringify(yamlAdapter((props.dockerCompose)), null, 2)
+                        :
+                        'No docker-compose.yml'
+                    }
+                </pre>
             </Typography>
-            {props.services.map((service) => (
-                <Box key={service.key}>
-                    <Typography>
-                        {"  container_name: "+service.name}
-                    </Typography>
-                    <Typography>
-                        {"  alias: "+service.alias}
-                    </Typography>
-                    <Typography key="image">
-                        {"  image:"}
-                    </Typography>
-                    <Typography>
-                        {"    id: "+service.image.id}
-                    </Typography>
-                    <Typography>
-                        {"    name: "+service.image.name}
-                    </Typography>
-                </Box>
-            ))}  
         </Paper>
     );
 }

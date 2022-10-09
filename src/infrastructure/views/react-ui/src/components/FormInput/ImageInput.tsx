@@ -137,12 +137,13 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   interface InputImagePortsProps {
     setDisableNext: (disable: boolean) => void;
     handlePortsChange: (port: port) => void;
+    defaultPorts?: port;
   }
   
   export const InputImagePorts = (props: InputImagePortsProps) => {
   
-    const [internalPort, setInternalPort] = useState(0);
-    const [externalPort, setExternalPort] = useState(0);
+    const [internalPort, setInternalPort] = useState(props.defaultPorts?.internal || 0);
+    const [externalPort, setExternalPort] = useState(props.defaultPorts?.external || 0);
     
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
       setInternalPort(parseInt(event.target.value));
@@ -153,7 +154,6 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     }
 
     useEffect(() => {
-      console.log(props);
       props.handlePortsChange({ internal: String(internalPort ?? 0), external: String(externalPort ?? 0) });
     }, [internalPort, externalPort]);
     

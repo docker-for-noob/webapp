@@ -169,7 +169,7 @@ export function ServiceForm(props: ServiceFormProps) {
             label="Prévisualiser le fichier"
           />
           {isFilePreviewEnabled ? (
-            <Previzualizer services={[]} />
+            <Previzualizer dockerCompose={{...props.dockerCompose, Container: [...props.dockerCompose.Container, container]}} />
           ) : (
             <Helper {...currentHelper} />
           )}

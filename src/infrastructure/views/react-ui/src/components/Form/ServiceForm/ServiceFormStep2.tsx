@@ -1,16 +1,18 @@
 import { DockerContainer } from "@core/domain/dockerCompose/models/DockerImage";
 import { Card, CardContent, Typography, CardActions, Button, Grid, Autocomplete, TextField, Box } from "@mui/material";
-import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent } from "react";
+import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent, useCallback } from "react";
 import { InputTextForm } from "../../FormInput/BaseInput";
 import { mockImages } from "../../../mock/ServiceFormMock";
 import { apiSlice } from "../../../../../../redux/api/apiSlice";
 import { ImageType, VersionType } from "./ServiceForm";
+import { PopulateImageDTO } from "../../../../../../redux/api/DTO";
+import { imageParams } from "../../../../../../redux/api/requestParams";
 
 interface ServiceFormStep2Props {
     setDisableNext: (disable: boolean) => void;
     setContainer: Dispatch<SetStateAction<DockerContainer>>
 }
-
+  
 export function ServiceFormStep2(props: ServiceFormStep2Props) {
     const defaultImage = {
       id: 0,
@@ -21,11 +23,12 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
   
     const defaultVersion = { version: '', tags: [] };
   
-    const [chosenImage, setChosenImage] = useState<ImageType>(defaultImage);
-    const [chosenVersion, setChosenVersion] = useState<VersionType>(defaultVersion);
-    const [chosenTags, setChosenTags] = useState<Array<string>>([]);
-    const [imageList, setImageList] = useState<Array<ImageType>>([]);
-    const [versionList, setVersionList] = useState<Array<VersionType>>([]);
+    const [chosenImage, setChosenImage] = useState<string>('');
+    const [chosenVersion, setChosenVersion] = useState<string>('');
+    const [chosenTags, setChosenTags] = useState<string>('');
+    const [fullImageList, setFullImageList] = useState<Array<string>>([]);
+    const [imageList, setImageList] = useState<Array<string>>([]);
+    const [versionList, setVersionList] = useState<Array<string>>([]);
     const [tagList, setTagList] = useState<Array<string>>([]);
     const [imageSearchInput, setImageSearchInput] = useState("");
     const [versionSearchInput, setVersionSearchInput] = useState("");
@@ -35,68 +38,96 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     const [isTagInputActive, setTagInputActive] = useState(false);
     const {
       usePopulateImageQuery,
-        usePopulateVersionQuery,
-        usePopulateTagQuery,
-        useFetchImageReferenceQuery,
+      usePopulateVersionQuery,
+      usePopulateTagQuery,
+      useFetchImageReferenceQuery,
     } = apiSlice;
-    let isDataLoaded = false;
     const populateImageQuery = usePopulateImageQuery();
-  
+    const populateVersionQuery = usePopulateVersionQuery({ image: chosenImage });
+    const populateTagQuery = usePopulateTagQuery({ image: chosenImage, version: chosenVersion });
+
+
     useEffect(() => {
-      const {data} = populateImageQuery;
-      console.log(data);
-      isDataLoaded = true;
-    }, []);
-  
+      const {
+        data: populatedImage,
+        error: imageError,
+        isLoading: imageLoading,
+      } = populateImageQuery;
+      //console.log(populatedImage, imageError, imageLoading);
+      setFullImageList(populatedImage?.Images ?? []);
+    }, [populateImageQuery]);  
+
+    useEffect(() => {
+      const {
+        data: populatedVersion,
+        error: versionError,
+        isLoading: versionLoading
+      } = populateVersionQuery;
+      //console.log(populatedVersion, versionError, versionLoading);
+      setVersionList(populatedVersion?.Versions ?? []);
+    }, [populateVersionQuery]);
+
+  useEffect(() => {
+    const {
+      data: populatedTag,
+      error: tagError,
+      isLoading: tagLoading
+    } = populateTagQuery;
+    //console.log(populatedTag, tagError, tagLoading);
+    console.log(populatedTag);
+    const tmpTags = populatedTag ?? [];
+    const tags: Array<string> = [];
+    tmpTags.forEach(tag => {
+      tags.push(tag.Name);
+    });
+    setTagList(tags);
+  }, [populateTagQuery]);
       
     useEffect(() => {
       props.setContainer((prev: DockerContainer) => {
         return {
           ...prev,
-          ImageName: chosenImage.name + ':' + chosenVersion.version,
-          Tag: chosenTags.join('-')
+          ImageName: chosenImage,
+          Tag: chosenTags
         }
       })
     }, [chosenImage, chosenVersion, chosenTags]);
-  
-  
-    const chooseImage = (image: ImageType) => {
+
+    const handleChooseImage = (image: string) => {
       setChosenImage(image);
-      setImageSearchInput(image.name);
+      setImageSearchInput(image);
       setImageList([]);
-      setVersionList(image.versions);
-      setChosenVersion(defaultVersion);
+      setChosenVersion('');
       setVersionInputActive(true);
       setImageInputActive(false);
     };
   
-    const handleChangeVersion = (version: VersionType | null) => {
-      if (version !== null && version.version !== "") {
-        setVersionSearchInput(version.version);
+    const handleChangeVersion = (version: string | null) => {
+      if (version !== null && version !== "") {
+        setVersionSearchInput(version);
         setChosenVersion(version);
-        setTagList(version.tags);
         setTagInputActive(true);
         setVersionInputActive(false);
       } else {
         setVersionSearchInput("");
-        setChosenVersion(defaultVersion);
+        setChosenVersion('');
         setTagList([]);
         setTagInputActive(false);
       }
     };
   
-    const handleChangeTags = (tags: string[]) => {
-      setChosenTags(tags);
+    const handleChangeTags = (tags: string | null) => {
+      setChosenTags(tags ?? '');
     }
   
     const handleImageFilterInput = (event: ChangeEvent<HTMLInputElement>) => {
       setImageSearchInput(event.target.value);
-      const listToFilter = mockImages;
+      const listToFilter = fullImageList ?? [];
       if (event.target.value != '') {
         setImageList(
           listToFilter
             .filter((image) =>
-              image.name
+              image
                 .toLowerCase()
                 .startsWith(event.target.value.toLowerCase())
             )
@@ -121,22 +152,25 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
       if (step === 1) {
         setImageInputActive(true);
         setVersionInputActive(false);
-        setChosenVersion(defaultVersion);
+        setChosenVersion('');
         setVersionSearchInput("");
       } else if (step === 2) {
         setVersionInputActive(true);
         setTagInputActive(false);
-        setChosenTags([]);
+        setChosenTags('');
         setTagSearchInput("");
       }
     }
-  
-    const ImageCard = (image: ImageType) => {
+    interface ImageCardType {
+      image: string;
+    }
+
+    const ImageCard = (image: ImageCardType) => {
       return (
         <Card sx={{ backgroundColor: "#F0F0F0", margin: "0 0.5rem" }}>
           <CardContent>
             <Typography variant="h5" component="div">
-              {image.name}
+              {image.image}
             </Typography>
           </CardContent>
           <CardActions>
@@ -144,7 +178,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
               variant="contained"
               size="medium"
               sx={{ margin: "0.5rem 1rem" }}
-              onClick={() => chooseImage(image)}
+              onClick={() => handleChooseImage(image.image)}
             >
               Choisir
             </Button>
@@ -158,8 +192,8 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive} />
         <Grid container spacing={2}>
           {imageList.map((image) => (
-            <Grid item xs={6} key={image.id}>
-              <ImageCard {...image} />
+            <Grid item xs={6} key={image}>
+              <ImageCard image={image}/>
             </Grid>
           ))}
         </Grid>
@@ -168,7 +202,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
           id="version-select"
           options={versionList}
           autoHighlight
-          getOptionLabel={(option) => option.version}
+          getOptionLabel={(option) => option}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -182,7 +216,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
             />
           )}
           value={chosenVersion}
-          onChange={(_event: any, newValue: VersionType | null) => {
+          onChange={(_event: any, newValue: string | null) => {
             handleChangeVersion(newValue);
           }}
           disabled={!isVersionInputActive}
@@ -198,7 +232,6 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
           options={tagList}
           autoHighlight
           getOptionLabel={(option) => option}
-          multiple
           renderInput={(params) => (
             <TextField
               {...params}
@@ -212,7 +245,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
             />
           )}
           value={chosenTags}
-          onChange={(_event: any, newValue: string[]) => {
+          onChange={(_event: any, newValue: string | null) => {
             handleChangeTags(newValue);
           }}
           disabled={!isTagInputActive}

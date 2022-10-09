@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { ServiceForm } from '../components/Form/ServiceForm/ServiceForm';
 import { ConfiguratorForm } from '../components/Form/ConfiguratorForm';
@@ -8,11 +8,10 @@ import { DockerCompose, DockerContainer } from '@core/domain/dockerCompose/model
 export function HomePage() {
 
   const dockerComposeVersion = process.env.REACT_APP_DOCKER_COMPOSE_VERSION ?? '';
-  const [dockerCompose, setDockerCompose] = React.useState<DockerCompose>(
-    { 
+  const [dockerCompose, setDockerCompose] = useState<DockerCompose>({ 
     DockerComposeVersion: dockerComposeVersion, 
     Container: [] 
-    });
+  });
 
   const changeForms = (index: number) => {
     setForm(forms[index]);
@@ -30,12 +29,17 @@ export function HomePage() {
     }
   }
 
+  useEffect(() => {
+    console.log(dockerCompose);
+  }, [dockerCompose]);
 
   const forms = [
     {
       title: 'Configuration',
       content: <ConfiguratorForm
         handleAddService={() => changeForms(1)}
+        dockerCompose={dockerCompose}
+        setDockerCompose={setDockerCompose}
       />
     },
     {
