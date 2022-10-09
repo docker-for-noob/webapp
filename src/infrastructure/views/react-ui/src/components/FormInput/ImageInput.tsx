@@ -5,6 +5,7 @@ import { InputTextForm } from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
+import { MAX_PORT_VALUE } from '@core/domain/dockerCompose/ports/Utils';
 
 interface InputImageVolumesProps {
     setDisableNext: (disable: boolean) => void;
@@ -144,13 +145,23 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     const [internalPort, setInternalPort] = useState(props.defaultPorts?.internal || 0);
     const [externalPort, setExternalPort] = useState(props.defaultPorts?.external || 0);
+
+    const getPortNumber = (port: number) => {
+      if (port > MAX_PORT_VALUE) {
+        return MAX_PORT_VALUE;
+      }
+      if (port < 0) {
+        return 0;
+      }
+      return port;
+    }
     
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setInternalPort(parseInt(event.target.value));
+      setInternalPort(getPortNumber(Number(event.target.value)));
     }
   
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setExternalPort(parseInt(event.target.value));
+      setExternalPort(getPortNumber(Number(event.target.value)));
     }
 
     useEffect(() => {

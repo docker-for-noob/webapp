@@ -7,6 +7,7 @@ import { apiSlice } from "../../../../../../redux/api/apiSlice";
 import { ImageType, VersionType } from "./ServiceForm";
 import { PopulateImageDTO } from "../../../../../../redux/api/DTO";
 import { imageParams } from "../../../../../../redux/api/requestParams";
+import { imageTypeUIValidator, versionUIValidator, tagsUIValidator } from "@infrastructure/validators/InputValidator";
 
 interface ServiceFormStep2Props {
     setDisableNext: (disable: boolean) => void;
@@ -189,7 +190,13 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
   
     return (
       <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
-        <InputTextForm variant="filled" label="Rechercher un type d'image" value={imageSearchInput} onChange={handleImageFilterInput} disabled={!isImageInputActive} />
+        <InputTextForm 
+        variant="filled"
+        label="Rechercher un type d'image"
+        value={imageSearchInput}
+        onChange={handleImageFilterInput}
+        disabled={!isImageInputActive}
+        error={imageTypeUIValidator(chosenImage)?.error} />
         <Grid container spacing={2}>
           {imageList.map((image) => (
             <Grid item xs={6} key={image}>
@@ -209,6 +216,8 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
               sx={{ margin: '1rem 0' }}
               label="Choisissez une version"
               variant="filled"
+              helperText={versionUIValidator(chosenVersion)?.error}
+              error={!!versionUIValidator(chosenVersion)?.error}
               inputProps={{
                 ...params.inputProps,
                 autoComplete: 'new-password', // disable autocomplete and autofill
@@ -238,6 +247,8 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
               sx={{ margin: '0 0 1rem 0' }}
               label="Choisissez vos tags"
               variant="filled"
+              helperText={tagsUIValidator(chosenTags)?.error}
+              error={!!tagsUIValidator(chosenTags)?.error}
               inputProps={{
                 ...params.inputProps,
                 autoComplete: 'new-password', // disable autocomplete and autofill
@@ -249,6 +260,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
             handleChangeTags(newValue);
           }}
           disabled={!isTagInputActive}
+          
         />
   
         {isTagInputActive &&

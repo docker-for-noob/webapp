@@ -2,6 +2,7 @@ import { DockerContainer } from "@core/domain/dockerCompose/models/DockerImage";
 import { FormControlLabel, Switch } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent } from "react";
 import { InputTextForm } from "../../FormInput/BaseInput";
+import { serviceNameUIValidator, containerNameUIValidator } from "@infrastructure/validators/InputValidator";
 
 interface ServiceFormStep1Props {
     setDisableNext: (disable: boolean) => void;
@@ -11,7 +12,6 @@ interface ServiceFormStep1Props {
 export function ServiceFormStep1(props: ServiceFormStep1Props) {
     const [serviceName, setServiceName] = useState("");
     const [alias, setAlias] = useState("");
-
     const [hasAlias, setHasAlias] = useState(false);
 
     const nextStepIsDisabled = () => {
@@ -21,6 +21,10 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
     useEffect(() => {
         props.setDisableNext(nextStepIsDisabled());
     }, [serviceName, alias, hasAlias]);
+
+    useEffect(() => {
+
+    }, [serviceName]);
 
     useEffect(() => {
         props.setContainer((prev: DockerContainer) => {
@@ -47,6 +51,7 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
     return (
         <form style={{ display: "flex", flexDirection: "column" }}>
             <InputTextForm
+                error={serviceNameUIValidator(serviceName)?.error}
                 label="Nom du service"
                 variant="filled"
                 value={serviceName}
@@ -60,6 +65,7 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
 
             {hasAlias && (
                 <InputTextForm
+                    error={containerNameUIValidator(alias)?.error}
                     variant="filled"
                     label="Alias"
                     value={alias}

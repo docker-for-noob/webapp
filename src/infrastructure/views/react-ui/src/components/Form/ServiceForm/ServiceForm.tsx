@@ -126,10 +126,6 @@ export function ServiceForm(props: ServiceFormProps) {
     setCurrentHelper(helpers[activeStep + tmpSubstep]);
   }, [activeStep, substep]);
 
-  useEffect(() => {
-    console.log(container);
-  }, [container]);
-
   return (
     <Box>
       <Box sx={{marginBottom:4}}>
