@@ -33,22 +33,24 @@ function TopBar() {
       <Box sx={{ flexGrow: 1, margin: '1.5rem 0' }}>
         <Box position="static">
           <Toolbar sx={{ backgroundColor: 'white' , display:'flex', justifyContent:'space-between', maxWidth:'1480px',width:'90%',margin:'auto'}}>
-            <Box sx={{display:'flex', alignItems:'center'}} >
-                <Box
-                component="img"
-                sx={{width: '4rem', height: '4rem', margin: '0 1rem'}}
-                alt="logo"
-                src={logo}
-                />
-                <Typography
-                variant="h4"
-                fontWeight="bold"
-                noWrap
-                textAlign="initial"
-                >
-                Docker for noob
-                </Typography>
-            </Box>
+            <NavLink to="/" style={{textDecoration:'none',color:'black'}} >
+              <Box sx={{display:'flex', alignItems:'center'}} >
+                    <Box
+                    component="img"
+                    sx={{width: '4rem', height: '4rem', margin: '0 1rem'}}
+                    alt="logo"
+                    src={logo}
+                    />
+                    <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    noWrap
+                    textAlign="initial"
+                    >
+                    Docker for noob
+                    </Typography>
+              </Box>
+            </NavLink>
 
             <Box sx={{display:'flex',gap:2}}>
               <NavLinkTopBar to="/" >

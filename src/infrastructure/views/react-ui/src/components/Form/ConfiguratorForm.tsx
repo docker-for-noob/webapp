@@ -21,6 +21,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import HelpIcon from '@mui/icons-material/Help';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ConfiguratorFormProps {
   handleAddService: () => void;
@@ -96,6 +97,11 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       setStep((old) => (newExpanded ? step : old));
     };
 
+  const handleDeleteService = (key:number) => {
+    console.log('handleDeleteService',key)
+  }
+  
+
   return (
     <Grid container spacing={4}>
       <Grid item xs={7}>
@@ -161,10 +167,16 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
                     >
                       {accordionDetail.content}
                     </AccordionDetails>
+                  
                   </Accordion>
                 </form>
               ))}
+            <Box sx={{marginTop:2,display:'flex',justifyContent:'center'}}>
+              <Button onClick={()=>{handleDeleteService(service.key)}} startIcon={<DeleteIcon />} variant="contained">Supprimer</Button>
+            </Box>
+
             </AccordionDetails>
+           
           </Accordion>
         ))}
 
