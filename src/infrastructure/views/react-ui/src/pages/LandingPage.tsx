@@ -4,7 +4,7 @@ import { Container } from "@mui/system";
 import { Button, Grid, Paper, Typography, useTheme } from "@mui/material";
 import fusee from "../assets/images/fusee.svg";
 import { Link } from "react-router-dom";
-import {ContainerCustom} from "./HomePage";
+import ContainerCustom from "./HomePage";
 
 export function LandingPage() {
 
