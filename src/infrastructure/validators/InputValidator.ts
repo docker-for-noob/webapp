@@ -56,7 +56,7 @@ const imageTypeUIValidator: Validator = (value) =>
 
 const portUIValidator = (value) =>
   combineValidator(required, mustBeString)(value);
-  
+
 export {
   portUIValidator,
   envVariableNameUIValidator,

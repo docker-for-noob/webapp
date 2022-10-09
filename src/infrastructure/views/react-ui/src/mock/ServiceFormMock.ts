@@ -1,4 +1,7 @@
-import { ImageType, VersionType } from "src/components/Form/ServiceForm/ServiceForm";
+import {
+  ImageType,
+  VersionType,
+} from "src/components/Form/ServiceForm/ServiceForm";
 
 export const mockImages: Array<ImageType> = [
   {
