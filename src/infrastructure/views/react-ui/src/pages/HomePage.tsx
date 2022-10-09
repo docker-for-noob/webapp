@@ -40,9 +40,10 @@ type ContainerCustomProps = {
   children: JSX.Element
 }
 
-export const ContainerCustom = ({ children }:  ContainerCustomProps) => (
+export function ContainerCustom({ children }:  ContainerCustomProps){
+  return(
   <Box sx={{maxWidth:'1480px',width:'90%', minHeight:'80vh', margin:'auto'}}>
       {children}
-  </Box>
-)
+  </Box>)
+}
 
