@@ -4,14 +4,15 @@ import { Container } from "@mui/system";
 import { Button, Grid, Paper, Typography, useTheme } from "@mui/material";
 import fusee from "../assets/images/fusee.svg";
 import { Link } from "react-router-dom";
-import {ContainerCustom} from "./HomePage";
+import { ContainerCustom } from "./HomePage";
+
 
 export function LandingPage() {
 
   const theme = useTheme()
 
   return (
-    <ContainerCustom>
+      <ContainerCustom>
       <Grid container spacing={4}>
         <Grid item xs={12} md={7} sx={{ display:'flex',alignItems:'center'}}>
           <Box sx={{maxWidth:'500px'}}>
