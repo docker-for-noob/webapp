@@ -1,7 +1,7 @@
 import { DockerContainer, port, volumes, env } from "@core/domain/dockerCompose/models/DockerImage";
 import { Accordion, AccordionSummary, Typography, AccordionDetails, Box, Button } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
-import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "src/components/FormInput/ImageInput";
+import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../../FormInput/ImageInput";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface ServiceFormStep3Props {

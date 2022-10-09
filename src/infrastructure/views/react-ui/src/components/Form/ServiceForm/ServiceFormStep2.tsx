@@ -1,8 +1,8 @@
 import { DockerContainer } from "@core/domain/dockerCompose/models/DockerImage";
 import { Card, CardContent, Typography, CardActions, Button, Grid, Autocomplete, TextField, Box } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent } from "react";
-import { InputTextForm } from "src/components/FormInput/BaseInput";
-import { mockImages } from "src/mock/ServiceFormMock";
+import { InputTextForm } from "../../FormInput/BaseInput";
+import { mockImages } from "../../../mock/ServiceFormMock";
 import { apiSlice } from "../../../../../../redux/api/apiSlice";
 import { ImageType, VersionType } from "./ServiceForm";
 

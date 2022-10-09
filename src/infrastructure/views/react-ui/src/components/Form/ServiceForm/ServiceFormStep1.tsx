@@ -1,7 +1,7 @@
 import { DockerContainer } from "@core/domain/dockerCompose/models/DockerImage";
 import { FormControlLabel, Switch } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent } from "react";
-import { InputTextForm } from "src/components/FormInput/BaseInput";
+import { InputTextForm } from "../../FormInput/BaseInput";
 
 interface ServiceFormStep1Props {
     setDisableNext: (disable: boolean) => void;
