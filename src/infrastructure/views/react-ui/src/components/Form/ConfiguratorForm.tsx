@@ -36,9 +36,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
 
   const handlePortChange = (index: number, port: port) => {
     const newDockerCompose = { ...props.dockerCompose };
-    console.log(newDockerCompose);
     newDockerCompose.Container[index].Ports = [port];
-    console.log("newDockerCompose", newDockerCompose);
     props.setDockerCompose(newDockerCompose);
     setRerender(rerender + 1);
   }
@@ -104,7 +102,10 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     };
 
   const handleDeleteService = (key:number) => {
-    console.log('handleDeleteService',key)
+    let newDockerCompose = props.dockerCompose
+    newDockerCompose.Container = newDockerCompose.Container.filter((service,keyService)=> keyService !== key)
+    props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
   }
   
 
@@ -178,7 +179,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
                 </form>
               ))}
             <Box sx={{marginTop:2,display:'flex',justifyContent:'center'}}>
-              <Button onClick={()=>{handleDeleteService(service.key)}} startIcon={<DeleteIcon />} variant="contained">Supprimer</Button>
+              <Button onClick={()=>{handleDeleteService(index)}} startIcon={<DeleteIcon />} variant="contained">Supprimer</Button>
             </Box>
 
             </AccordionDetails>
