@@ -9,7 +9,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 import {
   InputImageEnvVariables,
   InputImagePorts,
@@ -17,72 +17,77 @@ import {
 } from "../FormInput/ImageInput";
 import { Previzualizer } from "../Previzualizer";
 import { ServiceReference } from "@core/domain/serviceReference/models/service";
+import { DockerCompose, port, volumes, env } from '@core/domain/dockerCompose/models/DockerImage';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import HelpIcon from '@mui/icons-material/Help';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ConfiguratorFormProps {
   handleAddService: () => void;
+  dockerCompose: DockerCompose;
+  setDockerCompose: Dispatch<SetStateAction<DockerCompose>>;
 }
 
 export function ConfiguratorForm(props: ConfiguratorFormProps) {
   const [step, setStep] = useState(1);
+  const [rerender, setRerender] = useState(0);
 
-  const services: ServiceReference[] = [
-    {
-      key: 1,
-      name: "Golang",
-      alias: "go",
-      image: {
-        id: "go",
-        name: "go",
-        type: "APP",
-        port: [8080, 5050],
-        env: [
-          {
-            key: "GOPATH",
-            description: "desc",
-          }
-        ],
-      },
-    },
-    {
-      key: 2,
-      name: "Service 2",
-      alias: "service-2",
-      image: {
-        id: "image-2",
-        name: "image-2",
-        type: "APP",
-        port: [8080, 5050],
-        env: [
-          {
-            key: "value",
-            description: "description",
-          },
-        ],
-      },
-    },
-  ];
+  const handlePortChange = (index: number, port: port) => {
+    const newDockerCompose = { ...props.dockerCompose };
+    newDockerCompose.Container[index].Ports = [port];
+    props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
+  }
 
-  const accordionDetails = [
+  const handleAddVolume = (index: number, volume: volumes) => {
+    const newDockerCompose = { ...props.dockerCompose };
+    if (newDockerCompose.Container[index].Volumes !== undefined) {
+      newDockerCompose.Container[index].Volumes?.push(volume);
+    } else {
+      newDockerCompose.Container[index].Volumes = [volume];
+    }
+    props.setDockerCompose(newDockerCompose);
+  }
+
+  const handleAddEnvVariables = (index: number, env: env) => {
+    const newDockerCompose = { ...props.dockerCompose };
+    if (newDockerCompose.Container[index].Volumes !== undefined) {
+      newDockerCompose.Container[index].Env?.push(env);
+    } else {
+      newDockerCompose.Container[index].Env = [env];
+    }
+    props.setDockerCompose(newDockerCompose);
+  }
+
+  const accordionDetails = (indexContainer: number) => [
     {
       key: 1,
       title: "Ports",
-      content: <InputImagePorts setDisableNext={() => {}} />,
+      content: <InputImagePorts
+        setDisableNext={() => { }}
+        handlePortsChange={(ports) => handlePortChange(indexContainer, ports)}
+        defaultPorts={props.dockerCompose.Container[indexContainer].Ports![0]}
+      />,
       step: 1,
     },
     {
       key: 2,
       title: `Volumes`,
-      content: <InputImageVolumes setDisableNext={() => {}} />,
+      content: <InputImageVolumes
+        setDisableNext={() => { }}
+        handleAddVolume={(volume) => handleAddVolume(indexContainer, volume)}
+      />,
       step: 2,
     },
     {
       key: 3,
       title: `Variables d'environnement`,
-      content: <InputImageEnvVariables setDisableNext={() => {}} />,
+      content: <InputImageEnvVariables
+        setDisableNext={() => { }}
+        handleAddEnvVariable={(env) => handleAddEnvVariables(indexContainer, env)}
+      />,
       step: 3,
     },
   ];
@@ -96,6 +101,14 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       setStep((old) => (newExpanded ? step : old));
     };
 
+  const handleDeleteService = (key:number) => {
+    let newDockerCompose = props.dockerCompose
+    newDockerCompose.Container = newDockerCompose.Container.filter((service,keyService)=> keyService !== key)
+    props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
+  }
+  
+
   return (
     <Grid container spacing={4}>
       <Grid item xs={7}>
@@ -108,8 +121,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
           </Tooltip>
         </Box>
         
-        {services.map((service) => (
-          <Accordion key={service.key}  
+        {props.dockerCompose.Container.map((service, index) => (
+          <Accordion key={index}
           sx={{
             marginBottom:2,
             border:'none',  
@@ -118,19 +131,19 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
 
               <Box sx={{display:'flex', gap : 2}}>
                 <Box>
-                 <img src='https://via.placeholder.com/60' alt={`logo de ${service.name}`} />
+                 <img src='https://via.placeholder.com/60' alt={`logo de ${service.ServiceName}`} />
                 </Box>
                 <Box sx={{display:'flex',alignItems:'center'}}>
                     <Box>
-                      <Typography variant="h3" sx={{fontSize:'17px'}}>{service.name}</Typography>
-                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.image.port?.join(':')}</Typography>
+                      <Typography variant="h3" sx={{fontSize:'17px'}}>{service.ServiceName}</Typography>
+                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.Ports ? service.Ports[0].external+':'+service.Ports[0].internal : 'Aucun port'}</Typography>
                     </Box>
                 </Box>
 
               </Box>
             </AccordionSummary>
             <AccordionDetails sx={{ backgroundColor: "#F0F0F0" }}>
-              {accordionDetails.map((accordionDetail) => (
+              {accordionDetails(index).map((accordionDetail) => (
                 <form
                   key={accordionDetail.step}
                   style={{
@@ -161,10 +174,16 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
                     >
                       {accordionDetail.content}
                     </AccordionDetails>
+                  
                   </Accordion>
                 </form>
               ))}
+            <Box sx={{marginTop:2,display:'flex',justifyContent:'center'}}>
+              <Button onClick={()=>{handleDeleteService(index)}} startIcon={<DeleteIcon />} variant="contained">Supprimer</Button>
+            </Box>
+
             </AccordionDetails>
+           
           </Accordion>
         ))}
 
@@ -175,7 +194,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
           </Box>
       </Grid>
       <Grid item xs={5}>
-        <Previzualizer services={services} />
+        <Previzualizer dockerCompose={props.dockerCompose} rerender={rerender}/>
       </Grid>
     </Grid>
   );

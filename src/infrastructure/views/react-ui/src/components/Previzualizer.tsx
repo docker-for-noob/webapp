@@ -22,6 +22,7 @@ export function Previzualizer(props: PrevizualizerProps) {
         setIsLoading(true) 
         if(props.dockerCompose){
             const result = await downloadDockerCompose("docker-compose.yml",props.dockerCompose)
+            setIsLoading(false)
         }else{
             alert('No docker-compose.yml')
         }

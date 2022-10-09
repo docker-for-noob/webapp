@@ -6,7 +6,6 @@ import fusee from "../assets/images/fusee.svg";
 import { Link } from "react-router-dom";
 import { ContainerCustom } from "./HomePage";
 
-
 export function LandingPage() {
 
   const theme = useTheme()

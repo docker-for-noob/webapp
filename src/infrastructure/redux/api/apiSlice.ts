@@ -33,7 +33,7 @@ export const apiSlice = createApi({
     populateVersion: builder.query<VersionsFromImageDTO, imageParams>({
       query: ({ image }: imageParams) => populateVersionEndpoint(image),
     }),
-    populateTag: builder.query<TagsFromImageVersionDTO, DockerHubRequest>({
+    populateTag: builder.query<Array<TagsFromImageVersionDTO>, DockerHubRequest>({
       query: (data: DockerHubRequest) => getAllTagsFromImageVersion(data),
     }),
     fetchImageReference: builder.query<ImageReferenceDTO, imageParams>({
