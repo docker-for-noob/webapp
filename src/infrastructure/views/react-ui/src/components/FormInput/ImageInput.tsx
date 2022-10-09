@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { VolumeType, EnvType } from '../Form/ServiceForm';
+import { VolumeType, EnvType } from '../Form/ServiceForm/ServiceForm';
 import { InputTextForm } from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';

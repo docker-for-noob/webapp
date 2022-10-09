@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button, Box, Typography } from '@mui/material';
-import { ServiceForm } from '../components/Form/ServiceForm';
+import { ServiceForm } from '../components/Form/ServiceForm/ServiceForm';
 import { ConfiguratorForm } from '../components/Form/ConfiguratorForm';
 import { DockerCompose, DockerContainer } from '@core/domain/dockerCompose/models/DockerImage';
 
