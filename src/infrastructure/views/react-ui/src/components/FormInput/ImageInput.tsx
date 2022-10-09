@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import { MAX_PORT_VALUE } from '@core/domain/dockerCompose/ports/Utils';
+import { portUIValidator, envVariableNameUIValidator, envVariableValueUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
 
 interface InputImageVolumesProps {
     setDisableNext: (disable: boolean) => void;
@@ -40,10 +41,24 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Chemin sur votre machine" value={machineRoute} onChange={handleMachineRouteChange} />
-        <InputTextForm label="Chemin dans le container" value={dockerRoute} onChange={handleDockerRouteChange} />
+        <InputTextForm label="Chemin sur votre machine"
+        value={machineRoute} 
+        onChange={handleMachineRouteChange}
+        error={volumesUIValidator(machineRoute)?.error}
+        />
+        <InputTextForm label="Chemin dans le container"
+        value={dockerRoute} 
+        onChange={handleDockerRouteChange} 
+        error={volumesUIValidator(dockerRoute)?.error}
+        />
         <Box>
-          <Button startIcon={<AddIcon />} variant='outlined' onClick={handleVolumesChange}>Ajouter</Button>
+          <Button
+            startIcon={<AddIcon />}
+            variant='outlined'
+            onClick={handleVolumesChange}
+            disabled={volumesUIValidator(machineRoute)?.error != undefined || volumesUIValidator(dockerRoute)?.error != undefined}>
+              Ajouter
+            </Button>
         </Box>
         <Table sx={{ margin: '1rem 0' }}>
           <TableHead>
@@ -104,10 +119,26 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Clé" value={key} onChange={handleKeyChange} />
-        <InputTextForm label="Valeur" value={value} onChange={handleValueChange} />
+        <InputTextForm 
+        label="Clé" 
+        value={key} 
+        onChange={handleKeyChange}
+        error={envVariableNameUIValidator(key)?.error} 
+        />
+        <InputTextForm 
+        label="Valeur" 
+        value={value} 
+        onChange={handleValueChange}
+        error={envVariableValueUIValidator(value)?.error} 
+        />
         <Box>
-          <Button startIcon={<AddIcon />} variant='outlined' onClick={handleEnvChange}>Ajouter</Button>
+          <Button
+           startIcon={<AddIcon />}
+          variant='outlined'
+          disabled={envVariableNameUIValidator(key)?.error != undefined || envVariableValueUIValidator(value)?.error != undefined}
+          onClick={handleEnvChange}>
+            Ajouter
+          </Button>
         </Box>
         <Table sx={{ margin: '1rem 0' }}>
           <TableHead>
@@ -170,8 +201,18 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Port interne" type="number" value={internalPort} onChange={handleInternalPortChange} />
-        <InputTextForm label="Port externe" type="number" value={externalPort} onChange={handleExternalPortChange} />
+        <InputTextForm label="Port interne"
+        type="number" 
+        value={internalPort} 
+        onChange={handleInternalPortChange} 
+        error={portUIValidator(internalPort)?.error}
+        />
+        <InputTextForm label="Port externe" 
+        type="number" 
+        value={externalPort} 
+        onChange={handleExternalPortChange} 
+        error={portUIValidator(externalPort)?.error}
+        />
       </Box>
     );
   } 
