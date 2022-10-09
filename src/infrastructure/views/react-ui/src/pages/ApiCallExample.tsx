@@ -30,7 +30,7 @@ export function ApiCallExample() {
         data: imageReference,
         error: imageReferenceError,
         isLoading: imageReferenceLoading
-    } = useFetchImageReferenceQuery({image: 'mysql:8'}); // Data du MongoDB
+    } = useFetchImageReferenceQuery({image: 'mysql:latest'}); // Data du MongoDB
 
 
     const download = async () => {
