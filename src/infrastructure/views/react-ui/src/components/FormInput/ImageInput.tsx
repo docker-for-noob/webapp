@@ -1,15 +1,19 @@
-import React, { ChangeEvent, useState } from 'react';
-import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { VolumeType, EnvType } from '../Form/ServiceForm';
+import React, { ChangeEvent, useEffect, useState, Dispatch, SetStateAction } from 'react';
+import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { VolumeType, EnvType } from '../Form/ServiceForm/ServiceForm';
 import { InputTextForm } from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
+import { MAX_PORT_VALUE } from '@core/domain/dockerCompose/ports/Utils';
+import { portUIValidator, envVariableNameUIValidator, envVariableValueUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
 
-interface InputImageProps {
-    setDisableNext: (disable: boolean) => void
+interface InputImageVolumesProps {
+    setDisableNext: (disable: boolean) => void;
+    handleAddVolume: (volume: volumes) => void;
   }
 
-export const InputImageVolumes = (props: InputImageProps) => {
+export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
     const [volumesList, setVolumesList] = useState<Array<VolumeType>>([]);
   
@@ -26,6 +30,7 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     const handleVolumesChange = () => {
       setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
+      props.handleAddVolume({ internal: dockerRoute, external: machineRoute });
       setMachineRoute('')
       setDockerRoute('')
     }
@@ -36,10 +41,24 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Chemin sur votre machine" value={machineRoute} onChange={handleMachineRouteChange} />
-        <InputTextForm label="Chemin dans le container" value={dockerRoute} onChange={handleDockerRouteChange} />
+        <InputTextForm label="Chemin sur votre machine"
+        value={machineRoute} 
+        onChange={handleMachineRouteChange}
+        error={volumesUIValidator(machineRoute)?.error}
+        />
+        <InputTextForm label="Chemin dans le container"
+        value={dockerRoute} 
+        onChange={handleDockerRouteChange} 
+        error={volumesUIValidator(dockerRoute)?.error}
+        />
         <Box>
-          <Button startIcon={<AddIcon />} variant='outlined' onClick={handleVolumesChange}>Ajouter</Button>
+          <Button
+            startIcon={<AddIcon />}
+            variant='outlined'
+            onClick={handleVolumesChange}
+            disabled={volumesUIValidator(machineRoute)?.error != undefined || volumesUIValidator(dockerRoute)?.error != undefined}>
+              Ajouter
+            </Button>
         </Box>
         <Table sx={{ margin: '1rem 0' }}>
           <TableHead>
@@ -66,8 +85,13 @@ export const InputImageVolumes = (props: InputImageProps) => {
       </Box>
     );
   } 
+
+  interface InputImageEnvVariablesProps {
+    setDisableNext: (disable: boolean) => void;
+    handleAddEnvVariable: (envVariable: EnvType) => void;
+  }
   
-  export const InputImageEnvVariables = (props: InputImageProps) => {
+  export const InputImageEnvVariables = (props: InputImageEnvVariablesProps) => {
   
     const [envList, setEnvList] = useState<Array<EnvType>>([]);
   
@@ -84,6 +108,7 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     const handleEnvChange = () => {
       setEnvList([...envList, { key, value }]);
+      props.handleAddEnvVariable({ key, value });
       setKey('')
       setValue('')
     }
@@ -94,10 +119,26 @@ export const InputImageVolumes = (props: InputImageProps) => {
   
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Clé" value={key} onChange={handleKeyChange} />
-        <InputTextForm label="Valeur" value={value} onChange={handleValueChange} />
+        <InputTextForm 
+        label="Clé" 
+        value={key} 
+        onChange={handleKeyChange}
+        error={envVariableNameUIValidator(key)?.error} 
+        />
+        <InputTextForm 
+        label="Valeur" 
+        value={value} 
+        onChange={handleValueChange}
+        error={envVariableValueUIValidator(value)?.error} 
+        />
         <Box>
-          <Button startIcon={<AddIcon />} variant='outlined' onClick={handleEnvChange}>Ajouter</Button>
+          <Button
+           startIcon={<AddIcon />}
+          variant='outlined'
+          disabled={envVariableNameUIValidator(key)?.error != undefined || envVariableValueUIValidator(value)?.error != undefined}
+          onClick={handleEnvChange}>
+            Ajouter
+          </Button>
         </Box>
         <Table sx={{ margin: '1rem 0' }}>
           <TableHead>
@@ -124,24 +165,54 @@ export const InputImageVolumes = (props: InputImageProps) => {
       </Box>
     );
   } 
+
+  interface InputImagePortsProps {
+    setDisableNext: (disable: boolean) => void;
+    handlePortsChange: (port: port) => void;
+    defaultPorts?: port;
+  }
   
-  export const InputImagePorts = (props: InputImageProps) => {
+  export const InputImagePorts = (props: InputImagePortsProps) => {
   
-    const [internalPort, setInternalPort] = useState(0);
-    const [externalPort, setExternalPort] = useState(0);
+    const [internalPort, setInternalPort] = useState(props.defaultPorts?.internal || 0);
+    const [externalPort, setExternalPort] = useState(props.defaultPorts?.external || 0);
+
+    const getPortNumber = (port: number) => {
+      if (port > MAX_PORT_VALUE) {
+        return MAX_PORT_VALUE;
+      }
+      if (port < 0) {
+        return 0;
+      }
+      return port;
+    }
     
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setInternalPort(parseInt(event.target.value));
+      setInternalPort(getPortNumber(Number(event.target.value)));
     }
   
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setExternalPort(parseInt(event.target.value));
+      setExternalPort(getPortNumber(Number(event.target.value)));
     }
+
+    useEffect(() => {
+      props.handlePortsChange({ internal: String(internalPort ?? 0), external: String(externalPort ?? 0) });
+    }, [internalPort, externalPort]);
     
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Port interne" type="number" value={internalPort} onChange={handleInternalPortChange} />
-        <InputTextForm label="Port externe" type="number" value={externalPort} onChange={handleExternalPortChange} />
+        <InputTextForm label="Port interne"
+        type="number" 
+        value={internalPort} 
+        onChange={handleInternalPortChange} 
+        error={portUIValidator(internalPort)?.error}
+        />
+        <InputTextForm label="Port externe" 
+        type="number" 
+        value={externalPort} 
+        onChange={handleExternalPortChange} 
+        error={portUIValidator(externalPort)?.error}
+        />
       </Box>
     );
   } 

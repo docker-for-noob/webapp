@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import './App.css';
 
 import { HomePage } from './pages/HomePage';
-import { Box, Toolbar, Typography, Button } from '@mui/material';
+import { Box, Toolbar, Typography, Button, Link } from '@mui/material';
 import logo from './assets/images/logo.png';
 import { LandingPage } from './pages/LandingPage';
 import {ApiCallExample} from "@infrastructure/views/react-ui/src/pages/ApiCallExample";
@@ -33,22 +33,24 @@ function TopBar() {
       <Box sx={{ flexGrow: 1, margin: '1.5rem 0' }}>
         <Box position="static">
           <Toolbar sx={{ backgroundColor: 'white' , display:'flex', justifyContent:'space-between', maxWidth:'1480px',width:'90%',margin:'auto'}}>
-            <Box sx={{display:'flex', alignItems:'center'}} >
-                <Box
-                component="img"
-                sx={{width: '4rem', height: '4rem', margin: '0 1rem'}}
-                alt="logo"
-                src={logo}
-                />
-                <Typography
-                variant="h4"
-                fontWeight="bold"
-                noWrap
-                textAlign="initial"
-                >
-                Docker for noob
-                </Typography>
-            </Box>
+            <NavLink to="/" style={{textDecoration:'none',color:'black'}} >
+              <Box sx={{display:'flex', alignItems:'center'}} >
+                    <Box
+                    component="img"
+                    sx={{width: '4rem', height: '4rem', margin: '0 1rem'}}
+                    alt="logo"
+                    src={logo}
+                    />
+                    <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    noWrap
+                    textAlign="initial"
+                    >
+                    Docker for noob
+                    </Typography>
+              </Box>
+            </NavLink>
 
             <Box sx={{display:'flex',gap:2}}>
               <NavLinkTopBar to="/" >
