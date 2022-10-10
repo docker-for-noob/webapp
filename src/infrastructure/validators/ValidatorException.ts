@@ -2,36 +2,36 @@ import { InfrastructureException } from "../../core/application/commons/exceptio
 import { error, Error } from "../../core/application/commons/maybe/Maybe";
 
 const requiredError: Error<InfrastructureException> = error(
-  "This field is required"
+  "Ce champ est requis"
 );
 const mustBeNumberError: Error<InfrastructureException> =
-  error("Must be a number");
+  error("Ce champ doit être un Nombre");
 const mustBePositiveError: Error<InfrastructureException> = error(
-  "Must be a positive number"
+  "Ce champ doit être un Nombre positif"
 );
 const mustBeStringError: Error<InfrastructureException> =
-  error("Must be a string");
+  error("Ce champ doit être une chaine de caractère");
 const mustNotContainsWhiteSpaceError: Error<InfrastructureException> = error(
-  "Must not contain white space"
+  "Ce champ ne doit pas contenir d'espace"
 );
 const mustNotContainsUppercaseError: Error<InfrastructureException> = error(
-  "Must not contain uppercase"
+  "Ce champ ne doit pas contenir de majuscule"
 );
-const mustBePathError: Error<InfrastructureException> = error("Must be a path");
+const mustBePathError: Error<InfrastructureException> = error("Ce champ doit contenir un chemin d'accès");
 const mustBeInUpperCaseError: Error<InfrastructureException> = error(
-  "Must be in uppercase"
+    "Ce champ doit contenir exclusivement des majuscules"
 );
 const valueMustBeUniqueError: Error<InfrastructureException> = error(
-  "Value must be unique"
+  "La valeur doit être unique"
 );
 const mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError: Error<InfrastructureException> =
   error(
-    "Must not contain special characters except underscore slash and point"
+      "Ce champ ne doit pas contenir de caractère spéciaux hormis underscore, slash et les point"
   );
 const mustNotContainsSpecialCharactersExceptUnderscoreError: Error<InfrastructureException> =
-  error("Must not contain special characters except underscore");
+  error("Ce champ ne doit pas contenir de caractère spéciaux hormis underscore");
 const mustNotContainsSpecialCharactersExceptEqualsError: Error<InfrastructureException> =
-  error("Must not contain special characters except equal");
+  error("\"Ce champ ne doit pas contenir de caractère spéciaux hormis égale");
 
 export {
   requiredError,
