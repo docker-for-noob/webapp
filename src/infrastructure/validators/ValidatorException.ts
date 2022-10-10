@@ -31,7 +31,7 @@ const mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPointError: Error<
 const mustNotContainsSpecialCharactersExceptUnderscoreError: Error<InfrastructureException> =
   error("Ce champ ne doit pas contenir de caractère spéciaux hormis underscore");
 const mustNotContainsSpecialCharactersExceptEqualsError: Error<InfrastructureException> =
-  error("\"Ce champ ne doit pas contenir de caractère spéciaux hormis égale");
+  error("Ce champ ne doit pas contenir de caractère spéciaux hormis égale");
 
 export {
   requiredError,
