@@ -41,7 +41,6 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
       usePopulateImageQuery,
       usePopulateVersionQuery,
       usePopulateTagQuery,
-      useFetchImageReferenceQuery,
     } = apiSlice;
     const populateImageQuery = usePopulateImageQuery();
     const populateVersionQuery = usePopulateVersionQuery({ image: chosenImage });

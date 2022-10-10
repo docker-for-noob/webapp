@@ -3,6 +3,7 @@ import { Accordion, AccordionSummary, Typography, AccordionDetails, Box, Button 
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../../FormInput/ImageInput";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { apiSlice } from "../../../../../../redux/api/apiSlice";
 
 interface ServiceFormStep3Props {
     setDisableNext: (disabled: boolean) => void;
@@ -13,10 +14,23 @@ interface ServiceFormStep3Props {
   
   export function ServiceFormStep3(props: ServiceFormStep3Props) {
     const [step, setStep] = useState(1);
+
+    const {useFetchImageReferenceQuery} = apiSlice;
+    const imageReferenceQuery = useFetchImageReferenceQuery({ image: props.container.ImageName });
+
   
     useEffect(() => {
       props.setSubstep(step);
     }, [step]);
+
+    useEffect(() => {
+      const {
+        data: imageReferenceData,
+        error: imageReferenceError,
+        isLoading: imageReferenceLoading,
+      } = imageReferenceQuery;
+      console.log(imageReferenceData, imageReferenceError, imageReferenceLoading);
+    }, [imageReferenceQuery]);
   
     const handleChange =
       (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {

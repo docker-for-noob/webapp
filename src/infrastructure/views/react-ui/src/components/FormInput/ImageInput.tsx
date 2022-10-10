@@ -174,25 +174,39 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
   export const InputImagePorts = (props: InputImagePortsProps) => {
   
-    const [internalPort, setInternalPort] = useState(props.defaultPorts?.internal || 0);
-    const [externalPort, setExternalPort] = useState(props.defaultPorts?.external || 0);
+    const [internalPort, setInternalPort] = useState(props.defaultPorts?.internal || '0');
+    const [externalPort, setExternalPort] = useState(props.defaultPorts?.external || '0');
 
-    const getPortNumber = (port: number) => {
-      if (port > MAX_PORT_VALUE) {
-        return MAX_PORT_VALUE;
+    const [portList, setPortList] = useState<Array<port>>([]);
+
+
+    const handleAddPort = () => {
+      setPortList([...portList, { internal: internalPort, external: externalPort }]);
+      props.handlePortsChange({ internal: internalPort, external: externalPort });
+      setInternalPort('')
+      setExternalPort('')
+    }
+
+    const handlePortDelete = (index: number) => {
+      setPortList(portList.filter((_, i) => i !== index));
+    }
+
+    const getPortNumber = (port: string|number): string => {
+      if (Number(port) > MAX_PORT_VALUE) {
+        return MAX_PORT_VALUE.toString();
       }
-      if (port < 0) {
-        return 0;
+      if (Number(port) < 0) {
+        return '0';
       }
-      return port;
+      return port.toString();
     }
     
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setInternalPort(getPortNumber(Number(event.target.value)));
+      setInternalPort(getPortNumber(event.target.value));
     }
   
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setExternalPort(getPortNumber(Number(event.target.value)));
+      setExternalPort(getPortNumber(event.target.value));
     }
 
     useEffect(() => {
@@ -213,6 +227,37 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
         onChange={handleExternalPortChange} 
         error={portUIValidator(externalPort)?.error}
         />
-      </Box>
+        <Box>
+          <Button
+            startIcon={<AddIcon />}
+            variant='outlined'
+            disabled={portUIValidator(internalPort)?.error != undefined || portUIValidator(externalPort)?.error != undefined}
+            onClick={handleAddPort}>
+            Ajouter
+          </Button>
+        </Box>
+        <Table sx={{ margin: '1rem 0' }}>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: '20px' }}></TableCell>
+              <TableCell><Typography sx={{ fontWeight: 600 }}>Clé</Typography></TableCell>
+              <TableCell><Typography sx={{ fontWeight: 600 }}>Valeur</Typography></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {portList.map((port, index) => (
+              <TableRow key={port.internal}>
+                <TableCell sx={{ width: '20px' }}>
+                  <IconButton onClick={() => handlePortDelete(index)} component="label">
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>{port.internal}</TableCell>
+                <TableCell>{port.external}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>   
     );
   } 
