@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import { MAX_PORT_VALUE } from '@core/domain/dockerCompose/ports/Utils';
-import { portUIValidator, envVariableNameUIValidator, envVariableValueUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
+import { portUIValidator, envVariableNameUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
 
 interface InputImageVolumesProps {
     setDisableNext: (disable: boolean) => void;
@@ -129,13 +129,12 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
         label="Valeur" 
         value={value} 
         onChange={handleValueChange}
-        error={envVariableValueUIValidator(value)?.error} 
         />
         <Box>
           <Button
            startIcon={<AddIcon />}
           variant='outlined'
-          disabled={envVariableNameUIValidator(key)?.error != undefined || envVariableValueUIValidator(value)?.error != undefined}
+          disabled={envVariableNameUIValidator(key)?.error != undefined}
           onClick={handleEnvChange}>
             Ajouter
           </Button>

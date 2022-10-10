@@ -11,7 +11,6 @@ import {
   containerNameUIValidator,
   envVariableNameUIValidator,
   envVariablePathUIValidator,
-  envVariableValueUIValidator,
   imageTypeUIValidator,
   languageUIValidator,
   portUIValidator,
@@ -60,21 +59,6 @@ test("an env variable in lowercase has been sent and return an error message", (
   expect(envVariableNameUIValidator(initial)).toStrictEqual(
     mustBeInUpperCaseError
   );
-});
-
-test("no env value has been sent and return an error message", () => {
-  const initial = undefined;
-  expect(envVariableValueUIValidator(initial)).toStrictEqual(requiredError);
-});
-
-test("an env value as int has been sent and return undefined", () => {
-  const initial = 5679;
-  expect(envVariableValueUIValidator(initial)).toStrictEqual(undefined);
-});
-
-test("an env value as string has been sent and return undefined", () => {
-  const initial = "5679";
-  expect(envVariableValueUIValidator(initial)).toStrictEqual(undefined);
 });
 
 test("a valid env path func has been sent and return undefined", () => {
