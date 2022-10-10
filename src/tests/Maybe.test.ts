@@ -2,12 +2,14 @@ import {
   Error,
   error,
   getError,
-  getResult, handleError,
+  getResult,
+  handleError,
   isError,
   isSuccess,
   Maybe,
   Success,
-  success, suggest, warning,
+  success,
+  warning,
 } from "../core/application/commons/maybe/Maybe";
 
 const isInLowerCase = (expr: string): Maybe<boolean> => {
