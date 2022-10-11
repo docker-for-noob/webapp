@@ -6,7 +6,6 @@ import { Document } from "yaml";
 import { toYaml } from "../../../../infrastructure/format/yaml/FormatDependency";
 import YAML from "yaml";
 
-
 const formatDockerComposeToYaml = async (
   data: DockerCompose
 ): Promise<Maybe<Document>> => {
@@ -18,10 +17,9 @@ const formatDockerComposeToYaml = async (
 };
 
 const formatDockerComposeToPrevisualisation = (data: DockerCompose): string => {
-
   const FormattedData = yamlAdapter(data);
 
-  return YAML.stringify(FormattedData)
-}
+  return YAML.stringify(FormattedData);
+};
 
 export { formatDockerComposeToYaml, formatDockerComposeToPrevisualisation };
