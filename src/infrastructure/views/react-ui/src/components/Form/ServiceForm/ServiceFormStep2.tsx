@@ -167,12 +167,29 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     }
 
     const ImageCard = (image: ImageCardType) => {
+
+      const generateImageUrl =(imageName: string) => {
+        return process.env.REACT_APP_IMAGE_URL + "/library-" + imageName + "-logo.png";
+      };
+
+      const defaultImage = "https://cdn-icons-png.flaticon.com/512/3037/3037071.png";
+
       return (
         <Card sx={{ backgroundColor: "#F0F0F0", margin: "0 0.5rem" }}>
           <CardContent>
-            <Typography variant="h5" component="div">
-              {image.image}
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={generateImageUrl(image.image)}
+                onError={(e) => {
+                  e.currentTarget.src = defaultImage;
+                }}
+                alt={image.image}
+                style={{ width: 64, height: 64, marginRight: "1rem" }}
+              />
+              <Typography variant="h6" component="div" style={{ overflowWrap: "anywhere" }}>
+                {image.image}
+              </Typography>
+            </Box>
           </CardContent>
           <CardActions>
             <Button
