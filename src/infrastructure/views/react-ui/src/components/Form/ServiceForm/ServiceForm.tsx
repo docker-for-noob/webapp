@@ -77,6 +77,11 @@ export function ServiceForm(props: ServiceFormProps) {
       if(!disableNext){
         handleNext();
       }
+    } else if (evt.code == 'Backspace') {
+      evt.preventDefault();
+      if (!disablePrev()) {
+        handleBack();
+      }
     }
   });
 
