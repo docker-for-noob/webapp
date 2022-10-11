@@ -1,5 +1,16 @@
 import React from 'react';
-import { FormControl, InputLabel, FilledInput, Input, TextField } from "@mui/material";
+import {
+    FormControl,
+    TextField,
+    Typography,
+    useTheme
+} from "@mui/material";
+import {
+    acquireHelperText,
+    acquireValidationColor,
+    handleError,
+    Maybe
+} from "@core/application/commons/maybe/Maybe";
 
 interface InputTextFormProps {
     label: string;
@@ -8,12 +19,15 @@ interface InputTextFormProps {
     variant?: "standard" | "outlined" | "filled" | undefined;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     disabled?: boolean;
-    error?: string;
+    error?: Maybe<string>;
 }
 
 export function InputTextForm(props: InputTextFormProps) {
+    const theme = useTheme()
+    const color = acquireValidationColor(props.error)
+
     return (
-        <FormControl sx={{ margin: '1rem 0' }}>
+        <FormControl sx={{margin: '1rem 0'}}>
             <TextField
                 label={props.label}
                 value={props.value}
@@ -21,8 +35,12 @@ export function InputTextForm(props: InputTextFormProps) {
                 variant={props.variant || 'standard'}
                 onChange={props.onChange}
                 disabled={props.disabled}
-                error={props.error ? true : false}
-                helperText={props.error}
+                error={handleError(props.error)}
+                color={color}
+                focused={handleError(props.error)}
+                helperText={<Typography sx={{color: theme.palette[color!].main}}>
+                    {acquireHelperText(props.error)}
+                </Typography>}
             />
         </FormControl>
     );

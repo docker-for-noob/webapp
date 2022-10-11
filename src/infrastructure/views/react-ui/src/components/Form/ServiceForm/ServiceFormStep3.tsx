@@ -160,15 +160,12 @@ interface ServiceFormStep3Props {
         {accordionDetails.map((accordionDetail) => (
           <Accordion
             key={accordionDetail.step}
-            
             expanded={step == accordionDetail.step}
             onChange={handleChange(accordionDetail.step)}
             sx={{
               marginBottom:2,
               border:'none',  
               boxShadow:'none',
-  
-  
             }}
           >
             <AccordionSummary sx={{ backgroundColor: "#F0F0F0",paddingX:3} } expandIcon={<ExpandMoreIcon />}>
@@ -202,6 +199,5 @@ interface ServiceFormStep3Props {
           </Accordion>
         ))}
       </form>
-      
     );
   }

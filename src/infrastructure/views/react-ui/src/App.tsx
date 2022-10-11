@@ -10,6 +10,7 @@ import logo from './assets/images/logo.png';
 import { LandingPage } from './pages/LandingPage';
 import {ApiCallExample} from "@infrastructure/views/react-ui/src/pages/ApiCallExample";
 import { TypeFormatFlags } from 'typescript';
+import {InputTest} from "@infrastructure/views/react-ui/src/pages/inputTest";
 
 
 
@@ -86,6 +87,7 @@ export function App() {
              <TopBar />
             <Routes>
                 <Route path="/" element={<LandingPage />} />
+                <Route path="/test" element={<InputTest />} />
                 <Route path="/ApiCall" element={<ApiCallExample />} />
                 <Route path="/configurateur" element={<HomePage />} />
             </Routes>

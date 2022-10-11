@@ -21,11 +21,6 @@ import {
 } from "../infrastructure/validators/InputValidator";
 import { ValidatorService } from "../core/domain/dockerCompose/service/validator/ValidatorService";
 
-import {
-  mustBeString,
-  required,
-} from "../infrastructure/validators/ValidatorDependance";
-
 test("no networking has been sent and return an error", () => {
   const initial = undefined;
   const actual = ["8080", "192.168.172.1"];
@@ -241,7 +236,3 @@ test("an unvalid volume path has been sent and return an error message", () => {
   expect(envVariablePathUIValidator(initial)).toStrictEqual(mustBePathError);
 });
 
-test("a service name with Special Character has been sent and return an error", () => {
-  const initial = "test";
-  expect(ValidatorService.portMustBeUnique(initial)).toStrictEqual(undefined);
-});
