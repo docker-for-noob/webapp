@@ -129,8 +129,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     return `Configure ton application Docker grâce à l'interface`;
   }
 
-  const handleChange =
-    (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+  const handleChange = (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setStep((old) => (newExpanded ? step : old));
     };
 

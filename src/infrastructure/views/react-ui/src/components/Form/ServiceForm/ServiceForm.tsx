@@ -118,6 +118,7 @@ export function ServiceForm(props: ServiceFormProps) {
       case 0:
         return <ServiceFormStep1
           setDisableNext={setDisableNext}
+          dockerCompose={props.dockerCompose}
           setContainer={setContainer}
           container={container}
         />;
