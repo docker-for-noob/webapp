@@ -71,6 +71,15 @@ export function ServiceForm(props: ServiceFormProps) {
     "Configurer l'image",
   ];
 
+  window.addEventListener('keydown', (evt) => {
+    if(evt.code == 'Enter') {
+      evt.preventDefault();
+      if(!disableNext){
+        handleNext();
+      }
+    }
+  });
+
   const handleNext = () => {
     if (activeStep + 1 > 2) {
       props.addContainer(container);
