@@ -29,13 +29,13 @@ interface ServiceFormStep3Props {
         isLoading: imageReferenceLoading,
       } = imageReferenceQuery;
       imageReferenceData?.Workdir?.forEach((volume) => {
-        handleAddVolume({internal: volume, external: volume});
+        handleAddVolume({host: volume, container: volume});
       });
       imageReferenceData?.Env?.forEach((env) => {
         handleAddEnvVariable({ key: env.Key, value: env.Desc });
       });
       imageReferenceData?.Port?.forEach((port) => {
-        handleAddPort({ internal: port, external: port });
+        handleAddPort({ host: port, container: port });
       });
       setStep(1);
     }, [imageReferenceQuery]);
@@ -188,7 +188,6 @@ interface ServiceFormStep3Props {
                   </Button>
                 </Box>
               }
-              
             </AccordionDetails>
           </Accordion>
         ))}

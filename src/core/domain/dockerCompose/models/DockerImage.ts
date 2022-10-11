@@ -1,14 +1,14 @@
-export type InternalExternal<T> = {
-  internal: T;
-  external: T;
+export type HostContainer<T> = {
+  host: T;
+  container: T;
 };
 export type kvp<T> = {
   key: string;
   value: T;
 };
 
-export type port = InternalExternal<string>;
-export type volumes = InternalExternal<string>;
+export type port = HostContainer<string>;
+export type volumes = HostContainer<string>;
 export type env = kvp<string>;
 export type envArray = env[] | undefined;
 

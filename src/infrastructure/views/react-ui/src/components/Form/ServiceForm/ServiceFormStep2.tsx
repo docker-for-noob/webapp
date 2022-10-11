@@ -8,6 +8,7 @@ import { ImageType, VersionType } from "./ServiceForm";
 import { PopulateImageDTO, TagsFromImageVersionDTO } from "../../../../../../redux/api/DTO";
 import { imageParams } from "../../../../../../redux/api/requestParams";
 import { imageTypeUIValidator, versionUIValidator, tagsUIValidator } from "@infrastructure/validators/InputValidator";
+import ContainerImage from "../../ContainerImage";
 
 interface ServiceFormStep2Props {
     setDisableNext: (disable: boolean) => void;
@@ -38,6 +39,14 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     const populateTagQuery = usePopulateTagQuery({ image: chosenImage, version: chosenVersion });
 
 
+  const nextStepIsDisabled = () => {
+      return chosenImage === '' || chosenVersion === '' || chosenTags === '';
+  };
+
+  useEffect(() => {
+      props.setDisableNext(nextStepIsDisabled());
+  }, [chosenImage, chosenVersion, chosenTags]);
+    
     useEffect(() => {
       const {
         data: populatedImage,
@@ -151,9 +160,12 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
       return (
         <Card sx={{ backgroundColor: "#F0F0F0", margin: "0 0.5rem" }}>
           <CardContent>
-            <Typography variant="h5" component="div">
-              {image.image}
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                <ContainerImage imageName={image.image} />
+                <Typography variant="h6" component="div" style={{ overflowWrap: "anywhere" }}>
+                    {image.image}
+                </Typography>
+            </Box>
           </CardContent>
           <CardActions>
             <Button

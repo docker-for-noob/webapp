@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DockerCompose, DockerContainer, env, envArray, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import { MAX_PORT_VALUE } from '@core/domain/dockerCompose/ports/Utils';
-import { portUIValidator, envVariableNameUIValidator, envVariableValueUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
+import { portUIValidator, envVariableNameUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
 
 interface InputImageVolumesProps {
     setDisableNext: (disable: boolean) => void;
@@ -35,10 +35,10 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     }
   
     const handleVolumesChange = () => {
-      setVolumesList([...volumesList, { internal: dockerRoute, external: machineRoute }]);
-      props.handleAddVolume({ internal: dockerRoute, external: machineRoute });
-      setMachineRoute('');
-      setDockerRoute('');
+      setVolumesList([...volumesList, { host: machineRoute, container: dockerRoute }]);
+      props.handleAddVolume({ host: machineRoute, container: dockerRoute });
+      setMachineRoute('')
+      setDockerRoute('')
     }
   
     const handleVolumesDelete = (index: number) => {
@@ -71,20 +71,20 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           <TableHead>
             <TableRow>
               <TableCell  sx={{width:'20px'}}></TableCell>
-              <TableCell><Typography sx={{fontWeight:600}}>Chemin local</Typography></TableCell>
+              <TableCell><Typography sx={{fontWeight:600}}>Chemin machine</Typography></TableCell>
               <TableCell><Typography sx={{fontWeight:600}}>Chemin container</Typography></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {volumesList.map((volume, index) => (
-              <TableRow key={volume.internal}>
+              <TableRow key={index}>
                 <TableCell  sx={{width:'20px'}}>
                   <IconButton onClick={() => handleVolumesDelete(index)} component="label">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
-                <TableCell>{volume.external}</TableCell>
-                <TableCell>{volume.internal}</TableCell>
+                <TableCell>{volume.host}</TableCell>
+                <TableCell>{volume.container}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -143,13 +143,12 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
         label="Valeur" 
         value={value} 
         onChange={handleValueChange}
-        error={envVariableValueUIValidator(value)?.error} 
         />
         <Box>
           <Button
            startIcon={<AddIcon />}
           variant='outlined'
-          disabled={envVariableNameUIValidator(key)?.error != undefined || envVariableValueUIValidator(value)?.error != undefined}
+          disabled={envVariableNameUIValidator(key)?.error != undefined}
           onClick={handleEnvChange}>
             Ajouter
           </Button>
@@ -164,7 +163,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           </TableHead>
           <TableBody>
             {envList.map((env, index) => (
-              <TableRow key={env.key}>
+              <TableRow key={index}>
                 <TableCell sx={{width:'20px'}}>
                   <IconButton onClick={() => handleEnvDelete(index)}  component="label">
                     <DeleteIcon />
@@ -191,18 +190,18 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
     const [portList, setPortList] = useState<Array<port>>(props.currentPorts);
   
-    const [internalPort, setInternalPort] = useState('0');
-    const [externalPort, setExternalPort] = useState('0');
+    const [internalPort, setInternalPort] = useState(0);
+    const [externalPort, setExternalPort] = useState(0);
 
     useEffect(() => {
       setPortList(props.currentPorts);
     }, [props.currentPorts]);
 
     const handleAddPort = () => {
-      setPortList([...portList, { internal: internalPort, external: externalPort }]);
-      props.handleAddPort({ internal: internalPort, external: externalPort });
-      setInternalPort('');
-      setExternalPort('');
+      setPortList([...portList, { host: String(internalPort), container: String(externalPort) }]);
+      props.handleAddPort({ host: String(internalPort), container: String(externalPort) });
+      setInternalPort(0);
+      setExternalPort(0);
     }
 
     const handlePortDelete = (index: number) => {
@@ -210,43 +209,43 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
       props.handleRemovePort(index);
     }
 
-    const getPortNumber = (port: string|number): string => {
-      if (Number(port) > MAX_PORT_VALUE) {
-        return MAX_PORT_VALUE.toString();
+    const getPortNumber = (port: number): number => {
+      if (port > MAX_PORT_VALUE) {
+        return MAX_PORT_VALUE;
       }
-      if (Number(port) < 0) {
-        return '0';
+      if (port < 0) {
+        return 0;
       }
-      return port.toString();
+      return port;
     }
     
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setInternalPort(getPortNumber(event.target.value));
+      setInternalPort(getPortNumber(Number(event.target.value)));
     }
-  
+
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setExternalPort(getPortNumber(event.target.value));
+      setExternalPort(getPortNumber(Number(event.target.value)));
     }
     
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Port interne"
-        type="number" 
-        value={internalPort} 
-        onChange={handleInternalPortChange} 
-        error={portUIValidator(internalPort)?.error}
+        <InputTextForm label="Port machine"
+        type="number"
+        value={internalPort}
+        onChange={handleInternalPortChange}
+        error={portUIValidator(String(internalPort))?.error}
         />
-        <InputTextForm label="Port externe" 
-        type="number" 
-        value={externalPort} 
-        onChange={handleExternalPortChange} 
-        error={portUIValidator(externalPort)?.error}
+        <InputTextForm label="Port container"
+        type="number"
+        value={externalPort}
+        onChange={handleExternalPortChange}
+        error={portUIValidator(String(externalPort))?.error}
         />
         <Box>
           <Button
             startIcon={<AddIcon />}
             variant='outlined'
-            disabled={portUIValidator(internalPort)?.error != undefined || portUIValidator(externalPort)?.error != undefined}
+            disabled={portUIValidator(String(internalPort))?.error != undefined || portUIValidator(String(externalPort))?.error != undefined}
             onClick={handleAddPort}>
             Ajouter
           </Button>
@@ -261,18 +260,18 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           </TableHead>
           <TableBody>
             {portList.map((port, index) => (
-              <TableRow key={port.internal}>
+              <TableRow key={index}>
                 <TableCell sx={{ width: '20px' }}>
                   <IconButton onClick={() => handlePortDelete(index)} component="label">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
-                <TableCell>{port.internal}</TableCell>
-                <TableCell>{port.external}</TableCell>
+                <TableCell>{port.host}</TableCell>
+                <TableCell>{port.container}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </Box>   
     );
-  } 
+  };
