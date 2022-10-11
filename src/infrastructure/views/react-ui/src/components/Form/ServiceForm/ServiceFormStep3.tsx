@@ -28,7 +28,16 @@ interface ServiceFormStep3Props {
         error: imageReferenceError,
         isLoading: imageReferenceLoading,
       } = imageReferenceQuery;
-      console.log(imageReferenceData, imageReferenceError, imageReferenceLoading);
+      imageReferenceData?.Workdir?.forEach((volume) => {
+        handleAddVolume({internal: volume, external: volume});
+      });
+      imageReferenceData?.Env?.forEach((env) => {
+        handleAddEnvVariable({ key: env.Key, value: env.Desc });
+      });
+      imageReferenceData?.Port?.forEach((port) => {
+        handleAddPort({ internal: port, external: port });
+      });
+      setStep(1);
     }, [imageReferenceQuery]);
   
     const handleChange =
@@ -130,7 +139,7 @@ interface ServiceFormStep3Props {
          setDisableNext={props.setDisableNext}
          handleAddEnvVariable={handleAddEnvVariable}
          handleRemoveEnvVariable={handleRemoveEnvVariable}
-         currentEnv={props.container.Env}
+         currentEnv={props.container.Env ?? []}
           />,
         step: 3,
       },

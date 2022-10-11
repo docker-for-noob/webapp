@@ -21,6 +21,10 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     const [machineRoute, setMachineRoute] = useState("");
     const [dockerRoute, setDockerRoute] = useState("");
+
+    useEffect(() => {
+      setVolumesList(props.currentVolumes);
+    }, [props.currentVolumes]);
   
     const handleMachineRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
       setMachineRoute(event.target.value);
@@ -93,7 +97,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     setDisableNext: (disable: boolean) => void;
     handleAddEnvVariable: (envVariable: env) => void;
     handleRemoveEnvVariable: (index: number) => void;
-    currentEnv: envArray;
+    currentEnv: Array<env>;
   }
   
   export const InputImageEnvVariables = (props: InputImageEnvVariablesProps) => {
@@ -102,7 +106,11 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     const [key, setKey] = useState("");
     const [value, setValue] = useState("");
-  
+
+    useEffect(() => {
+      setEnvList(props.currentEnv);
+    }, [props.currentEnv]);
+
     const handleKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
       setKey(event.target.value);
     }
@@ -185,6 +193,10 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     const [internalPort, setInternalPort] = useState('0');
     const [externalPort, setExternalPort] = useState('0');
+
+    useEffect(() => {
+      setPortList(props.currentPorts);
+    }, [props.currentPorts]);
 
     const handleAddPort = () => {
       setPortList([...portList, { internal: internalPort, external: externalPort }]);
