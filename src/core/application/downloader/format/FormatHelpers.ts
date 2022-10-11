@@ -1,7 +1,7 @@
 import {
   DockerContainer,
   env,
-  InternalExternal,
+  HostContainer,
 } from "../../../domain/dockerCompose/models/DockerImage";
 
 const formatImageName = (data: DockerContainer): string => {
@@ -9,10 +9,10 @@ const formatImageName = (data: DockerContainer): string => {
   return data.ImageName;
 };
 const formatIEArrayToStringArray = <T>(
-  data?: InternalExternal<T>[]
+  data?: HostContainer<T>[]
 ): string[] | undefined => data?.map(formatPrimitiveIEToString<T>);
-const formatPrimitiveIEToString = <T>(e: InternalExternal<T>): string =>
-  [e.internal, e.external].join(":");
+const formatPrimitiveIEToString = <T>(e: HostContainer<T>): string =>
+  [e.host, e.container].join(":");
 
 const formatEnvVarToKVPObject = (data?: env[]): any =>
   data && {

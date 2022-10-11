@@ -30,7 +30,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     const handleVolumesChange = () => {
       setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
-      props.handleAddVolume({ internal: dockerRoute, external: machineRoute });
+      props.handleAddVolume({ host: machineRoute, container: dockerRoute });
       setMachineRoute('')
       setDockerRoute('')
     }
@@ -64,7 +64,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           <TableHead>
             <TableRow>
               <TableCell  sx={{width:'20px'}}></TableCell>
-              <TableCell><Typography sx={{fontWeight:600}}>Chemin local</Typography></TableCell>
+              <TableCell><Typography sx={{fontWeight:600}}>Chemin machine</Typography></TableCell>
               <TableCell><Typography sx={{fontWeight:600}}>Chemin container</Typography></TableCell>
             </TableRow>
           </TableHead>
@@ -174,8 +174,8 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
   export const InputImagePorts = (props: InputImagePortsProps) => {
   
-    const [internalPort, setInternalPort] = useState(props.defaultPorts?.internal || 0);
-    const [externalPort, setExternalPort] = useState(props.defaultPorts?.external || 0);
+    const [internalPort, setInternalPort] = useState(props.defaultPorts?.host || 0);
+    const [externalPort, setExternalPort] = useState(props.defaultPorts?.container || 0);
 
     const getPortNumber = (port: number) => {
       if (port > MAX_PORT_VALUE) {
@@ -196,18 +196,18 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     }
 
     useEffect(() => {
-      props.handlePortsChange({ internal: String(internalPort ?? 0), external: String(externalPort ?? 0) });
+      props.handlePortsChange({ host: String(internalPort ?? 0), container: String(externalPort ?? 0) });
     }, [internalPort, externalPort]);
     
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <InputTextForm label="Port interne"
+        <InputTextForm label="Port machine"
         type="number" 
         value={internalPort} 
         onChange={handleInternalPortChange} 
         error={portUIValidator(internalPort)?.error}
         />
-        <InputTextForm label="Port externe" 
+        <InputTextForm label="Port container"
         type="number" 
         value={externalPort} 
         onChange={handleExternalPortChange} 
