@@ -54,7 +54,6 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         error: imageError,
         isLoading: imageLoading,
       } = populateImageQuery;
-      //console.log(populatedImage, imageError, imageLoading);
       setFullImageList(populatedImage?.Images ?? []);
     }, [populateImageQuery]);  
 
@@ -64,7 +63,6 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         error: versionError,
         isLoading: versionLoading
       } = populateVersionQuery;
-      //console.log(populatedVersion, versionError, versionLoading);
       setVersionList(populatedVersion?.Versions ?? []);
     }, [populateVersionQuery]);
 
@@ -74,8 +72,6 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
       error: tagError,
       isLoading: tagLoading
     } = populateTagQuery;
-    //console.log(populatedTag, tagError, tagLoading);
-    console.log(populatedTag);
     const tmpTags = populatedTag ?? [];
     const tags: Array<string> = [];
     tmpTags.forEach(tag => {

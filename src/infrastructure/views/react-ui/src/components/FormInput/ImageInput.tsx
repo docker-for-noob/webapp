@@ -173,36 +173,36 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
   export const InputImagePorts = (props: InputImagePortsProps) => {
   
-    const [internalPort, setInternalPort] = useState(props.defaultPorts?.host || 0);
-    const [externalPort, setExternalPort] = useState(props.defaultPorts?.container || 0);
+    const [internalPort, setInternalPort] = useState(props.defaultPorts?.host || "0");
+    const [externalPort, setExternalPort] = useState(props.defaultPorts?.container || "0");
 
-    
+
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
       setInternalPort(event.target.value);
     }
-  
+
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
       setExternalPort(event.target.value);
     }
 
     useEffect(() => {
-      props.handlePortsChange({ host: String(internalPort ?? 0), container: String(externalPort ?? 0) });
+      props.handlePortsChange({ host: internalPort ?? "0", container:externalPort ?? "0" });
     }, [internalPort, externalPort]);
-    
+
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <InputTextForm label="Port machine"
         type="text"
-        value={internalPort} 
-        onChange={handleInternalPortChange} 
+        value={internalPort}
+        onChange={handleInternalPortChange}
         error={portUIValidator(internalPort)?.error}
         />
         <InputTextForm label="Port container"
         type="text"
-        value={externalPort} 
-        onChange={handleExternalPortChange} 
+        value={externalPort}
+        onChange={handleExternalPortChange}
         error={portUIValidator(externalPort)?.error}
         />
       </Box>
     );
-  } 
+  };

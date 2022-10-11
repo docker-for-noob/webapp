@@ -39,7 +39,6 @@ interface ServiceFormStep3Props {
     const handleAddVolume = (volume: volumes) => {
       props.setContainer((prev: DockerContainer) => {
         const volumes = prev.Volumes ?? [];
-        console.log(volumes);
         return {
           ...prev,
           Volumes: [...volumes, volume],
