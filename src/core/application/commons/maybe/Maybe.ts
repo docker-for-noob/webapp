@@ -55,22 +55,21 @@ export const getSuggest = <U>(maybe: Maybe<U>): string => {
   return (maybe as Suggest<U>).suggest;
 };
 
-
 export const acquireValidationColor = (maybe: Maybe<string> | undefined) => {
-    if (maybe == undefined) return "primary";
-    if (isError(maybe)) return "error"
-    if (isWarning(maybe)) return "warning"
-    if (isSuggest(maybe)) return "info"
+  if (maybe == undefined) return "primary";
+  if (isError(maybe)) return "error";
+  if (isWarning(maybe)) return "warning";
+  if (isSuggest(maybe)) return "info";
 };
 
 export const acquireHelperText = (maybe: Maybe<string> | undefined) => {
-    if (maybe == undefined) return "";
-    if (isError(maybe)) return getError(maybe)
-    if (isWarning(maybe)) return getWarning(maybe)
-    if (isSuggest(maybe)) return getSuggest(maybe)
-}
+  if (maybe == undefined) return "";
+  if (isError(maybe)) return getError(maybe);
+  if (isWarning(maybe)) return getWarning(maybe);
+  if (isSuggest(maybe)) return getSuggest(maybe);
+};
 
 export const handleError = (maybe: Maybe<string> | undefined) => {
-    if (maybe == undefined) return false
-    if (isError(maybe) || isWarning(maybe) || isSuggest(maybe)) return true
-}
+  if (maybe == undefined) return false;
+  if (isError(maybe) || isWarning(maybe) || isSuggest(maybe)) return true;
+};

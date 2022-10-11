@@ -235,4 +235,3 @@ test("an unvalid volume path has been sent and return an error message", () => {
   const initial = "C:/hel**o";
   expect(envVariablePathUIValidator(initial)).toStrictEqual(mustBePathError);
 });
-
