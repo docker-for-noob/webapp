@@ -176,15 +176,6 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     const [internalPort, setInternalPort] = useState(props.defaultPorts?.host || 0);
     const [externalPort, setExternalPort] = useState(props.defaultPorts?.container || 0);
 
-    const getPortNumber = (port: number) => {
-      if (port > MAX_PORT_VALUE) {
-        return MAX_PORT_VALUE;
-      }
-      if (port < 0) {
-        return 0;
-      }
-      return port;
-    }
     
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
       setInternalPort(event.target.value);
@@ -201,13 +192,13 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <InputTextForm label="Port machine"
-        type="number" 
+        type="text"
         value={internalPort} 
         onChange={handleInternalPortChange} 
         error={portUIValidator(internalPort)?.error}
         />
         <InputTextForm label="Port container"
-        type="number" 
+        type="text"
         value={externalPort} 
         onChange={handleExternalPortChange} 
         error={portUIValidator(externalPort)?.error}
