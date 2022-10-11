@@ -118,15 +118,17 @@ interface ServiceFormStep3Props {
               }}
             >
               {accordionDetail.content}
-              <Box sx={{ display: "flex", justifyContent: "start" }}>
-                <Button
-                  variant="contained"
-                  onClick={() => setStep(accordionDetail.step + 1)}
-                  sx={{marginY:1}}
-                >
-                  Étape suivante
-                </Button>
-              </Box>
+              {accordionDetail.step != 3 &&
+                <Box sx={{ display: "flex", justifyContent: "start" }}>
+                  <Button
+                      variant="contained"
+                      onClick={() => setStep(accordionDetail.step + 1)}
+                      sx={{marginY:1}}
+                  >
+                    Étape suivante
+                  </Button>
+                </Box>
+              }
             </AccordionDetails>
           </Accordion>
         ))}
