@@ -17,7 +17,6 @@ interface ServiceFormStep3Props {
 
     const {useFetchImageReferenceQuery} = apiSlice;
     const imageReferenceQuery = useFetchImageReferenceQuery({ image: props.container.ImageName });
-
   
     useEffect(() => {
       props.setSubstep(step);
@@ -29,6 +28,7 @@ interface ServiceFormStep3Props {
         error: imageReferenceError,
         isLoading: imageReferenceLoading,
       } = imageReferenceQuery;
+      console.log(imageReferenceData, imageReferenceError, imageReferenceLoading);
     }, [imageReferenceQuery]);
   
     const handleChange =

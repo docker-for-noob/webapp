@@ -71,19 +71,23 @@ export function ServiceForm(props: ServiceFormProps) {
     "Configurer l'image",
   ];
 
-  window.addEventListener('keydown', (evt) => {
-    if(evt.code == 'Enter') {
-      evt.preventDefault();
-      if(!disableNext){
-        handleNext();
+  useEffect(() => {
+    window.addEventListener('keydown', (evt) => {
+      const target = evt.target as Element;
+      if (evt.code == 'Enter') {
+        evt.preventDefault();
+        if (!disableNext && target.nodeName != 'INPUT') {
+          handleNext();
+        }
+      } else if (evt.code == 'Backspace' && target.nodeName != 'INPUT') {
+        evt.preventDefault();
+        if (!disablePrev) {
+          handleBack();
+        }
       }
-    } else if (evt.code == 'Backspace') {
-      evt.preventDefault();
-      if (!disablePrev()) {
-        handleBack();
-      }
-    }
-  });
+    });
+  }, [activeStep]);
+
 
   const handleNext = () => {
     if (activeStep + 1 > 2) {
