@@ -49,6 +49,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       newDockerCompose.Container[index].Volumes = [volume];
     }
     props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
   }
 
   const handleAddEnvVariables = (index: number, env: env) => {
@@ -59,6 +60,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       newDockerCompose.Container[index].Env = [env];
     }
     props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
+
   }
 
   const accordionDetails = (indexContainer: number) => [
