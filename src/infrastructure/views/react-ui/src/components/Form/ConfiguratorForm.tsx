@@ -23,6 +23,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import HelpIcon from '@mui/icons-material/Help';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ContainerImage from "../ContainerImage";
 
 interface ConfiguratorFormProps {
   handleAddService: () => void;
@@ -34,12 +35,23 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
   const [step, setStep] = useState(1);
   const [rerender, setRerender] = useState(0);
 
-  const handlePortChange = (index: number, port: port) => {
+  const handleAddPort = (index: number, port: port) => {
     const newDockerCompose = { ...props.dockerCompose };
-    newDockerCompose.Container[index].Ports = [port];
+    if (newDockerCompose.Container[index].Ports !== undefined) {
+      newDockerCompose.Container[index].Ports?.push(port);
+    } else {
+      newDockerCompose.Container[index].Ports = [port];
+    }
     props.setDockerCompose(newDockerCompose);
     setRerender(rerender + 1);
-  }
+  };
+
+  const handleRemovePort = (index: number, portIndex: number) => {
+    const newDockerCompose = { ...props.dockerCompose };
+    newDockerCompose.Container[index].Ports?.splice(portIndex, 1);
+    props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
+  };
 
   const handleAddVolume = (index: number, volume: volumes) => {
     const newDockerCompose = { ...props.dockerCompose };
@@ -48,6 +60,13 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     } else {
       newDockerCompose.Container[index].Volumes = [volume];
     }
+    props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
+  }
+
+  const handleRemoveVolume = (index: number, volumeIndex: number) => {
+    const newDockerCompose = { ...props.dockerCompose };
+    newDockerCompose.Container[index].Volumes?.splice(volumeIndex, 1);
     props.setDockerCompose(newDockerCompose);
     setRerender(rerender + 1);
   }
@@ -61,7 +80,13 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     }
     props.setDockerCompose(newDockerCompose);
     setRerender(rerender + 1);
+  }
 
+  const handleRemoveEnvVariables = (index: number, envIndex: number) => {
+    const newDockerCompose = { ...props.dockerCompose };
+    newDockerCompose.Container[index].Env?.splice(envIndex, 1);
+    props.setDockerCompose(newDockerCompose);
+    setRerender(rerender + 1);
   }
 
   const accordionDetails = (indexContainer: number) => [
@@ -70,8 +95,9 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       title: "Ports",
       content: <InputImagePorts
         setDisableNext={() => { }}
-        handlePortsChange={(ports) => handlePortChange(indexContainer, ports)}
-        defaultPorts={props.dockerCompose.Container[indexContainer].Ports![0]}
+        handleAddPort={(ports) => handleAddPort(indexContainer, ports)}
+        handleRemovePort={(portIndex) => handleRemovePort(indexContainer, portIndex)}
+        currentPorts={props.dockerCompose.Container[indexContainer].Ports ?? []}
       />,
       step: 1,
     },
@@ -81,6 +107,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       content: <InputImageVolumes
         setDisableNext={() => { }}
         handleAddVolume={(volume) => handleAddVolume(indexContainer, volume)}
+        handleRemoveVolume={(volumeIndex) => handleRemoveVolume(indexContainer, volumeIndex)}
+        currentVolumes={props.dockerCompose.Container[indexContainer].Volumes ?? []}
       />,
       step: 2,
     },
@@ -90,6 +118,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
       content: <InputImageEnvVariables
         setDisableNext={() => { }}
         handleAddEnvVariable={(env) => handleAddEnvVariables(indexContainer, env)}
+        handleRemoveEnvVariable={(envIndex) => handleRemoveEnvVariables(indexContainer, envIndex)}
+        currentEnv={props.dockerCompose.Container[indexContainer].Env ?? []}
       />,
       step: 3,
     },
@@ -134,7 +164,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
 
               <Box sx={{display:'flex', gap : 2}}>
                 <Box>
-                 <img src='https://via.placeholder.com/60' alt={`logo de ${service.ServiceName}`} />
+                  <ContainerImage imageName={service.ImageName.split(':')[0]} />
                 </Box>
                 <Box sx={{display:'flex',alignItems:'center'}}>
                     <Box>

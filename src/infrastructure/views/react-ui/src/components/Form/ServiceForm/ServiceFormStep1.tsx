@@ -6,13 +6,14 @@ import { serviceNameUIValidator, containerNameUIValidator } from "@infrastructur
 
 interface ServiceFormStep1Props {
     setDisableNext: (disable: boolean) => void;
-    setContainer: Dispatch<SetStateAction<DockerContainer>>
+    setContainer: Dispatch<SetStateAction<DockerContainer>>;
+    container: DockerContainer;
 }
 
 export function ServiceFormStep1(props: ServiceFormStep1Props) {
-    const [serviceName, setServiceName] = useState("");
-    const [alias, setAlias] = useState("");
-    const [hasAlias, setHasAlias] = useState(false);
+    const [serviceName, setServiceName] = useState(props.container.ServiceName);
+    const [alias, setAlias] = useState(props.container.ContainerName);
+    const [hasAlias, setHasAlias] = useState(!!props.container.ContainerName);
 
     const nextStepIsDisabled = () => {
         return !serviceName || (hasAlias && !alias);
@@ -46,6 +47,7 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
 
     const handleSwitch = (event: ChangeEvent<HTMLInputElement>) => {
         setHasAlias(event.target.checked);
+        setAlias('');
     };
 
     return (

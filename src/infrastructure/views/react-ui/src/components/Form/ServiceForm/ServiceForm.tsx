@@ -71,6 +71,24 @@ export function ServiceForm(props: ServiceFormProps) {
     "Configurer l'image",
   ];
 
+  useEffect(() => {
+    window.addEventListener('keydown', (evt) => {
+      const target = evt.target as Element;
+      if (evt.code == 'Enter') {
+        evt.preventDefault();
+        if (!disableNext && target.nodeName != 'INPUT') {
+          handleNext();
+        }
+      } else if (evt.code == 'Backspace' && target.nodeName != 'INPUT') {
+        evt.preventDefault();
+        if (!disablePrev) {
+          handleBack();
+        }
+      }
+    });
+  }, [activeStep]);
+
+
   const handleNext = () => {
     if (activeStep + 1 > 2) {
       props.addContainer(container);
@@ -101,11 +119,13 @@ export function ServiceForm(props: ServiceFormProps) {
         return <ServiceFormStep1
           setDisableNext={setDisableNext}
           setContainer={setContainer}
+          container={container}
         />;
       case 1:
         return <ServiceFormStep2
           setDisableNext={setDisableNext}
           setContainer={setContainer}
+          container={container}
         />;
       case 2:
         return (

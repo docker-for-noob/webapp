@@ -3,20 +3,42 @@ import { Accordion, AccordionSummary, Typography, AccordionDetails, Box, Button 
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../../FormInput/ImageInput";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { apiSlice } from "../../../../../../redux/api/apiSlice";
 
 interface ServiceFormStep3Props {
     setDisableNext: (disabled: boolean) => void;
     setSubstep: (substep: number) => void;
-    container: DockerContainer;
     setContainer: Dispatch<SetStateAction<DockerContainer>>
+    container: DockerContainer;
   }
   
   export function ServiceFormStep3(props: ServiceFormStep3Props) {
     const [step, setStep] = useState(1);
+
+    const {useFetchImageReferenceQuery} = apiSlice;
+    const imageReferenceQuery = useFetchImageReferenceQuery({ image: props.container.ImageName });
   
     useEffect(() => {
       props.setSubstep(step);
     }, [step]);
+
+    useEffect(() => {
+      const {
+        data: imageReferenceData,
+        error: imageReferenceError,
+        isLoading: imageReferenceLoading,
+      } = imageReferenceQuery;
+      imageReferenceData?.Workdir?.forEach((volume) => {
+        handleAddVolume({host: volume, container: volume});
+      });
+      imageReferenceData?.Env?.forEach((env) => {
+        handleAddEnvVariable({ key: env.Key, value: env.Desc });
+      });
+      imageReferenceData?.Port?.forEach((port) => {
+        handleAddPort({ host: port, container: port });
+      });
+      setStep(1);
+    }, [imageReferenceQuery]);
   
     const handleChange =
       (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -29,9 +51,20 @@ interface ServiceFormStep3Props {
   
     const handleAddPort = (port: port) => {
       props.setContainer((prev: DockerContainer) => {
+        const ports = prev.Ports ?? [];
         return {
           ...prev,
-          Ports: [port],
+          Ports: [...ports, port],
+        }
+      })
+    }
+
+    const handleRemovePort = (index: number) => {
+      props.setContainer((prev: DockerContainer) => {
+        const ports = prev.Ports ? prev.Ports.filter((_, i) => i !== index) : [];
+        return {
+          ...prev,
+          Ports: ports,
         }
       })
     }
@@ -45,6 +78,16 @@ interface ServiceFormStep3Props {
         }
       })
     }
+
+    const handleRemoveVolume = (index: number) => {
+      props.setContainer((prev: DockerContainer) => {
+        const volumes = prev.Volumes ? prev.Volumes.filter((_, i) => i !== index) : [];
+        return {
+          ...prev,
+          Volumes: volumes,
+        }
+      })
+    }
   
     const handleAddEnvVariable = (envVariable: env) => {
       props.setContainer((prev: DockerContainer) => {
@@ -55,6 +98,16 @@ interface ServiceFormStep3Props {
         }
       })
     }
+
+    const handleRemoveEnvVariable = (index: number) => {
+      props.setContainer((prev: DockerContainer) => {
+        const envVariables = prev.Env ? prev.Env.filter((_, i) => i !== index) : [];
+        return {
+          ...prev,
+          Env: envVariables,
+        }
+      })
+    }
   
     const accordionDetails = [
       {
@@ -62,7 +115,9 @@ interface ServiceFormStep3Props {
         fullTitle: "Choix des ports",
         content: <InputImagePorts
           setDisableNext={props.setDisableNext}
-          handlePortsChange={handleAddPort}
+          handleAddPort={handleAddPort}
+          handleRemovePort={handleRemovePort}
+          currentPorts={props.container.Ports ?? []}
         />,
         step: 1,
       },
@@ -72,6 +127,8 @@ interface ServiceFormStep3Props {
         content: <InputImageVolumes
           setDisableNext={props.setDisableNext}
           handleAddVolume={handleAddVolume}
+          handleRemoveVolume={handleRemoveVolume}
+          currentVolumes={props.container.Volumes ?? []}
         />,
         step: 2,
       },
@@ -81,6 +138,8 @@ interface ServiceFormStep3Props {
         content: <InputImageEnvVariables
          setDisableNext={props.setDisableNext}
          handleAddEnvVariable={handleAddEnvVariable}
+         handleRemoveEnvVariable={handleRemoveEnvVariable}
+         currentEnv={props.container.Env ?? []}
           />,
         step: 3,
       },
@@ -117,12 +176,13 @@ interface ServiceFormStep3Props {
               }}
             >
               {accordionDetail.content}
-              {accordionDetail.step != 3 &&
+              {
+                accordionDetail.step > 2 ||
                 <Box sx={{ display: "flex", justifyContent: "start" }}>
                   <Button
-                      variant="contained"
-                      onClick={() => setStep(accordionDetail.step + 1)}
-                      sx={{marginY:1}}
+                    variant="contained"
+                    onClick={() => setStep(accordionDetail.step + 1)}
+                    sx={{ marginY: 1 }}
                   >
                     Étape suivante
                   </Button>

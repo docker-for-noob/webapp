@@ -3,7 +3,7 @@ import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, T
 import { VolumeType, EnvType } from '../Form/ServiceForm/ServiceForm';
 import { InputTextForm } from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
+import { DockerCompose, DockerContainer, env, envArray, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import { MAX_PORT_VALUE } from '@core/domain/dockerCompose/ports/Utils';
 import { portUIValidator, envVariableNameUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
@@ -11,14 +11,20 @@ import { portUIValidator, envVariableNameUIValidator, envVariablePathUIValidator
 interface InputImageVolumesProps {
     setDisableNext: (disable: boolean) => void;
     handleAddVolume: (volume: volumes) => void;
+    handleRemoveVolume: (index: number) => void;
+    currentVolumes: volumes[];
   }
 
 export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
-    const [volumesList, setVolumesList] = useState<Array<VolumeType>>([]);
+    const [volumesList, setVolumesList] = useState<Array<volumes>>(props.currentVolumes);
   
     const [machineRoute, setMachineRoute] = useState("");
     const [dockerRoute, setDockerRoute] = useState("");
+
+    useEffect(() => {
+      setVolumesList(props.currentVolumes);
+    }, [props.currentVolumes]);
   
     const handleMachineRouteChange = (event: ChangeEvent<HTMLInputElement>) => {
       setMachineRoute(event.target.value);
@@ -29,7 +35,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     }
   
     const handleVolumesChange = () => {
-      setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
+      setVolumesList([...volumesList, { host: machineRoute, container: dockerRoute }]);
       props.handleAddVolume({ host: machineRoute, container: dockerRoute });
       setMachineRoute('')
       setDockerRoute('')
@@ -37,6 +43,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
   
     const handleVolumesDelete = (index: number) => {
       setVolumesList(volumesList.filter((_, i) => i !== index));
+      props.handleRemoveVolume(index);
     }
   
     return (
@@ -70,14 +77,14 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           </TableHead>
           <TableBody>
             {volumesList.map((volume, index) => (
-              <TableRow key={volume.machineRoute}>
+              <TableRow key={index}>
                 <TableCell  sx={{width:'20px'}}>
                   <IconButton onClick={() => handleVolumesDelete(index)} component="label">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
-                <TableCell>{volume.machineRoute}</TableCell>
-                <TableCell>{volume.dockerRoute}</TableCell>
+                <TableCell>{volume.host}</TableCell>
+                <TableCell>{volume.container}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -88,16 +95,22 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
   interface InputImageEnvVariablesProps {
     setDisableNext: (disable: boolean) => void;
-    handleAddEnvVariable: (envVariable: EnvType) => void;
+    handleAddEnvVariable: (envVariable: env) => void;
+    handleRemoveEnvVariable: (index: number) => void;
+    currentEnv: Array<env>;
   }
   
   export const InputImageEnvVariables = (props: InputImageEnvVariablesProps) => {
   
-    const [envList, setEnvList] = useState<Array<EnvType>>([]);
+    const [envList, setEnvList] = useState<Array<env>>(props.currentEnv ?? []);
   
     const [key, setKey] = useState("");
     const [value, setValue] = useState("");
-  
+
+    useEffect(() => {
+      setEnvList(props.currentEnv);
+    }, [props.currentEnv]);
+
     const handleKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
       setKey(event.target.value);
     }
@@ -109,12 +122,13 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     const handleEnvChange = () => {
       setEnvList([...envList, { key, value }]);
       props.handleAddEnvVariable({ key, value });
-      setKey('')
-      setValue('')
+      setKey('');
+      setValue('');
     }
   
     const handleEnvDelete = (index: number) => {
       setEnvList(envList.filter((_, i) => i !== index));
+      props.handleRemoveEnvVariable(index);
     }
   
     return (
@@ -149,7 +163,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           </TableHead>
           <TableBody>
             {envList.map((env, index) => (
-              <TableRow key={env.key}>
+              <TableRow key={index}>
                 <TableCell sx={{width:'20px'}}>
                   <IconButton onClick={() => handleEnvDelete(index)}  component="label">
                     <DeleteIcon />
@@ -167,42 +181,97 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
   interface InputImagePortsProps {
     setDisableNext: (disable: boolean) => void;
-    handlePortsChange: (port: port) => void;
-    defaultPorts?: port;
+    handleAddPort: (port: port) => void;
+    handleRemovePort: (index: number) => void;
+    currentPorts: port[];
   }
   
   export const InputImagePorts = (props: InputImagePortsProps) => {
+
+    const [portList, setPortList] = useState<Array<port>>(props.currentPorts);
   
-    const [internalPort, setInternalPort] = useState(props.defaultPorts?.host || "0");
-    const [externalPort, setExternalPort] = useState(props.defaultPorts?.container || "0");
+    const [internalPort, setInternalPort] = useState(0);
+    const [externalPort, setExternalPort] = useState(0);
 
+    useEffect(() => {
+      setPortList(props.currentPorts);
+    }, [props.currentPorts]);
 
+    const handleAddPort = () => {
+      setPortList([...portList, { host: String(internalPort), container: String(externalPort) }]);
+      props.handleAddPort({ host: String(internalPort), container: String(externalPort) });
+      setInternalPort(0);
+      setExternalPort(0);
+    }
+
+    const handlePortDelete = (index: number) => {
+      setPortList(portList.filter((_, i) => i !== index));
+      props.handleRemovePort(index);
+    }
+
+    const getPortNumber = (port: number): number => {
+      if (port > MAX_PORT_VALUE) {
+        return MAX_PORT_VALUE;
+      }
+      if (port < 0) {
+        return 0;
+      }
+      return port;
+    }
+    
     const handleInternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setInternalPort(event.target.value);
+      setInternalPort(getPortNumber(Number(event.target.value)));
     }
 
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setExternalPort(event.target.value);
+      setExternalPort(getPortNumber(Number(event.target.value)));
     }
-
-    useEffect(() => {
-      props.handlePortsChange({ host: internalPort ?? "0", container:externalPort ?? "0" });
-    }, [internalPort, externalPort]);
-
+    
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <InputTextForm label="Port machine"
-        type="text"
+        type="number"
         value={internalPort}
         onChange={handleInternalPortChange}
-        error={portUIValidator(internalPort)?.error}
+        error={portUIValidator(String(internalPort))?.error}
         />
         <InputTextForm label="Port container"
-        type="text"
+        type="number"
         value={externalPort}
         onChange={handleExternalPortChange}
-        error={portUIValidator(externalPort)?.error}
+        error={portUIValidator(String(externalPort))?.error}
         />
-      </Box>
+        <Box>
+          <Button
+            startIcon={<AddIcon />}
+            variant='outlined'
+            disabled={portUIValidator(String(internalPort))?.error != undefined || portUIValidator(String(externalPort))?.error != undefined}
+            onClick={handleAddPort}>
+            Ajouter
+          </Button>
+        </Box>
+        <Table sx={{ margin: '1rem 0' }}>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: '20px' }}></TableCell>
+              <TableCell><Typography sx={{ fontWeight: 600 }}>Interne</Typography></TableCell>
+              <TableCell><Typography sx={{ fontWeight: 600 }}>Externe</Typography></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {portList.map((port, index) => (
+              <TableRow key={index}>
+                <TableCell sx={{ width: '20px' }}>
+                  <IconButton onClick={() => handlePortDelete(index)} component="label">
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>{port.host}</TableCell>
+                <TableCell>{port.container}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>   
     );
   };
