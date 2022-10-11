@@ -110,11 +110,13 @@ export function ServiceForm(props: ServiceFormProps) {
         return <ServiceFormStep1
           setDisableNext={setDisableNext}
           setContainer={setContainer}
+          container={container}
         />;
       case 1:
         return <ServiceFormStep2
           setDisableNext={setDisableNext}
           setContainer={setContainer}
+          container={container}
         />;
       case 2:
         return (

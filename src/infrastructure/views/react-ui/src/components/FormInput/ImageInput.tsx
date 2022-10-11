@@ -3,7 +3,7 @@ import { FormControl, InputLabel, Input, FilledInput, Box, Button, IconButton, T
 import { VolumeType, EnvType } from '../Form/ServiceForm/ServiceForm';
 import { InputTextForm } from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { DockerCompose, DockerContainer, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
+import { DockerCompose, DockerContainer, env, envArray, port, volumes } from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import { MAX_PORT_VALUE } from '@core/domain/dockerCompose/ports/Utils';
 import { portUIValidator, envVariableNameUIValidator, envVariableValueUIValidator, envVariablePathUIValidator, volumesUIValidator } from "@infrastructure/validators/InputValidator";
@@ -11,11 +11,13 @@ import { portUIValidator, envVariableNameUIValidator, envVariableValueUIValidato
 interface InputImageVolumesProps {
     setDisableNext: (disable: boolean) => void;
     handleAddVolume: (volume: volumes) => void;
+    handleRemoveVolume: (index: number) => void;
+    currentVolumes: volumes[];
   }
 
 export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
-    const [volumesList, setVolumesList] = useState<Array<VolumeType>>([]);
+    const [volumesList, setVolumesList] = useState<Array<volumes>>(props.currentVolumes);
   
     const [machineRoute, setMachineRoute] = useState("");
     const [dockerRoute, setDockerRoute] = useState("");
@@ -29,14 +31,15 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     }
   
     const handleVolumesChange = () => {
-      setVolumesList([...volumesList, { machineRoute, dockerRoute }]);
+      setVolumesList([...volumesList, { internal: dockerRoute, external: machineRoute }]);
       props.handleAddVolume({ internal: dockerRoute, external: machineRoute });
-      setMachineRoute('')
-      setDockerRoute('')
+      setMachineRoute('');
+      setDockerRoute('');
     }
   
     const handleVolumesDelete = (index: number) => {
       setVolumesList(volumesList.filter((_, i) => i !== index));
+      props.handleRemoveVolume(index);
     }
   
     return (
@@ -70,14 +73,14 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           </TableHead>
           <TableBody>
             {volumesList.map((volume, index) => (
-              <TableRow key={volume.machineRoute}>
+              <TableRow key={volume.internal}>
                 <TableCell  sx={{width:'20px'}}>
                   <IconButton onClick={() => handleVolumesDelete(index)} component="label">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
-                <TableCell>{volume.machineRoute}</TableCell>
-                <TableCell>{volume.dockerRoute}</TableCell>
+                <TableCell>{volume.external}</TableCell>
+                <TableCell>{volume.internal}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -88,12 +91,14 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
   interface InputImageEnvVariablesProps {
     setDisableNext: (disable: boolean) => void;
-    handleAddEnvVariable: (envVariable: EnvType) => void;
+    handleAddEnvVariable: (envVariable: env) => void;
+    handleRemoveEnvVariable: (index: number) => void;
+    currentEnv: envArray;
   }
   
   export const InputImageEnvVariables = (props: InputImageEnvVariablesProps) => {
   
-    const [envList, setEnvList] = useState<Array<EnvType>>([]);
+    const [envList, setEnvList] = useState<Array<env>>(props.currentEnv ?? []);
   
     const [key, setKey] = useState("");
     const [value, setValue] = useState("");
@@ -109,12 +114,13 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     const handleEnvChange = () => {
       setEnvList([...envList, { key, value }]);
       props.handleAddEnvVariable({ key, value });
-      setKey('')
-      setValue('')
+      setKey('');
+      setValue('');
     }
   
     const handleEnvDelete = (index: number) => {
       setEnvList(envList.filter((_, i) => i !== index));
+      props.handleRemoveEnvVariable(index);
     }
   
     return (
@@ -168,27 +174,28 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
   interface InputImagePortsProps {
     setDisableNext: (disable: boolean) => void;
-    handlePortsChange: (port: port) => void;
-    defaultPorts?: port;
+    handleAddPort: (port: port) => void;
+    handleRemovePort: (index: number) => void;
+    currentPorts: port[];
   }
   
   export const InputImagePorts = (props: InputImagePortsProps) => {
+
+    const [portList, setPortList] = useState<Array<port>>(props.currentPorts);
   
-    const [internalPort, setInternalPort] = useState(props.defaultPorts?.internal || '0');
-    const [externalPort, setExternalPort] = useState(props.defaultPorts?.external || '0');
-
-    const [portList, setPortList] = useState<Array<port>>([]);
-
+    const [internalPort, setInternalPort] = useState('0');
+    const [externalPort, setExternalPort] = useState('0');
 
     const handleAddPort = () => {
       setPortList([...portList, { internal: internalPort, external: externalPort }]);
-      props.handlePortsChange({ internal: internalPort, external: externalPort });
-      setInternalPort('')
-      setExternalPort('')
+      props.handleAddPort({ internal: internalPort, external: externalPort });
+      setInternalPort('');
+      setExternalPort('');
     }
 
     const handlePortDelete = (index: number) => {
       setPortList(portList.filter((_, i) => i !== index));
+      props.handleRemovePort(index);
     }
 
     const getPortNumber = (port: string|number): string => {
@@ -208,10 +215,6 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
       setExternalPort(getPortNumber(event.target.value));
     }
-
-    useEffect(() => {
-      props.handlePortsChange({ internal: String(internalPort ?? 0), external: String(externalPort ?? 0) });
-    }, [internalPort, externalPort]);
     
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -240,8 +243,8 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
           <TableHead>
             <TableRow>
               <TableCell sx={{ width: '20px' }}></TableCell>
-              <TableCell><Typography sx={{ fontWeight: 600 }}>Clé</Typography></TableCell>
-              <TableCell><Typography sx={{ fontWeight: 600 }}>Valeur</Typography></TableCell>
+              <TableCell><Typography sx={{ fontWeight: 600 }}>Interne</Typography></TableCell>
+              <TableCell><Typography sx={{ fontWeight: 600 }}>Externe</Typography></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -8,8 +8,8 @@ import { apiSlice } from "../../../../../../redux/api/apiSlice";
 interface ServiceFormStep3Props {
     setDisableNext: (disabled: boolean) => void;
     setSubstep: (substep: number) => void;
-    container: DockerContainer;
     setContainer: Dispatch<SetStateAction<DockerContainer>>
+    container: DockerContainer;
   }
   
   export function ServiceFormStep3(props: ServiceFormStep3Props) {
@@ -29,7 +29,6 @@ interface ServiceFormStep3Props {
         error: imageReferenceError,
         isLoading: imageReferenceLoading,
       } = imageReferenceQuery;
-      console.log(imageReferenceData, imageReferenceError, imageReferenceLoading);
     }, [imageReferenceQuery]);
   
     const handleChange =
@@ -43,9 +42,20 @@ interface ServiceFormStep3Props {
   
     const handleAddPort = (port: port) => {
       props.setContainer((prev: DockerContainer) => {
+        const ports = prev.Ports ?? [];
         return {
           ...prev,
-          Ports: [port],
+          Ports: [...ports, port],
+        }
+      })
+    }
+
+    const handleRemovePort = (index: number) => {
+      props.setContainer((prev: DockerContainer) => {
+        const ports = prev.Ports ? prev.Ports.filter((_, i) => i !== index) : [];
+        return {
+          ...prev,
+          Ports: ports,
         }
       })
     }
@@ -53,10 +63,19 @@ interface ServiceFormStep3Props {
     const handleAddVolume = (volume: volumes) => {
       props.setContainer((prev: DockerContainer) => {
         const volumes = prev.Volumes ?? [];
-        console.log(volumes);
         return {
           ...prev,
           Volumes: [...volumes, volume],
+        }
+      })
+    }
+
+    const handleRemoveVolume = (index: number) => {
+      props.setContainer((prev: DockerContainer) => {
+        const volumes = prev.Volumes ? prev.Volumes.filter((_, i) => i !== index) : [];
+        return {
+          ...prev,
+          Volumes: volumes,
         }
       })
     }
@@ -70,6 +89,16 @@ interface ServiceFormStep3Props {
         }
       })
     }
+
+    const handleRemoveEnvVariable = (index: number) => {
+      props.setContainer((prev: DockerContainer) => {
+        const envVariables = prev.Env ? prev.Env.filter((_, i) => i !== index) : [];
+        return {
+          ...prev,
+          Env: envVariables,
+        }
+      })
+    }
   
     const accordionDetails = [
       {
@@ -77,7 +106,9 @@ interface ServiceFormStep3Props {
         fullTitle: "Choix des ports",
         content: <InputImagePorts
           setDisableNext={props.setDisableNext}
-          handlePortsChange={handleAddPort}
+          handleAddPort={handleAddPort}
+          handleRemovePort={handleRemovePort}
+          currentPorts={props.container.Ports ?? []}
         />,
         step: 1,
       },
@@ -87,6 +118,8 @@ interface ServiceFormStep3Props {
         content: <InputImageVolumes
           setDisableNext={props.setDisableNext}
           handleAddVolume={handleAddVolume}
+          handleRemoveVolume={handleRemoveVolume}
+          currentVolumes={props.container.Volumes ?? []}
         />,
         step: 2,
       },
@@ -96,6 +129,8 @@ interface ServiceFormStep3Props {
         content: <InputImageEnvVariables
          setDisableNext={props.setDisableNext}
          handleAddEnvVariable={handleAddEnvVariable}
+         handleRemoveEnvVariable={handleRemoveEnvVariable}
+         currentEnv={props.container.Env}
           />,
         step: 3,
       },
@@ -132,15 +167,19 @@ interface ServiceFormStep3Props {
               }}
             >
               {accordionDetail.content}
-              <Box sx={{ display: "flex", justifyContent: "start" }}>
-                <Button
-                  variant="contained"
-                  onClick={() => setStep(accordionDetail.step + 1)}
-                  sx={{marginY:1}}
-                >
-                  Étape suivante
-                </Button>
-              </Box>
+              {
+                accordionDetail.step > 2 ||
+                <Box sx={{ display: "flex", justifyContent: "start" }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => setStep(accordionDetail.step + 1)}
+                    sx={{ marginY: 1 }}
+                  >
+                    Étape suivante
+                  </Button>
+                </Box>
+              }
+              
             </AccordionDetails>
           </Accordion>
         ))}
