@@ -136,7 +136,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
                 <Box sx={{display:'flex',alignItems:'center'}}>
                     <Box>
                       <Typography variant="h3" sx={{fontSize:'17px'}}>{service.ServiceName}</Typography>
-                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.Ports ? service.Ports[0].external+':'+service.Ports[0].internal : 'Aucun port'}</Typography>
+                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.Ports ? service.Ports[0].container+':'+service.Ports[0].host : 'Aucun port'}</Typography>
                     </Box>
                 </Box>
 
