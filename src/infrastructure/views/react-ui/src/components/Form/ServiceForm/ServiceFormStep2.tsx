@@ -48,6 +48,14 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     const populateTagQuery = usePopulateTagQuery({ image: chosenImage, version: chosenVersion });
 
 
+  const nextStepIsDisabled = () => {
+      return chosenImage === '' || chosenVersion === '' || chosenTags === '';
+  };
+
+  useEffect(() => {
+      props.setDisableNext(nextStepIsDisabled());
+  }, [chosenImage, chosenVersion, chosenTags]);
+    
     useEffect(() => {
       const {
         data: populatedImage,
