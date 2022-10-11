@@ -4,6 +4,8 @@ import { yamlAdapter } from "../../../../infrastructure/format/yaml/YamlAdapter"
 import { noContainerFoundError } from "./FormatterException";
 import { Document } from "yaml";
 import { toYaml } from "../../../../infrastructure/format/yaml/FormatDependency";
+import YAML from "yaml";
+
 
 const formatDockerComposeToYaml = async (
   data: DockerCompose
@@ -15,4 +17,11 @@ const formatDockerComposeToYaml = async (
   return toYaml(FormattedData);
 };
 
-export { formatDockerComposeToYaml };
+const formatDockerComposeToPrevisualisation = (data: DockerCompose): string => {
+
+  const FormattedData = yamlAdapter(data);
+
+  return YAML.stringify(FormattedData)
+}
+
+export { formatDockerComposeToYaml, formatDockerComposeToPrevisualisation };
