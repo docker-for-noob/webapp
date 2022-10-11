@@ -5,7 +5,7 @@ import {
 } from "../../../domain/dockerCompose/models/DockerImage";
 
 const formatImageName = (data: DockerContainer): string => {
-  if (data.Tag != undefined) return [data.ImageName, data.Tag].join(":");
+  if (data.Tag != undefined) return data.Tag;
   return data.ImageName;
 };
 const formatIEArrayToStringArray = <T>(
