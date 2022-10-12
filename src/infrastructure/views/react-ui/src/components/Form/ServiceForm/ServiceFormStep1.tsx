@@ -24,10 +24,6 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
     }, [serviceName, alias, hasAlias]);
 
     useEffect(() => {
-
-    }, [serviceName]);
-
-    useEffect(() => {
         props.setContainer((prev: DockerContainer) => {
             return {
                 ...prev,
