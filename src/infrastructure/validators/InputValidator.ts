@@ -12,8 +12,8 @@ import { combineValidator } from "../../core/application/validators/CombineValid
 
 const envVariableNameUIValidator: Validator = (value) =>
   combineValidator(mustBeInUpperCase, mustBeString)(value);
-const envVariablePathUIValidator: Validator = (value) =>
-  combineValidator(mustBePath)(value);
+const envVariableValueUIValidator: Validator = (value) =>
+  combineValidator(mustBeString,required)(value);
 const versionUIValidator: Validator = (value) =>
   combineValidator(mustBeString, mustNotContainsWhiteSpace)(value);
 const tagsUIValidator: Validator = (value) =>
@@ -58,7 +58,7 @@ const portUIValidator = (value) =>
 export {
   portUIValidator,
   envVariableNameUIValidator,
-  envVariablePathUIValidator,
+  envVariableValueUIValidator,
   serviceNameUIValidator,
   containerNameUIValidator,
   languageUIValidator,

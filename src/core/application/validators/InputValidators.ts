@@ -1,12 +1,10 @@
 import {
-    envVariableNameUIValidator,
-    envVariableValueUIValidator,
+    envVariableNameUIValidator, envVariableValueUIValidator,
     portUIValidator, volumesUIValidator
 } from "../../../infrastructure/validators/InputValidator";
 import {ValidatorService} from "../../domain/dockerCompose/service/validator/ValidatorService";
 import {combineValidator} from "./CombineValidators";
-import {env, HostContainer, port, volumes} from "../../domain/dockerCompose/models/DockerImage";
-import {Validator} from "./type/type";
+import {env, volumes} from "../../domain/dockerCompose/models/DockerImage";
 
 const {
     ServiceNameNeedAnAlias,
