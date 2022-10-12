@@ -8,7 +8,9 @@ import {
   isSuccess,
   Maybe,
   Success,
-  success, suggest, warning,
+  success,
+  suggest,
+  warning,
 } from "../core/application/commons/maybe/Maybe";
 
 const isInLowerCase = (expr: string): Maybe<boolean> => {

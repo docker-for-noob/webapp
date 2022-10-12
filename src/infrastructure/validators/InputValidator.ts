@@ -13,7 +13,7 @@ import { combineValidator } from "../../core/application/validators/CombineValid
 const envVariableNameUIValidator: Validator = (value) =>
   combineValidator(mustBeInUpperCase, mustBeString)(value);
 const envVariableValueUIValidator: Validator = (value) =>
-  combineValidator(mustBeString,required)(value);
+  combineValidator(mustBeString, required)(value);
 const versionUIValidator: Validator = (value) =>
   combineValidator(mustBeString, mustNotContainsWhiteSpace)(value);
 const tagsUIValidator: Validator = (value) =>
