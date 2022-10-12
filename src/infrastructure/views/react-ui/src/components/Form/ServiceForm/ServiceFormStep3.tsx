@@ -50,6 +50,10 @@ interface ServiceFormStep3Props {
     }, [step]);
   
     const handleAddPort = (port: port) => {
+      if (props.container.Ports !== undefined &&
+        (props.container.Ports.find((p) => p.host === port.host) && props.container.Ports.find((p) => p.host === port.host))) {
+        return;
+      }
       props.setContainer((prev: DockerContainer) => {
         const ports = prev.Ports ?? [];
         return {
@@ -70,6 +74,9 @@ interface ServiceFormStep3Props {
     }
   
     const handleAddVolume = (volume: volumes) => {
+      if (props.container.Volumes !== undefined && props.container.Volumes.find((v) => v.host === volume.host)) {
+        return;
+      }
       props.setContainer((prev: DockerContainer) => {
         const volumes = prev.Volumes ?? [];
         return {
@@ -90,6 +97,9 @@ interface ServiceFormStep3Props {
     }
   
     const handleAddEnvVariable = (envVariable: env) => {
+      if (props.container.Env === undefined || props.container.Env.find((e) => e.key === envVariable.key)) {
+        return;
+      }
       props.setContainer((prev: DockerContainer) => {
         const envVariables = prev.Env ?? [];
         return {
