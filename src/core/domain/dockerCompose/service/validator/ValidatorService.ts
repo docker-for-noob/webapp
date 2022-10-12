@@ -21,7 +21,7 @@ import {
 const suggestPort = (value): Suggest<string> => defaultPortSuggest(value);
 
 const isDefaultPort =
-  (defaultPort?: defaultPorts): Validator =>
+  (defaultPort?: port[]): Validator =>
   (value: port) => {
     if (defaultPort) {
       const result = defaultPort.find(

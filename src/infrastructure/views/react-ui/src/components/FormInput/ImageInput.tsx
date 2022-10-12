@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow, Chip} from '@mui/material';
+import {Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 import {InputTextForm} from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {env, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
@@ -10,8 +10,9 @@ import {
 } from "@infrastructure/validators/InputValidator";
 import {handleError} from "@core/application/commons/maybe/Maybe";
 import {
+    ContainerPortValidator,
     envKeyValidator,
-    envValueValidator,
+    envValueValidator, HostPortValidator,
     VolumeContainerValidator,
     VolumeHostValidator
 } from "@core/application/validators/InputValidators";
@@ -253,7 +254,7 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
         if (props.suggestions) {
             props.setSuggestions(props.suggestions.filter(port => port.container !== String(containerPort)));
         }
-        
+
         setHostPort(0);
         setContainerPort(0);
     }
@@ -305,13 +306,13 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
                            type="number"
                            value={hostPort}
                            onChange={handleInternalPortChange}
-                           error={portUIValidator(String(hostPort))}
+                           error={HostPortValidator()(String(hostPort))}
             />
             <InputTextForm label="Port container"
                            type="number"
                            value={containerPort}
                            onChange={handleExternalPortChange}
-                           error={portUIValidator(String(containerPort))}
+                           error={ContainerPortValidator(props.defaultPorts)(String(containerPort))}
             />
             <Box>
                 <Button

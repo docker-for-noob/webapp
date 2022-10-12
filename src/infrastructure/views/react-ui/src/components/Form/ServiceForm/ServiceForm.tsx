@@ -134,6 +134,7 @@ export function ServiceForm(props: ServiceFormProps) {
             setSubstep={setSubstep}
             setContainer={setContainer}
             container={container}
+            dockerCompose={props.dockerCompose}
           />
         );
       default:
