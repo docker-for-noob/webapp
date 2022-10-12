@@ -10,14 +10,14 @@ export const BackendSeed: DockerCompose = {
       Tag: "latest",
       Ports: [
         {
-          external: "8080",
-          internal: "8080",
+          host: "8080",
+          container: "8080",
         },
       ],
       Volumes: [
         {
-          internal: "/",
-          external: "/go/src/api/",
+          host: "/",
+          container: "/go/src/api/",
         },
       ],
     },
@@ -43,8 +43,8 @@ export const BackendSeed: DockerCompose = {
       Restart: "always",
       Ports: [
         {
-          external: "8081",
-          internal: "8081",
+          host: "8081",
+          container: "8081",
         },
       ],
       Env: [
@@ -67,8 +67,8 @@ export const BackendSeed: DockerCompose = {
       ImageName: "redislabs/redismod",
       Ports: [
         {
-          external: "6379",
-          internal: "6379",
+          host: "6379",
+          container: "6379",
         },
       ],
     },
@@ -78,14 +78,14 @@ export const BackendSeed: DockerCompose = {
       Tag: "latest",
       Ports: [
         {
-          external: "8001",
-          internal: "8001",
+          host: "8001",
+          container: "8001",
         },
       ],
       Volumes: [
         {
-          internal: "/",
-          external: "/db",
+          host: "/",
+          container: "/db",
         },
       ],
     },

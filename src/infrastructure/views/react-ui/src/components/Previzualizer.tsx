@@ -36,10 +36,12 @@ export function Previzualizer(props: PrevizualizerProps) {
 
     return (
         <Box sx={{backgroundColor:'#F0F0F0',paddingX:3,paddingY:2}}>
+
             <Paper sx={{ padding: '1rem', backgroundColor: '#5D5D5D', color: '#fff',overflow:'hidden'}}>
                     <Box component="pre" sx={{fontSize:'14px'}}>
                     {props.dockerCompose ?
                             handlePrevizualization(props.dockerCompose)
+
                             :
                             'No docker-compose.yml'
                             }

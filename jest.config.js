@@ -11,7 +11,7 @@ module.exports = {
     ],
     coverageThreshold: {
         "src/core/domain/**/service/**/*.{ts,tsx}": {
-            branches: 100,
+            branches: 80,
             functions: 100,
             lines: 100,
             statements: 100,

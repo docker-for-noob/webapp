@@ -41,6 +41,7 @@
     "@manaflair/redux-batch": "^1.0.0",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.1",
+    "@mui/styles": "^5.10.8",
     "@reduxjs/toolkit": "^1.8.2",
     "axios": "^0.21.1",
     "axios-mock-adapter": "^1.21.1",

@@ -17,7 +17,7 @@ interface ServiceFormStep3Props {
 
     const {useFetchImageReferenceQuery} = apiSlice;
     const imageReferenceQuery = useFetchImageReferenceQuery({ image: props.container.ImageName });
-  
+
     useEffect(() => {
       props.setSubstep(step);
     }, [step]);
@@ -39,7 +39,7 @@ interface ServiceFormStep3Props {
       });
       setStep(1);
     }, [imageReferenceQuery]);
-  
+
     const handleChange =
       (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
         setStep((old) => (newExpanded ? step : old));
@@ -68,7 +68,7 @@ interface ServiceFormStep3Props {
         }
       })
     }
-  
+
     const handleAddVolume = (volume: volumes) => {
       props.setContainer((prev: DockerContainer) => {
         const volumes = prev.Volumes ?? [];
@@ -88,8 +88,9 @@ interface ServiceFormStep3Props {
         }
       })
     }
-  
+
     const handleAddEnvVariable = (envVariable: env) => {
+      console.log("envVariable", envVariable);
       props.setContainer((prev: DockerContainer) => {
         const envVariables = prev.Env ?? [];
         return {
@@ -108,7 +109,7 @@ interface ServiceFormStep3Props {
         }
       })
     }
-  
+
     const accordionDetails = [
       {
         title: "Ports",
@@ -150,15 +151,12 @@ interface ServiceFormStep3Props {
         {accordionDetails.map((accordionDetail) => (
           <Accordion
             key={accordionDetail.step}
-            
             expanded={step == accordionDetail.step}
             onChange={handleChange(accordionDetail.step)}
             sx={{
               marginBottom:2,
               border:'none',  
               boxShadow:'none',
-  
-  
             }}
           >
             <AccordionSummary sx={{ backgroundColor: "#F0F0F0",paddingX:3} } expandIcon={<ExpandMoreIcon />}>
@@ -192,6 +190,5 @@ interface ServiceFormStep3Props {
           </Accordion>
         ))}
       </form>
-      
     );
   }

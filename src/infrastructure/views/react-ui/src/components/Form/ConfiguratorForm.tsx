@@ -129,8 +129,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     return `Configure ton application Docker grâce à l'interface`;
   }
 
-  const handleChange =
-    (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+  const handleChange = (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setStep((old) => (newExpanded ? step : old));
     };
 
@@ -227,6 +226,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
           </Box>
       </Grid>
       <Grid item md={5} xs={12}>
+
         <Previzualizer dockerCompose={props.dockerCompose} rerender={rerender}/>
       </Grid>
     </Grid>
