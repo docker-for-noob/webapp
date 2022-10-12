@@ -3,7 +3,7 @@ import {Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableH
 import {VolumeType, EnvType} from '../Form/ServiceForm/ServiceForm';
 import {InputTextForm} from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {DockerCompose, DockerContainer, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
+import {env, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import {MAX_PORT_VALUE} from '@core/domain/dockerCompose/ports/Utils';
 import {
@@ -13,6 +13,14 @@ import {
     envVariablePathUIValidator,
     volumesUIValidator
 } from "@infrastructure/validators/InputValidator";
+import {acquireHelperText, handleError, Maybe} from "@core/application/commons/maybe/Maybe";
+import {
+    envKeyValidator,
+    envValueValidator,
+    VolumeContainerValidator,
+    VolumeHostValidator
+} from "@core/application/validators/InputValidators";
+
 
 interface InputImageVolumesProps {
     setDisableNext: (disable: boolean) => void;
@@ -57,19 +65,25 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
             <InputTextForm label="Chemin sur votre machine"
                            value={machineRoute}
                            onChange={handleMachineRouteChange}
-                           error={volumesUIValidator(machineRoute)}
+                           error={VolumeHostValidator({host: machineRoute, container: dockerRoute})(machineRoute)}
             />
             <InputTextForm label="Chemin dans le container"
                            value={dockerRoute}
                            onChange={handleDockerRouteChange}
-                           error={volumesUIValidator(dockerRoute)}
+                           error={VolumeContainerValidator({host: machineRoute, container: dockerRoute})(dockerRoute)}
             />
             <Box>
                 <Button
                     startIcon={<AddIcon/>}
                     variant='outlined'
                     onClick={handleVolumesChange}
-                    disabled={handleError(volumesUIValidator(machineRoute)) || handleError(volumesUIValidator(dockerRoute))}>
+                    disabled={handleError(VolumeContainerValidator({
+                        host: machineRoute,
+                        container: dockerRoute
+                    })(dockerRoute)) || handleError(VolumeHostValidator({
+                        host: machineRoute,
+                        container: dockerRoute
+                    })(machineRoute))}>
                     Ajouter
                 </Button>
             </Box>
@@ -143,19 +157,22 @@ export const InputImageEnvVariables = (props: InputImageEnvVariablesProps) => {
                 label="Clé"
                 value={key}
                 onChange={handleKeyChange}
-                error={envVariableNameUIValidator(key)}
+                error={envKeyValidator({key, value})(key)}
             />
             <InputTextForm
                 label="Valeur"
                 value={value}
                 onChange={handleValueChange}
-                error={envVariableValueUIValidator(value)}
+                error={envValueValidator({key, value})(value)}
             />
             <Box>
                 <Button
                     startIcon={<AddIcon/>}
                     variant='outlined'
-                    disabled={handleError(envVariableNameUIValidator(key)) || handleError(envVariableValueUIValidator(value))}
+                    disabled={handleError(envKeyValidator({key, value})(key)) || handleError(envValueValidator({
+                        key,
+                        value
+                    })(value))}
                     onClick={handleEnvChange}>
                     Ajouter
                 </Button>
@@ -286,4 +303,4 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
             </Table>
         </Box>
     );
-} 
+}

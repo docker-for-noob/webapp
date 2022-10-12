@@ -17,7 +17,7 @@ interface ServiceFormStep3Props {
 
     const {useFetchImageReferenceQuery} = apiSlice;
     const imageReferenceQuery = useFetchImageReferenceQuery({ image: props.container.ImageName });
-  
+
     useEffect(() => {
       props.setSubstep(step);
     }, [step]);
@@ -39,7 +39,7 @@ interface ServiceFormStep3Props {
       });
       setStep(1);
     }, [imageReferenceQuery]);
-  
+
     const handleChange =
       (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
         setStep((old) => (newExpanded ? step : old));
@@ -72,7 +72,7 @@ interface ServiceFormStep3Props {
         }
       })
     }
-  
+
     const handleAddVolume = (volume: volumes) => {
       if (props.container.Volumes !== undefined && props.container.Volumes.find((v) => v.host === volume.host)) {
         return;
@@ -95,7 +95,7 @@ interface ServiceFormStep3Props {
         }
       })
     }
-  
+
     const handleAddEnvVariable = (envVariable: env) => {
       if (props.container.Env === undefined || props.container.Env.find((e) => e.key === envVariable.key)) {
         return;
@@ -118,7 +118,7 @@ interface ServiceFormStep3Props {
         }
       })
     }
-  
+
     const accordionDetails = [
       {
         title: "Ports",

@@ -7,7 +7,7 @@ import {
   isWarning,
 } from "../core/application/commons/maybe/Maybe";
 import { ValidatorService } from "../core/domain/dockerCompose/service/validator/ValidatorService";
-import { env } from "../core/domain/dockerCompose/models/DockerImage";
+import {env, volumes} from "../core/domain/dockerCompose/models/DockerImage";
 
 const {
   isDefaultPort,
@@ -149,8 +149,17 @@ test("env kvp contain a value but no key and return an error", () => {
   expect(getError(result!)).toStrictEqual("Une clé doit être saisie");
 });
 
+test("env kvp contain a value and a key and return undefined", () => {
+  const emptyEnv: env = { key: "key", value: "value" };
+
+  const result = VolumeValueMustBeRelateToKey(emptyEnv);
+  expect(result).toBeUndefined();
+});
+
+
+
 test("volume kvp contain 2 empty string and return undefined", () => {
-  const emptyEnv: env = { key: "", value: "" };
+  const emptyEnv: volumes = { host: "", container: "" };
 
   const result = VolumeValueMustBeRelateToKey(emptyEnv);
 
@@ -158,17 +167,25 @@ test("volume kvp contain 2 empty string and return undefined", () => {
 });
 
 test("volume kvp contain a key but no value  and return an error", () => {
-  const emptyEnv: env = { key: "key", value: "" };
+  const emptyEnv: volumes = { host: "key", container: "" };
 
   const result = VolumeValueMustBeRelateToKey(emptyEnv);
   expect(isError(result!)).toStrictEqual(true);
-  expect(getError(result!)).toStrictEqual("Une valeur doit être saisie");
+  expect(getError(result!)).toStrictEqual("Un chemin container doit être saisie");
 });
 
 test("volume kvp contain a value but no key and return an error", () => {
-  const emptyEnv: env = { key: "", value: "value" };
+  const emptyEnv: volumes = { host: "", container: "value" };
 
   const result = VolumeValueMustBeRelateToKey(emptyEnv);
   expect(isError(result!)).toStrictEqual(true);
-  expect(getError(result!)).toStrictEqual("Une clé doit être saisie");
+  expect(getError(result!)).toStrictEqual("Un chemin host doit être saisie");
 });
+
+test("volume kvp contain a value and a key and return undefined", () => {
+  const emptyEnv: volumes = { host: "key", container: "value" };
+
+  const result = VolumeValueMustBeRelateToKey(emptyEnv);
+  expect(result).toBeUndefined();
+});
+
