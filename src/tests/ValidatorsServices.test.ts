@@ -118,7 +118,7 @@ test("Service name isnt  unique and return a warning", () => {
   const result = ServiceNameNeedAnAlias(allServiceName)("Service1");
   expect(isWarning(result!)).toStrictEqual(true);
   expect(getWarning(result!)).toStrictEqual(
-    "le service : Service1 doit avoir un alias"
+    "le service : Service1 est déjà existant"
   );
 });
 
