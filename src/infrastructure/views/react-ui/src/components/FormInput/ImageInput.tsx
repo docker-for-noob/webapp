@@ -1,19 +1,14 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import {Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
-import {VolumeType, EnvType} from '../Form/ServiceForm/ServiceForm';
 import {InputTextForm} from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {env, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import {MAX_PORT_VALUE} from '@core/domain/dockerCompose/ports/Utils';
 import {
-    portUIValidator,
-    envVariableNameUIValidator,
-    envVariableValueUIValidator,
-    envVariablePathUIValidator,
-    volumesUIValidator
+    portUIValidator, versionUIValidator,
 } from "@infrastructure/validators/InputValidator";
-import {acquireHelperText, handleError, Maybe} from "@core/application/commons/maybe/Maybe";
+import {handleError} from "@core/application/commons/maybe/Maybe";
 import {
     envKeyValidator,
     envValueValidator,
@@ -32,7 +27,6 @@ interface InputImageVolumesProps {
 export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
     const [volumesList, setVolumesList] = useState<Array<volumes>>(props.currentVolumes);
-
     const [machineRoute, setMachineRoute] = useState("");
     const [dockerRoute, setDockerRoute] = useState("");
 
@@ -223,8 +217,8 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
     }, [props.currentPorts]);
 
     const handleAddPort = () => {
-        setPortList([...portList, {host: String(hostPort), container: String(externalPort)}]);
-        props.handleAddPort({host: String(hostPort), container: String(externalPort)});
+        setPortList([...portList, {host: String(hostPort), container: String(containerPort)}]);
+        props.handleAddPort({host: String(hostPort), container: String(containerPort)});
         setHostPort(0);
         setContainerPort(0);
     }
@@ -252,10 +246,6 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
         setHostPort(getPortNumber(Number(event.target.value)));
     }
 
-    useEffect(() => {
-        props.handlePortsChange({host: String(hostPort ?? 0), container: String(containerPort ?? 0)});
-    }, [hostPort, containerPort]);
-
     return (
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
             <InputTextForm label="Port machine"
@@ -274,7 +264,7 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
                 <Button
                     startIcon={<AddIcon/>}
                     variant='outlined'
-                    disabled={portUIValidator(String(hostPort))?.error != undefined || portUIValidator(String(externalPort))?.error != undefined}
+                    disabled={handleError(portUIValidator(hostPort)) || handleError(portUIValidator(containerPort))}
                     onClick={handleAddPort}>
                     Ajouter
                 </Button>

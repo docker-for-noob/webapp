@@ -14,7 +14,6 @@ import { mockHelpers } from "../../../mock/HelperMock";
 import { HelperData, Helper } from "../../Helper";
 import { Previzualizer } from "../../Previzualizer";
 import { DockerCompose, DockerContainer } from '@core/domain/dockerCompose/models/DockerImage';
-
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { ServiceFormStep1 } from "./ServiceFormStep1";

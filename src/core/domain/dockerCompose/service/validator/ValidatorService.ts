@@ -9,7 +9,8 @@ import {
 import {Validator} from "../../../../application/validators/type/type";
 import {
     containerPathMustBeInput,
-    defaultPortSuggest, hostPathMustBeInput,
+    defaultPortSuggest,
+    hostPathMustBeInput,
     keyMustBeInput,
     portAlreadyInUse,
     serviceNeedAnAlias,

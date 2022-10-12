@@ -8,13 +8,6 @@ import {
 } from "../core/application/commons/maybe/Maybe";
 import {ValidatorService} from "../core/domain/dockerCompose/service/validator/ValidatorService";
 import {env, volumes} from "../core/domain/dockerCompose/models/DockerImage";
-import {Validator} from "../core/application/validators/type/type";
-import {
-    containerPathMustBeInput,
-    hostPathMustBeInput,
-    keyMustBeInput,
-    valueMustBeInput
-} from "../core/domain/dockerCompose/service/validator/ValidatorException";
 
 const {
     isDefaultPort,

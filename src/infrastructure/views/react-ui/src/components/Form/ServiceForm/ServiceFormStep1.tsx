@@ -3,6 +3,7 @@ import {FormControlLabel, Switch} from "@mui/material";
 import React, {Dispatch, SetStateAction, useState, useEffect, ChangeEvent} from "react";
 import {InputTextForm} from "../../FormInput/BaseInput";
 import {containerNameUIValidator} from "@infrastructure/validators/InputValidator";
+import {ServiceNameValidator} from "@core/application/validators/InputValidators";
 
 interface ServiceFormStep1Props {
     setDisableNext: (disable: boolean) => void;
