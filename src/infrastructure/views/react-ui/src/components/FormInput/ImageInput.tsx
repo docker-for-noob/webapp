@@ -10,8 +10,9 @@ import {
 } from "@infrastructure/validators/InputValidator";
 import {handleError} from "@core/application/commons/maybe/Maybe";
 import {
+    ContainerPortValidator,
     envKeyValidator,
-    envValueValidator,
+    envValueValidator, HostPortValidator,
     VolumeContainerValidator,
     VolumeHostValidator
 } from "@core/application/validators/InputValidators";
