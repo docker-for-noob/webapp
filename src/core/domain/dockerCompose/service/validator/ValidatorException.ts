@@ -6,9 +6,9 @@ import {
     Warning,
     warning,
 } from "../../../../application/commons/maybe/Maybe";
-import {formatPrimitiveHCToString} from "../../../../application/downloader/format/FormatHelpers";
 import {HostContainer} from "../../models/DockerImage";
 import {DomainException} from "../../../../application/commons/exception/exception";
+import {formatPrimitiveHCToString} from "../../../../application/downloader/format/FormatHelpers";
 
 const valueMustBeInput: Error<DomainException> = error<string>(
     "Une valeur doit être saisie"

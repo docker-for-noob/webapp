@@ -10,7 +10,6 @@ import {
 import {
   containerNameUIValidator,
   envVariableNameUIValidator,
-  envVariablePathUIValidator,
   imageTypeUIValidator,
   languageUIValidator,
   portUIValidator,
@@ -19,7 +18,6 @@ import {
   versionUIValidator,
   volumesUIValidator,
 } from "../infrastructure/validators/InputValidator";
-import { ValidatorService } from "../core/domain/dockerCompose/service/validator/ValidatorService";
 
 test("no networking has been sent and return an error", () => {
   const initial = undefined;
@@ -54,26 +52,6 @@ test("an env variable in lowercase has been sent and return an error message", (
   expect(envVariableNameUIValidator(initial)).toStrictEqual(
     mustBeInUpperCaseError
   );
-});
-
-test("a valid env path func has been sent and return undefined", () => {
-  const initial = "C://test";
-  expect(envVariablePathUIValidator(initial)).toStrictEqual(undefined);
-});
-
-test("an unvalid env path func has been sent and return an error message", () => {
-  const initial = "C://te?st.html";
-  expect(envVariablePathUIValidator(initial)).toStrictEqual(mustBePathError);
-});
-
-test("a valid env path func has been sent and return undefined", () => {
-  const initial = "C://test/hello.html";
-  expect(envVariablePathUIValidator(initial)).toStrictEqual(undefined);
-});
-
-test("an unvalid env path func has been sent and return an error message", () => {
-  const initial = "C:/hel**o";
-  expect(envVariablePathUIValidator(initial)).toStrictEqual(mustBePathError);
 });
 
 test("a correct service name has been sent and return undefined", () => {
@@ -219,19 +197,4 @@ test("a tag as int has been sent and return an error", () => {
 test("a valid volume path has been sent and return undefined", () => {
   const initial = "C://test";
   expect(volumesUIValidator(initial)).toStrictEqual(undefined);
-});
-
-test("an unvalid volume path has been sent and return an error message", () => {
-  const initial = "C://te?st.html";
-  expect(envVariablePathUIValidator(initial)).toStrictEqual(mustBePathError);
-});
-
-test("a valid volume path has been sent and return undefined", () => {
-  const initial = "C://test/hello.html";
-  expect(envVariablePathUIValidator(initial)).toStrictEqual(undefined);
-});
-
-test("an unvalid volume path has been sent and return an error message", () => {
-  const initial = "C:/hel**o";
-  expect(envVariablePathUIValidator(initial)).toStrictEqual(mustBePathError);
 });
