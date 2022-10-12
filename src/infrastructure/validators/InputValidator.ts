@@ -12,8 +12,6 @@ import { combineValidator } from "../../core/application/validators/CombineValid
 
 const envVariableNameUIValidator: Validator = (value) =>
   combineValidator(mustBeInUpperCase, mustBeString)(value);
-const envVariableValueUIValidator: Validator = (value) =>
-  combineValidator(required)(value);
 const envVariablePathUIValidator: Validator = (value) =>
   combineValidator(mustBePath)(value);
 const versionUIValidator: Validator = (value) =>
@@ -21,7 +19,7 @@ const versionUIValidator: Validator = (value) =>
 const tagsUIValidator: Validator = (value) =>
   combineValidator(mustBeString, mustNotContainsWhiteSpace)(value);
 const volumesUIValidator: Validator = (value) =>
-  combineValidator(required, mustBePath)(value);
+  combineValidator(mustBePath)(value);
 
 const serviceNameUIValidator: Validator = (value) =>
   combineValidator(
@@ -56,11 +54,10 @@ const imageTypeUIValidator: Validator = (value) =>
 
 const portUIValidator = (value) =>
   combineValidator(required, mustBeString)(value);
-  
+
 export {
   portUIValidator,
   envVariableNameUIValidator,
-  envVariableValueUIValidator,
   envVariablePathUIValidator,
   serviceNameUIValidator,
   containerNameUIValidator,

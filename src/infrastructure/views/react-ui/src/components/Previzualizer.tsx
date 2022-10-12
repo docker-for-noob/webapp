@@ -6,6 +6,7 @@ import { DockerCompose,  } from '@core/domain/dockerCompose/models/DockerImage';
 import { yamlAdapter } from '../../../../format/yaml/YamlAdapter';
 import DownloadIcon from '@mui/icons-material/Download';
 import { downloadDockerCompose } from '@core/application/downloader/Downloader';
+import { formatDockerComposeToPrevisualisation } from '@core/application/downloader/format/Formatter';
 
 
 interface PrevizualizerProps {
@@ -27,7 +28,10 @@ export function Previzualizer(props: PrevizualizerProps) {
             alert('No docker-compose.yml')
         }
         setIsLoading(false)
-        
+    }
+
+    const handlePrevizualization = (dockerCompose :DockerCompose): string => {
+        return formatDockerComposeToPrevisualisation(dockerCompose)
     }
 
     return (
@@ -37,7 +41,7 @@ export function Previzualizer(props: PrevizualizerProps) {
                     <pre>
                         {props.dockerCompose ?
 
-                            JSON.stringify(yamlAdapter((props.dockerCompose)), null, 2)
+                           handlePrevizualization(props.dockerCompose)
                             :
                             'No docker-compose.yml'
                         }

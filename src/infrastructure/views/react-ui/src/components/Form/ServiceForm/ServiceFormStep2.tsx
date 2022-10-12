@@ -5,56 +5,54 @@ import { InputTextForm } from "../../FormInput/BaseInput";
 import { mockImages } from "../../../mock/ServiceFormMock";
 import { apiSlice } from "../../../../../../redux/api/apiSlice";
 import { ImageType, VersionType } from "./ServiceForm";
-import { PopulateImageDTO } from "../../../../../../redux/api/DTO";
+import { PopulateImageDTO, TagsFromImageVersionDTO } from "../../../../../../redux/api/DTO";
 import { imageParams } from "../../../../../../redux/api/requestParams";
 import { imageTypeUIValidator, versionUIValidator, tagsUIValidator } from "@infrastructure/validators/InputValidator";
+import ContainerImage from "../../ContainerImage";
 
 interface ServiceFormStep2Props {
     setDisableNext: (disable: boolean) => void;
-    setContainer: Dispatch<SetStateAction<DockerContainer>>
+    setContainer: Dispatch<SetStateAction<DockerContainer>>;
+    container: DockerContainer;
 }
   
 export function ServiceFormStep2(props: ServiceFormStep2Props) {
-    const defaultImage = {
-      id: 0,
-      name: "",
-      versions: [],
-      isUtils: false,
-    };
   
-    const defaultVersion = { version: '', tags: [] };
-  
-    const [chosenImage, setChosenImage] = useState<string>('');
-    const [chosenVersion, setChosenVersion] = useState<string>('');
-    const [chosenTags, setChosenTags] = useState<string>('');
+    const [chosenImage, setChosenImage] = useState<string>(props.container.ImageName.split(':')[0]);
+    const [chosenVersion, setChosenVersion] = useState<string>(props.container.ImageName.split(':')[1] ?? '');
+    const [chosenTags, setChosenTags] = useState<string>(props.container.Tag ?? '');
     const [fullImageList, setFullImageList] = useState<Array<string>>([]);
     const [imageList, setImageList] = useState<Array<string>>([]);
     const [versionList, setVersionList] = useState<Array<string>>([]);
     const [tagList, setTagList] = useState<Array<string>>([]);
-    const [imageSearchInput, setImageSearchInput] = useState("");
-    const [versionSearchInput, setVersionSearchInput] = useState("");
-    const [tagSearchInput, setTagSearchInput] = useState("");
+    const [imageSearchInput, setImageSearchInput] = useState(props.container.ImageName.split(':')[0]);
     const [isImageInputActive, setImageInputActive] = useState(true);
-    const [isVersionInputActive, setVersionInputActive] = useState(false);
-    const [isTagInputActive, setTagInputActive] = useState(false);
+    const [isVersionInputActive, setVersionInputActive] = useState(!!props.container.ImageName.split(':')[0]);
+    const [isTagInputActive, setTagInputActive] = useState(!!props.container.ImageName.split(':')[1]);
     const {
       usePopulateImageQuery,
       usePopulateVersionQuery,
       usePopulateTagQuery,
-      useFetchImageReferenceQuery,
     } = apiSlice;
     const populateImageQuery = usePopulateImageQuery();
     const populateVersionQuery = usePopulateVersionQuery({ image: chosenImage });
     const populateTagQuery = usePopulateTagQuery({ image: chosenImage, version: chosenVersion });
 
 
+  const nextStepIsDisabled = () => {
+      return chosenImage === '' || chosenVersion === '' || chosenTags === '';
+  };
+
+  useEffect(() => {
+      props.setDisableNext(nextStepIsDisabled());
+  }, [chosenImage, chosenVersion, chosenTags]);
+    
     useEffect(() => {
       const {
         data: populatedImage,
         error: imageError,
         isLoading: imageLoading,
       } = populateImageQuery;
-      //console.log(populatedImage, imageError, imageLoading);
       setFullImageList(populatedImage?.Images ?? []);
     }, [populateImageQuery]);  
 
@@ -64,7 +62,6 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         error: versionError,
         isLoading: versionLoading
       } = populateVersionQuery;
-      //console.log(populatedVersion, versionError, versionLoading);
       setVersionList(populatedVersion?.Versions ?? []);
     }, [populateVersionQuery]);
 
@@ -74,11 +71,8 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
       error: tagError,
       isLoading: tagLoading
     } = populateTagQuery;
-    //console.log(populatedTag, tagError, tagLoading);
-    console.log(populatedTag);
-    const tmpTags = populatedTag ?? [];
     const tags: Array<string> = [];
-    tmpTags.forEach(tag => {
+    populatedTag?.forEach((tag: TagsFromImageVersionDTO) => {
       tags.push(tag.Name);
     });
     setTagList(tags);
@@ -88,7 +82,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
       props.setContainer((prev: DockerContainer) => {
         return {
           ...prev,
-          ImageName: chosenImage,
+          ImageName: chosenImage + ':' + chosenVersion,
           Tag: chosenTags
         }
       })
@@ -105,12 +99,10 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
   
     const handleChangeVersion = (version: string | null) => {
       if (version !== null && version !== "") {
-        setVersionSearchInput(version);
         setChosenVersion(version);
         setTagInputActive(true);
         setVersionInputActive(false);
       } else {
-        setVersionSearchInput("");
         setChosenVersion('');
         setTagList([]);
         setTagInputActive(false);
@@ -154,12 +146,10 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         setImageInputActive(true);
         setVersionInputActive(false);
         setChosenVersion('');
-        setVersionSearchInput("");
       } else if (step === 2) {
         setVersionInputActive(true);
         setTagInputActive(false);
         setChosenTags('');
-        setTagSearchInput("");
       }
     }
     interface ImageCardType {
@@ -170,9 +160,12 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
       return (
         <Card sx={{ backgroundColor: "#F0F0F0", margin: "0 0.5rem" }}>
           <CardContent>
-            <Typography variant="h5" component="div">
-              {image.image}
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                <ContainerImage imageName={image.image} />
+                <Typography variant="h6" component="div" style={{ overflowWrap: "anywhere" }}>
+                    {image.image}
+                </Typography>
+            </Box>
           </CardContent>
           <CardActions>
             <Button
