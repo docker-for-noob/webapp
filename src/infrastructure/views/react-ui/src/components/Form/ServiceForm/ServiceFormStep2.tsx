@@ -2,22 +2,20 @@ import { DockerContainer } from "@core/domain/dockerCompose/models/DockerImage";
 import { Card, CardContent, Typography, CardActions, Button, Grid, Autocomplete, TextField, Box } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent, useCallback } from "react";
 import { InputTextForm } from "../../FormInput/BaseInput";
-import { mockImages } from "../../../mock/ServiceFormMock";
 import { apiSlice } from "../../../../../../redux/api/apiSlice";
-import { ImageType, VersionType } from "./ServiceForm";
-import { PopulateImageDTO, TagsFromImageVersionDTO } from "../../../../../../redux/api/DTO";
-import { imageParams } from "../../../../../../redux/api/requestParams";
+import {  TagsFromImageVersionDTO } from "../../../../../../redux/api/DTO";
 import { imageTypeUIValidator, versionUIValidator, tagsUIValidator } from "@infrastructure/validators/InputValidator";
 import ContainerImage from "../../ContainerImage";
+import {acquireHelperText, handleError} from "@core/application/commons/maybe/Maybe";
 
 interface ServiceFormStep2Props {
     setDisableNext: (disable: boolean) => void;
     setContainer: Dispatch<SetStateAction<DockerContainer>>;
     container: DockerContainer;
 }
-  
+
 export function ServiceFormStep2(props: ServiceFormStep2Props) {
-  
+
     const [chosenImage, setChosenImage] = useState<string>(props.container.ImageName.split(':')[0]);
     const [chosenVersion, setChosenVersion] = useState<string>(props.container.ImageName.split(':')[1] ?? '');
     const [chosenTags, setChosenTags] = useState<string>(props.container.Tag ?? '');
@@ -30,13 +28,13 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     const [isVersionInputActive, setVersionInputActive] = useState(!!props.container.ImageName.split(':')[0]);
     const [isTagInputActive, setTagInputActive] = useState(!!props.container.ImageName.split(':')[1]);
     const {
-      usePopulateImageQuery,
-      usePopulateVersionQuery,
-      usePopulateTagQuery,
+        usePopulateImageQuery,
+        usePopulateVersionQuery,
+        usePopulateTagQuery
     } = apiSlice;
     const populateImageQuery = usePopulateImageQuery();
-    const populateVersionQuery = usePopulateVersionQuery({ image: chosenImage });
-    const populateTagQuery = usePopulateTagQuery({ image: chosenImage, version: chosenVersion });
+    const populateVersionQuery = usePopulateVersionQuery({image: chosenImage});
+    const populateTagQuery = usePopulateTagQuery({image: chosenImage, version: chosenVersion});
 
 
   const nextStepIsDisabled = () => {
@@ -46,7 +44,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
   useEffect(() => {
       props.setDisableNext(nextStepIsDisabled());
   }, [chosenImage, chosenVersion, chosenTags]);
-    
+
     useEffect(() => {
       const {
         data: populatedImage,
@@ -89,14 +87,14 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     }, [chosenImage, chosenVersion, chosenTags]);
 
     const handleChooseImage = (image: string) => {
-      setChosenImage(image);
-      setImageSearchInput(image);
-      setImageList([]);
-      setChosenVersion('');
-      setVersionInputActive(true);
-      setImageInputActive(false);
+        setChosenImage(image);
+        setImageSearchInput(image);
+        setImageList([]);
+        setChosenVersion('');
+        setVersionInputActive(true);
+        setImageInputActive(false);
     };
-  
+
     const handleChangeVersion = (version: string | null) => {
       if (version !== null && version !== "") {
         setChosenVersion(version);
@@ -108,39 +106,39 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         setTagInputActive(false);
       }
     };
-  
+
     const handleChangeTags = (tags: string | null) => {
-      setChosenTags(tags ?? '');
+        setChosenTags(tags ?? '');
     }
-  
+
     const handleImageFilterInput = (event: ChangeEvent<HTMLInputElement>) => {
-      setImageSearchInput(event.target.value);
-      const listToFilter = fullImageList ?? [];
-      if (event.target.value != '') {
-        setImageList(
-          listToFilter
-            .filter((image) =>
-              image
-                .toLowerCase()
-                .startsWith(event.target.value.toLowerCase())
-            )
-            .slice(0, 9)
-        );
-      } else {
-        setImageList([]);
-      }
+        setImageSearchInput(event.target.value);
+        const listToFilter = fullImageList ?? [];
+        if (event.target.value != '') {
+            setImageList(
+                listToFilter
+                    .filter((image) =>
+                        image
+                            .toLowerCase()
+                            .startsWith(event.target.value.toLowerCase())
+                    )
+                    .slice(0, 9)
+            );
+        } else {
+            setImageList([]);
+        }
     };
-  
+
     const handleNextStep = (step: number) => {
-      if (step === 1) {
-        setImageInputActive(false);
-        setVersionInputActive(true);
-      } else if (step === 2) {
-        setVersionInputActive(false);
-        setTagInputActive(true);
-      }
+        if (step === 1) {
+            setImageInputActive(false);
+            setVersionInputActive(true);
+        } else if (step === 2) {
+            setVersionInputActive(false);
+            setTagInputActive(true);
+        }
     }
-  
+
     const handlePreviousStep = (step: number) => {
       if (step === 1) {
         setImageInputActive(true);
@@ -152,8 +150,9 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         setChosenTags('');
       }
     }
+
     interface ImageCardType {
-      image: string;
+        image: string;
     }
 
     const ImageCard = (image: ImageCardType) => {
@@ -180,87 +179,89 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         </Card>
       );
     };
-  
+
     return (
-      <form style={{ display: "flex", flexDirection: "column", padding: '1rem' }}>
-        <InputTextForm 
-        variant="filled"
-        label="Rechercher un type d'image"
-        value={imageSearchInput}
-        onChange={handleImageFilterInput}
-        disabled={!isImageInputActive}
-        error={imageTypeUIValidator(chosenImage)?.error} />
-        <Grid container spacing={2}>
-          {imageList.map((image) => (
-            <Grid item xs={6} key={image}>
-              <ImageCard image={image}/>
+        <form style={{display: "flex", flexDirection: "column", padding: '1rem'}}>
+            <InputTextForm
+                variant="filled"
+                label="Rechercher un type d'image"
+                value={imageSearchInput}
+                onChange={handleImageFilterInput}
+                disabled={!isImageInputActive}
+                error={imageTypeUIValidator(chosenImage)}/>
+            <Grid container spacing={2}>
+                {imageList.map((image) => (
+                    <Grid item xs={6} key={image}>
+                        <ImageCard image={image}/>
+                    </Grid>
+                ))}
             </Grid>
-          ))}
-        </Grid>
-  
-        <Autocomplete
-          id="version-select"
-          options={versionList}
-          autoHighlight
-          getOptionLabel={(option) => option}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              sx={{ margin: '1rem 0' }}
-              label="Choisissez une version"
-              variant="filled"
-              helperText={versionUIValidator(chosenVersion)?.error}
-              error={!!versionUIValidator(chosenVersion)?.error}
-              inputProps={{
-                ...params.inputProps,
-                autoComplete: 'new-password', // disable autocomplete and autofill
-              }}
+
+            <Autocomplete
+                id="version-select"
+                options={versionList}
+                autoHighlight
+                getOptionLabel={(option) => option}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        sx={{margin: '1rem 0'}}
+                        label="Choisissez une version"
+                        variant="filled"
+                        helperText={acquireHelperText(versionUIValidator(chosenVersion))}
+                        error={handleError(versionUIValidator(chosenVersion))}
+                        inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password', // disable autocomplete and autofill
+                        }}
+                    />
+                )}
+                value={chosenVersion}
+                onChange={(_event: any, newValue: string | null) => {
+                    handleChangeVersion(newValue);
+                }}
+                disabled={!isVersionInputActive}
             />
-          )}
-          value={chosenVersion}
-          onChange={(_event: any, newValue: string | null) => {
-            handleChangeVersion(newValue);
-          }}
-          disabled={!isVersionInputActive}
-        />
-        {isVersionInputActive &&
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(1)} sx={{ margin: '0.5rem 1rem' }}>Précédent</Button>
-          </Box>
-        }
-  
-        <Autocomplete
-          id="tag-select"
-          options={tagList}
-          autoHighlight
-          getOptionLabel={(option) => option}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              sx={{ margin: '0 0 1rem 0' }}
-              label="Choisissez vos tags"
-              variant="filled"
-              helperText={tagsUIValidator(chosenTags)?.error}
-              error={!!tagsUIValidator(chosenTags)?.error}
-              inputProps={{
-                ...params.inputProps,
-                autoComplete: 'new-password', // disable autocomplete and autofill
-              }}
+            {isVersionInputActive &&
+                <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                    <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(1)}
+                            sx={{margin: '0.5rem 1rem'}}>Précédent</Button>
+                </Box>
+            }
+
+            <Autocomplete
+                id="tag-select"
+                options={tagList}
+                autoHighlight
+                getOptionLabel={(option) => option}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        sx={{margin: '0 0 1rem 0'}}
+                        label="Choisissez vos tags"
+                        variant="filled"
+                        helperText={acquireHelperText(tagsUIValidator(chosenVersion))}
+                        error={handleError(tagsUIValidator(chosenVersion))}
+                        inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password', // disable autocomplete and autofill
+                        }}
+                    />
+                )}
+                value={chosenTags}
+                onChange={(_event: any, newValue: string | null) => {
+                    handleChangeTags(newValue);
+                }}
+                disabled={!isTagInputActive}
+
             />
-          )}
-          value={chosenTags}
-          onChange={(_event: any, newValue: string | null) => {
-            handleChangeTags(newValue);
-          }}
-          disabled={!isTagInputActive}
-          
-        />
-  
-        {isTagInputActive &&
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(2)} sx={{ margin: '0.5rem 1rem' }}>Précédent</Button>
-          </Box>
-        }
-      </form>
+
+            {isTagInputActive &&
+                <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                    <Button color="secondary" variant='contained' onClick={() => handlePreviousStep(2)}
+                            sx={{margin: '0.5rem 1rem'}}>Précédent</Button>
+                </Box>
+            }
+        </form>
     );
-  }
+}

@@ -8,6 +8,7 @@ export type kvp<T> = {
 };
 
 export type port = HostContainer<string>;
+export type defaultPorts = HostContainer<string>[];
 export type volumes = HostContainer<string>;
 export type env = kvp<string>;
 export type envArray = env[] | undefined;

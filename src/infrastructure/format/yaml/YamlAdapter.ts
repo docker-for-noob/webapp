@@ -4,7 +4,7 @@ import {
 } from "../../../core/domain/dockerCompose/models/DockerImage";
 import {
   formatEnvVarToKVPObject,
-  formatIEArrayToStringArray,
+  formatHCArrayToStringArray,
   formatImageName,
 } from "../../../core/application/downloader/format/FormatHelpers";
 
@@ -15,8 +15,8 @@ export const yamlAdapter = (data: DockerCompose) => {
       acc[container.ServiceName] = {
         container_name: container.ContainerName,
         image: formatImageName(container),
-        ports: formatIEArrayToStringArray(container.Ports),
-        volumes: formatIEArrayToStringArray(container.Volumes),
+        ports: formatHCArrayToStringArray(container.Ports),
+        volumes: formatHCArrayToStringArray(container.Volumes),
         environment: formatEnvVarToKVPObject(container.Env),
         link: container.Link,
         restart: container.Restart,

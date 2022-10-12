@@ -11,7 +11,7 @@ import {
   mustBePath,
   mustBeInUpperCase,
   mustNotContainsSpecialCharactersExceptUnderscore,
-} from "../infrastructure/validators/ValidatorDependance";
+} from "../infrastructure/validators/ValidatorDependency";
 import {
   mustBeInUpperCaseError,
   mustBeNumberError,

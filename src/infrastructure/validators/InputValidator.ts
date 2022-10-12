@@ -7,13 +7,13 @@ import {
   mustNotContainsSpecialCharactersExceptUnderscoreSlashAndPoint,
   mustNotContainsWhiteSpace,
   required,
-} from "./ValidatorDependance";
+} from "./ValidatorDependency";
 import { combineValidator } from "../../core/application/validators/CombineValidators";
 
 const envVariableNameUIValidator: Validator = (value) =>
   combineValidator(mustBeInUpperCase, mustBeString)(value);
-const envVariablePathUIValidator: Validator = (value) =>
-  combineValidator(mustBePath)(value);
+const envVariableValueUIValidator: Validator = (value) =>
+  combineValidator(mustBeString, required)(value);
 const versionUIValidator: Validator = (value) =>
   combineValidator(mustBeString, mustNotContainsWhiteSpace)(value);
 const tagsUIValidator: Validator = (value) =>
@@ -58,7 +58,7 @@ const portUIValidator = (value) =>
 export {
   portUIValidator,
   envVariableNameUIValidator,
-  envVariablePathUIValidator,
+  envVariableValueUIValidator,
   serviceNameUIValidator,
   containerNameUIValidator,
   languageUIValidator,

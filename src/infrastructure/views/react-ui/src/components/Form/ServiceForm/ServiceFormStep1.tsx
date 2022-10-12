@@ -1,19 +1,22 @@
-import { DockerContainer } from "@core/domain/dockerCompose/models/DockerImage";
-import { FormControlLabel, Switch } from "@mui/material";
-import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent } from "react";
-import { InputTextForm } from "../../FormInput/BaseInput";
-import { serviceNameUIValidator, containerNameUIValidator } from "@infrastructure/validators/InputValidator";
+import {DockerCompose, DockerContainer} from "@core/domain/dockerCompose/models/DockerImage";
+import {FormControlLabel, Switch} from "@mui/material";
+import React, {Dispatch, SetStateAction, useState, useEffect, ChangeEvent} from "react";
+import {InputTextForm} from "../../FormInput/BaseInput";
+import {containerNameUIValidator} from "@infrastructure/validators/InputValidator";
+import {ServiceNameValidator} from "@core/application/validators/InputValidators";
 
 interface ServiceFormStep1Props {
     setDisableNext: (disable: boolean) => void;
     setContainer: Dispatch<SetStateAction<DockerContainer>>;
     container: DockerContainer;
+    dockerCompose: DockerCompose;
 }
 
 export function ServiceFormStep1(props: ServiceFormStep1Props) {
     const [serviceName, setServiceName] = useState(props.container.ServiceName);
     const [alias, setAlias] = useState(props.container.ContainerName);
     const [hasAlias, setHasAlias] = useState(!!props.container.ContainerName);
+    const allServiceName = props.dockerCompose.Container.map(e => e.ServiceName)
 
     const nextStepIsDisabled = () => {
         return !serviceName || (hasAlias && !alias);
@@ -47,9 +50,9 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
     };
 
     return (
-        <form style={{ display: "flex", flexDirection: "column" }}>
+        <form style={{display: "flex", flexDirection: "column"}}>
             <InputTextForm
-                error={serviceNameUIValidator(serviceName)?.error}
+                error={ServiceNameValidator(allServiceName)(serviceName)}
                 label="Nom du service"
                 variant="filled"
                 value={serviceName}
@@ -57,13 +60,13 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
             />
 
             <FormControlLabel
-                control={<Switch checked={hasAlias} onChange={handleSwitch} />}
+                control={<Switch checked={hasAlias} onChange={handleSwitch}/>}
                 label="Ajouter un alias"
             />
 
             {hasAlias && (
                 <InputTextForm
-                    error={containerNameUIValidator(alias)?.error}
+                    error={containerNameUIValidator(alias)}
                     variant="filled"
                     label="Alias"
                     value={alias}
