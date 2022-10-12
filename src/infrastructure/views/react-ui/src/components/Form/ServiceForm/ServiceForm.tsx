@@ -159,7 +159,7 @@ export function ServiceForm(props: ServiceFormProps) {
       </Box>
       
       <Grid container spacing={4}>
-        <Grid item xs={7}>
+        <Grid item xs={6}>
           <Box sx={{paddingX:2,height:'70px'}}>
             <Typography variant="h1">{steps[activeStep]}</Typography>
           </Box>
@@ -174,7 +174,7 @@ export function ServiceForm(props: ServiceFormProps) {
             <Button variant='contained'endIcon={<ArrowForwardIosIcon />} onClick={handleNext} disabled={disableNext}>Suivant</Button>
           </Box>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <FormControlLabel
             control={
               <Switch

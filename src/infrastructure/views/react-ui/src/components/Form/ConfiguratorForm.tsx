@@ -143,7 +143,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={7}>
+      <Grid item xs={6}>
         <Box sx={{marginBottom:2,display:'flex',gap:1,alignItems:'start'}}>
           <Typography variant="h1">Configurateur</Typography>
           <Tooltip placement="right" title={TooltipTextH1()}>
@@ -225,7 +225,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
             </Button>
           </Box>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={6}>
         <Previzualizer dockerCompose={props.dockerCompose} rerender={rerender}/>
       </Grid>
     </Grid>

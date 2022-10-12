@@ -134,6 +134,7 @@ export const InputImageEnvVariables = (props: InputImageEnvVariablesProps) => {
     }
 
     const handleEnvChange = () => {
+        console.log(key, value);
         setEnvList([...envList, {key, value}]);
         props.handleAddEnvVariable({key, value});
         setKey('');
@@ -209,8 +210,8 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
 
     const [portList, setPortList] = useState<Array<port>>(props.currentPorts);
 
-    const [hostPort, setHostPort] = useState(props.defaultPorts?.host || 0);
-    const [containerPort, setContainerPort] = useState(props.defaultPorts?.container || 0);
+    const [hostPort, setHostPort] = useState(Number(props.defaultPorts?.host) || 0);
+    const [containerPort, setContainerPort] = useState(Number(props.defaultPorts?.container) || 0);
 
     useEffect(() => {
         setPortList(props.currentPorts);
@@ -243,7 +244,7 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
     }
 
     const handleExternalPortChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setHostPort(getPortNumber(Number(event.target.value)));
+        setContainerPort(getPortNumber(Number(event.target.value)));
     }
 
     return (
@@ -252,19 +253,19 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
                            type="number"
                            value={hostPort}
                            onChange={handleInternalPortChange}
-                           error={portUIValidator(hostPort)}
+                           error={portUIValidator(String(hostPort))}
             />
             <InputTextForm label="Port container"
                            type="number"
                            value={containerPort}
                            onChange={handleExternalPortChange}
-                           error={portUIValidator(containerPort)}
+                           error={portUIValidator(String(containerPort))}
             />
             <Box>
                 <Button
                     startIcon={<AddIcon/>}
                     variant='outlined'
-                    disabled={handleError(portUIValidator(hostPort)) || handleError(portUIValidator(containerPort))}
+                    disabled={handleError(portUIValidator(String(hostPort))) || handleError(portUIValidator(String(containerPort)))}
                     onClick={handleAddPort}>
                     Ajouter
                 </Button>

@@ -4,6 +4,7 @@ import React, {Dispatch, SetStateAction, useState, useEffect, ChangeEvent} from 
 import {InputTextForm} from "../../FormInput/BaseInput";
 import {containerNameUIValidator} from "@infrastructure/validators/InputValidator";
 import {ServiceNameValidator} from "@core/application/validators/InputValidators";
+import { handleError } from "@core/application/commons/maybe/Maybe";
 
 interface ServiceFormStep1Props {
     setDisableNext: (disable: boolean) => void;
@@ -19,8 +20,8 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
     const allServiceName = props.dockerCompose.Container.map(e => e.ServiceName)
 
     const nextStepIsDisabled = () => {
-        return !serviceName || (hasAlias && !alias);
-    };
+        return Boolean(handleError(ServiceNameValidator(allServiceName)(serviceName)) || (hasAlias && handleError(containerNameUIValidator(alias))));
+    }
 
     useEffect(() => {
         props.setDisableNext(nextStepIsDisabled());

@@ -26,7 +26,7 @@ const hostPathMustBeInput: Error<DomainException> = error<string>(
 );
 
 const serviceNeedAnAlias = (service: string): Warning<DomainException> =>
-  warning<string>(`le service : ${service} doit avoir un alias`);
+  warning<string>(`le service : ${service} est déjà existant`);
 const defaultPortSuggest = (
   value: HostContainer<string>
 ): Suggest<DomainException> =>
