@@ -29,4 +29,5 @@ export type DockerContainer = {
   Link?: string[];
   Env?: envArray;
   Command: string;
+  DependsOn?:string;
 };
