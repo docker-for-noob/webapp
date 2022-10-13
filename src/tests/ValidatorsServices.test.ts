@@ -103,12 +103,12 @@ test("Service name is unique and return undefined", () => {
   expect(result).toBeUndefined();
 });
 
-test("Service name isnt  unique and return a warning", () => {
+test("Service name isnt  unique and return an error", () => {
   const allServiceName = ["Service1", "Service2"];
 
   const result = ServiceNameNeedAnAlias(allServiceName)("Service1");
-  expect(isWarning(result!)).toStrictEqual(true);
-  expect(getWarning(result!)).toStrictEqual(
+  expect(isError(result!)).toStrictEqual(true);
+  expect(getError(result!)).toStrictEqual(
     "le service : Service1 est déjà existant"
   );
 });

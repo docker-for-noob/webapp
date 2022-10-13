@@ -1,5 +1,5 @@
 import { IValidatorService } from "../../ports/ValidatorsPorts";
-import { Suggest } from "../../../../application/commons/maybe/Maybe";
+import { Suggest, Warning } from "../../../../application/commons/maybe/Maybe";
 import {
   defaultPorts,
   env,
@@ -16,9 +16,10 @@ import {
   portAlreadyInUse,
   serviceNeedAnAlias,
   valueMustBeInput,
+  versionIsLatest,
 } from "./ValidatorException";
 
-const suggestPort = (value): Suggest<string> => defaultPortSuggest(value);
+const suggestPort = (value): Warning<string> => defaultPortSuggest(value);
 
 const isDefaultPort =
   (defaultPort?: port[]): Validator =>
@@ -92,6 +93,13 @@ const VolumeContainerMustBeRelateToHost =
     return undefined;
   };
 
+const VersionIsLatest =
+  (version: string): Validator =>
+  () => {
+    if (version == "latest") return versionIsLatest;
+    return undefined;
+  };
+
 export const ValidatorService: IValidatorService = {
   isDefaultPort,
   hostPortMustBeUnique,
@@ -101,4 +109,5 @@ export const ValidatorService: IValidatorService = {
   VolumeHostMustBeRelateToContainer,
   VolumeContainerMustBeRelateToHost,
   IsServiceUnique,
+  VersionIsLatest,
 };
