@@ -67,7 +67,7 @@ export default function DialogDownload(props: DialogDownloadProps) {
                     </DialogContentText>)
                     :
                     (<DialogContentText sx={{ mb: 2 }}>
-                        Nous n'avons pas trouvé de commandes personnalisées pour votre docker-compose.yml.
+                        Nous n avons pas trouvé de commandes personnalisées pour votre docker-compose.yml.
                         Vous pouvez directement télécharger le fichier.
                     </DialogContentText>)
                 }
