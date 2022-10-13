@@ -98,6 +98,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
         handleAddPort={(ports) => handleAddPort(indexContainer, ports)}
         handleRemovePort={(portIndex) => handleRemovePort(indexContainer, portIndex)}
         currentPorts={props.dockerCompose.Container[indexContainer].Ports ?? []}
+        suggestions={[]}
+        setSuggestions={() => { }}
       />,
       step: 1,
     },
@@ -109,6 +111,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
         handleAddVolume={(volume) => handleAddVolume(indexContainer, volume)}
         handleRemoveVolume={(volumeIndex) => handleRemoveVolume(indexContainer, volumeIndex)}
         currentVolumes={props.dockerCompose.Container[indexContainer].Volumes ?? []}
+        suggestions={[]}
+        setSuggestions={() => { }}
       />,
       step: 2,
     },
@@ -168,7 +172,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
                 <Box sx={{display:'flex',alignItems:'center'}}>
                     <Box>
                       <Typography variant="h3" sx={{fontSize:'17px'}}>{service.ServiceName}</Typography>
-                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.Ports ? service.Ports[0].container+':'+service.Ports[0].host : 'Aucun port'}</Typography>
+                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.Ports && service.Ports.length > 0 ? service.Ports[0].host+':'+service.Ports[0].container : 'Aucun port'}</Typography>
                     </Box>
                 </Box>
 
