@@ -169,7 +169,6 @@ test("mustBePath func take a path and return undefined", () => {
   expect(mustBePath(initial)).toStrictEqual(undefined);
 });
 
-
 test("mustBePath func take a string cut with special characters as path and return an error message", () => {
   const initial = "./hel**o";
   expect(mustBePath(initial)).toStrictEqual(undefined);
