@@ -21,24 +21,24 @@ import {
 const suggestPort = (value): Suggest<string> => defaultPortSuggest(value);
 
 const isDefaultPort =
-  (defaultPort?: defaultPorts): Validator =>
-  (value: port) => {
+  (defaultPort?: port[]): Validator =>
+  (value: string) => {
     if (defaultPort) {
-      const result = defaultPort.find(
-        (p) => p.container === value.container && p.host === value.host
-      );
+      const result = defaultPort.find((p) => p.container === value);
       if (result) return suggestPort(value);
     }
     return undefined;
   };
 
 const hostPortMustBeUnique =
-  (usedPort?: HostContainer<string>[]): Validator =>
+  (usedPort: (port[] | undefined)[]): Validator =>
   (value: port) => {
-    if (usedPort) {
-      const hostPortResult = usedPort.find((p) => p.host === value.host);
-      if (hostPortResult) return portAlreadyInUse(hostPortResult);
-    }
+    const portArray: string[] = [];
+    usedPort.map((value, index) => value?.map((e) => portArray.push(e.host)));
+
+    const hostPortResult = portArray.find((p) => p === String(value));
+
+    if (hostPortResult != undefined) return portAlreadyInUse(hostPortResult);
     return undefined;
   };
 

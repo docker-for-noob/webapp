@@ -9,7 +9,7 @@ import { Validator } from "../../../application/validators/type/type";
 
 export interface IValidatorService {
   isDefaultPort: (defaultPort?: defaultPorts) => Validator;
-  hostPortMustBeUnique: (usedPort?: HostContainer<string>[]) => Validator;
+  hostPortMustBeUnique: (usedPort: (port[] | undefined)[]) => Validator;
   ServiceNameNeedAnAlias: (value?: string[]) => Validator;
   EnvKeyMustBeRelateToValue: (env: env) => Validator;
   EnvValueMustBeRelateToKey: (env: env) => Validator;

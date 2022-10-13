@@ -6,7 +6,13 @@ import {
 } from "../../../infrastructure/validators/InputValidator";
 import { ValidatorService } from "../../domain/dockerCompose/service/validator/ValidatorService";
 import { combineValidator } from "./CombineValidators";
-import { env, volumes } from "../../domain/dockerCompose/models/DockerImage";
+import {
+  defaultPorts,
+  env,
+  HostContainer,
+  port,
+  volumes,
+} from "../../domain/dockerCompose/models/DockerImage";
 
 const {
   ServiceNameNeedAnAlias,
@@ -14,6 +20,8 @@ const {
   EnvValueMustBeRelateToKey,
   VolumeHostMustBeRelateToContainer,
   VolumeContainerMustBeRelateToHost,
+  isDefaultPort,
+  hostPortMustBeUnique,
 } = ValidatorService;
 
 export const ServiceNameValidator =
@@ -46,3 +54,11 @@ export const VolumeContainerValidator = (volume: volumes) => (value: string) =>
     VolumeContainerMustBeRelateToHost(volume),
     volumesUIValidator
   )(value);
+
+export const HostPortValidator =
+  (usedPort: (port[] | undefined)[]) => (value: string) =>
+    combineValidator(hostPortMustBeUnique(usedPort), portUIValidator)(value);
+
+export const ContainerPortValidator =
+  (defaultPort?: defaultPorts) => (value: string) =>
+    combineValidator(isDefaultPort(defaultPort), portUIValidator)(value);

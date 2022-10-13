@@ -16,7 +16,6 @@ import {
   InputImageVolumes,
 } from "../FormInput/ImageInput";
 import { Previzualizer } from "../Previzualizer";
-import { ServiceReference } from "@core/domain/serviceReference/models/service";
 import { DockerCompose, port, volumes, env } from '@core/domain/dockerCompose/models/DockerImage';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from '@mui/icons-material/Add';
@@ -100,6 +99,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
         currentPorts={props.dockerCompose.Container[indexContainer].Ports ?? []}
         suggestions={[]}
         setSuggestions={() => { }}
+        dockerCompose={props.dockerCompose}
       />,
       step: 1,
     },
