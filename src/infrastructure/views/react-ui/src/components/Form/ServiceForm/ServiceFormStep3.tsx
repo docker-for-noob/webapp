@@ -32,12 +32,14 @@ interface ServiceFormStep3Props {
         isLoading: imageReferenceLoading,
       } = imageReferenceQuery;
 
+      setVolumesSuggestions([]);
       imageReferenceData?.Workdir?.forEach((volume) => {
         setVolumesSuggestions((prev) => [...prev, { container: volume, host: volume }]);
       });
       imageReferenceData?.Env?.forEach((env) => {
         //TODO: add env variable suggestion
       });
+      setPortsSuggestions([]);
       imageReferenceData?.Port?.forEach((port) => {
         setPortsSuggestions((prev) => [...prev, {host: port, container: port}]);
       });
