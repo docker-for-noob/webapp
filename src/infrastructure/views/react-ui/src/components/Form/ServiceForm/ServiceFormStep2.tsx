@@ -132,7 +132,6 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         Tag: tmpImageNameWithTags
       }
     })
-    console.log(props.container);
   }, [chosenImage, chosenVersion, chosenTags]);
 
   const handleChooseImage = (image: string) => {
