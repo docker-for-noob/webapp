@@ -16,9 +16,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {DockerCompose, DockerContainer, env, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import {MAX_PORT_VALUE} from '@core/domain/dockerCompose/ports/Utils';
-import {
-    portUIValidator, versionUIValidator,
-} from "@infrastructure/validators/InputValidator";
 import {handleError} from "@core/application/commons/maybe/Maybe";
 import {
     ContainerPortValidator,
