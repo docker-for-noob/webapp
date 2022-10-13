@@ -18,7 +18,7 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
     const [alias, setAlias] = useState(props.container.ContainerName);
     const [hasAlias, setHasAlias] = useState(!!props.container.ContainerName);
     const [hasDependsOn,setHasDependsOn] = useState(props.container.DependsOn ? true : false)
-    const [dependsOn,setDependsOn] = useState(props.container.DependsOn ? props.container.DependsOn : false)
+    const [dependsOn,setDependsOn] = useState(props.container.DependsOn ? props.container.DependsOn : undefined)
     const allServiceName = props.dockerCompose.Container.map(e => e.ServiceName)
 
     const nextStepIsDisabled = () => {
@@ -66,9 +66,8 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
         setDependsOn('')
     }
 
-    const handleChangeDependsOn = (service: DockerContainer) => {
-        setDependsOn(service.ServiceName)
-        
+    const handleChangeDependsOn = (serviceName: string) => {
+        setDependsOn(serviceName)
     }
 
     return (
@@ -98,14 +97,13 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
 
             {props.dockerCompose.Container.length > 0 && 
                 <Box>
-                    <FormControlLabel control={<Switch checked={hasDependsOn}/>} onChange={handleSwitchDependsOn} label="Ajouter une dépendance " />
+                    <FormControlLabel control={<Switch checked={hasDependsOn} onChange={handleSwitchDependsOn} />} label="Ajouter une dépendance " />
                     {hasDependsOn && 
                         <Autocomplete
                             id="version-select"
                             options={props.dockerCompose.Container}
                             autoHighlight
                             getOptionLabel={(container) => container.ServiceName}
-                            onChange={(event: any, newValue: string | null) => { handleChangeDependsOn(newValue);}}
                             renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -118,7 +116,7 @@ export function ServiceFormStep1(props: ServiceFormStep1Props) {
                                 }}
                             />
                             )}
-                            
+                            onChange={(_event: any, newValue: DockerContainer | null) => { handleChangeDependsOn(newValue?.ServiceName ?? "");}}
                         />
                     }
                 </Box>
