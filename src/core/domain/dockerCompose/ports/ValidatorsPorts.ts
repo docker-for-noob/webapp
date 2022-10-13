@@ -16,4 +16,6 @@ export interface IValidatorService {
   VolumeHostMustBeRelateToContainer: (value: volumes) => Validator;
   VolumeContainerMustBeRelateToHost: (value: volumes) => Validator;
   IsServiceUnique: (actual: string) => (value?: string[]) => boolean;
+  VersionIsLatest : (version: string)=> Validator ;
+
 }

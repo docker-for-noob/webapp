@@ -1,12 +1,18 @@
-import { DockerContainer } from "@core/domain/dockerCompose/models/DockerImage";
-import { Card, CardContent, Typography, CardActions, Button, Grid, Autocomplete, TextField, Box } from "@mui/material";
-import React, { Dispatch, SetStateAction, useState, useEffect, ChangeEvent, useCallback } from "react";
-import { InputTextForm } from "../../FormInput/BaseInput";
-import { apiSlice } from "../../../../../../redux/api/apiSlice";
-import {  TagsFromImageVersionDTO } from "../../../../../../redux/api/DTO";
-import { imageTypeUIValidator, versionUIValidator, tagsUIValidator } from "@infrastructure/validators/InputValidator";
+import {DockerContainer} from "@core/domain/dockerCompose/models/DockerImage";
+import {Card, CardContent, Typography, CardActions, Button, Grid, Autocomplete, TextField, Box} from "@mui/material";
+import React, {Dispatch, SetStateAction, useState, useEffect, ChangeEvent, useCallback} from "react";
+import {InputTextForm} from "../../FormInput/BaseInput";
+import {apiSlice} from "../../../../../../redux/api/apiSlice";
+import {TagsFromImageVersionDTO} from "../../../../../../redux/api/DTO";
+import {imageTypeUIValidator, versionUIValidator, tagsUIValidator} from "@infrastructure/validators/InputValidator";
 import ContainerImage from "../../ContainerImage";
-import {acquireHelperText, handleError} from "@core/application/commons/maybe/Maybe";
+import {
+    acquireHelperText,
+    acquireValidationColor,
+    handleError,
+    handleFocus
+} from "@core/application/commons/maybe/Maybe";
+import {VersionValidator} from "@core/application/validators/InputValidators";
 
 interface ServiceFormStep2Props {
     setDisableNext: (disable: boolean) => void;
@@ -37,53 +43,53 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     const populateTagQuery = usePopulateTagQuery({image: chosenImage, version: chosenVersion});
 
 
-  const nextStepIsDisabled = () => {
-      return chosenImage === '' || chosenVersion === '' || chosenTags === '';
-  };
-
-  useEffect(() => {
-      props.setDisableNext(nextStepIsDisabled());
-  }, [chosenImage, chosenVersion, chosenTags]);
+    const nextStepIsDisabled = () => {
+        return chosenImage === '' || chosenVersion === '' || chosenTags === '';
+    };
 
     useEffect(() => {
-      const {
-        data: populatedImage,
-        error: imageError,
-        isLoading: imageLoading,
-      } = populateImageQuery;
-      setFullImageList(populatedImage?.Images ?? []);
-    }, [populateImageQuery]);  
+        props.setDisableNext(nextStepIsDisabled());
+    }, [chosenImage, chosenVersion, chosenTags]);
 
     useEffect(() => {
-      const {
-        data: populatedVersion,
-        error: versionError,
-        isLoading: versionLoading
-      } = populateVersionQuery;
-      setVersionList(populatedVersion?.Versions ?? []);
+        const {
+            data: populatedImage,
+            error: imageError,
+            isLoading: imageLoading,
+        } = populateImageQuery;
+        setFullImageList(populatedImage?.Images ?? []);
+    }, [populateImageQuery]);
+
+    useEffect(() => {
+        const {
+            data: populatedVersion,
+            error: versionError,
+            isLoading: versionLoading
+        } = populateVersionQuery;
+        setVersionList(populatedVersion?.Versions ?? []);
     }, [populateVersionQuery]);
 
-  useEffect(() => {
-    const {
-      data: populatedTag,
-      error: tagError,
-      isLoading: tagLoading
-    } = populateTagQuery;
-    const tags: Array<string> = [];
-    populatedTag?.forEach((tag: TagsFromImageVersionDTO) => {
-      tags.push(tag.Name);
-    });
-    setTagList(tags);
-  }, [populateTagQuery]);
-      
     useEffect(() => {
-      props.setContainer((prev: DockerContainer) => {
-        return {
-          ...prev,
-          ImageName: chosenImage + ':' + chosenVersion,
-          Tag: chosenTags
-        }
-      })
+        const {
+            data: populatedTag,
+            error: tagError,
+            isLoading: tagLoading
+        } = populateTagQuery;
+        const tags: Array<string> = [];
+        populatedTag?.forEach((tag: TagsFromImageVersionDTO) => {
+            tags.push(tag.Name);
+        });
+        setTagList(tags);
+    }, [populateTagQuery]);
+
+    useEffect(() => {
+        props.setContainer((prev: DockerContainer) => {
+            return {
+                ...prev,
+                ImageName: chosenImage + ':' + chosenVersion,
+                Tag: chosenTags
+            }
+        })
     }, [chosenImage, chosenVersion, chosenTags]);
 
     const handleChooseImage = (image: string) => {
@@ -96,15 +102,15 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     };
 
     const handleChangeVersion = (version: string | null) => {
-      if (version !== null && version !== "") {
-        setChosenVersion(version);
-        setTagInputActive(true);
-        setVersionInputActive(false);
-      } else {
-        setChosenVersion('');
-        setTagList([]);
-        setTagInputActive(false);
-      }
+        if (version !== null && version !== "") {
+            setChosenVersion(version);
+            setTagInputActive(true);
+            setVersionInputActive(false);
+        } else {
+            setChosenVersion('');
+            setTagList([]);
+            setTagInputActive(false);
+        }
     };
 
     const handleChangeTags = (tags: string | null) => {
@@ -140,44 +146,45 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
     }
 
     const handlePreviousStep = (step: number) => {
-      if (step === 1) {
-        setImageInputActive(true);
-        setVersionInputActive(false);
-        setChosenVersion('');
-      } else if (step === 2) {
-        setVersionInputActive(true);
-        setTagInputActive(false);
-        setChosenTags('');
-      }
+        if (step === 1) {
+            setImageInputActive(true);
+            setVersionInputActive(false);
+            setChosenVersion('');
+        } else if (step === 2) {
+            setVersionInputActive(true);
+            setTagInputActive(false);
+            setChosenTags('');
+        }
     }
 
     interface ImageCardType {
         image: string;
     }
 
+
     const ImageCard = (image: ImageCardType) => {
-      return (
-        <Card sx={{ backgroundColor: "#F0F0F0", margin: "0 0.5rem" }}>
-          <CardContent>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                <ContainerImage imageName={image.image} />
-                <Typography variant="h6" component="div" style={{ overflowWrap: "anywhere" }}>
-                    {image.image}
-                </Typography>
-            </Box>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              size="medium"
-              sx={{ margin: "0.5rem 1rem" }}
-              onClick={() => handleChooseImage(image.image)}
-            >
-              Choisir
-            </Button>
-          </CardActions>
-        </Card>
-      );
+        return (
+            <Card sx={{backgroundColor: "#F0F0F0", margin: "0 0.5rem"}}>
+                <CardContent>
+                    <Box sx={{display: "flex", alignItems: "center"}}>
+                        <ContainerImage imageName={image.image}/>
+                        <Typography variant="h6" component="div" style={{overflowWrap: "anywhere"}}>
+                            {image.image}
+                        </Typography>
+                    </Box>
+                </CardContent>
+                <CardActions>
+                    <Button
+                        variant="contained"
+                        size="medium"
+                        sx={{margin: "0.5rem 1rem"}}
+                        onClick={() => handleChooseImage(image.image)}
+                    >
+                        Choisir
+                    </Button>
+                </CardActions>
+            </Card>
+        );
     };
 
     return (
@@ -202,14 +209,18 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
                 options={versionList}
                 autoHighlight
                 getOptionLabel={(option) => option}
+                color={acquireValidationColor(VersionValidator(chosenVersion)())}
                 renderInput={(params) => (
                     <TextField
                         {...params}
                         sx={{margin: '1rem 0'}}
                         label="Choisissez une version"
                         variant="filled"
-                        helperText={acquireHelperText(versionUIValidator(chosenVersion))}
-                        error={handleError(versionUIValidator(chosenVersion))}
+                        helperText={<Typography sx={{color: "#6563ff"}}>
+                            {acquireHelperText(VersionValidator(chosenVersion)())}
+                        </Typography>}
+                        error={handleError(VersionValidator(chosenVersion)())}
+                        focused={handleFocus(VersionValidator(chosenVersion)())}
                         inputProps={{
                             ...params.inputProps,
                             autoComplete: 'new-password', // disable autocomplete and autofill
