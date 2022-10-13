@@ -31,11 +31,9 @@ const defaultPortSuggest = (
   value: HostContainer<string>
 ): Suggest<DomainException> =>
   suggest<string>(
-      `${value} est le port par default, il est préférable de le modifier`
+    `${value} est le port par default, il est préférable de le modifier`
   );
-const portAlreadyInUse = (
-  value: string
-): Error<DomainException> =>
+const portAlreadyInUse = (value: string): Error<DomainException> =>
   error<string>(`Le port Host :  ${value} est déjà utilisé`);
 
 export {

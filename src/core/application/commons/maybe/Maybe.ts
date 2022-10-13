@@ -76,5 +76,5 @@ export const handleError = (maybe: Maybe<string> | undefined) => {
 
 export const handleFocus = (maybe: Maybe<string> | undefined) => {
   if (maybe == undefined) return false;
-  if (isError(maybe) || isWarning(maybe)|| isSuggest(maybe)) return true;
+  if (isError(maybe) || isWarning(maybe) || isSuggest(maybe)) return true;
 };
