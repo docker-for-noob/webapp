@@ -123,8 +123,8 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
   }, [populateTagQuery]);
 
   useEffect(() => {
-    const tmpImageName = '"' + chosenImage + ':' + chosenVersion;
-    const tmpImageNameWithTags = (chosenTags.length > 0) ? tmpImageName + '-' + chosenTags.join('-') + '"' : tmpImageName + '"';
+    const tmpImageName = chosenImage + ':' + chosenVersion;
+    const tmpImageNameWithTags = (chosenTags.length > 0) ? tmpImageName + '-' + chosenTags.join('-') : tmpImageName;
     props.setContainer((prev: DockerContainer) => {
       return {
         ...prev,
@@ -132,6 +132,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
         Tag: tmpImageNameWithTags
       }
     })
+    console.log(props.container);
   }, [chosenImage, chosenVersion, chosenTags]);
 
   const handleChooseImage = (image: string) => {
