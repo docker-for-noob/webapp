@@ -1,31 +1,27 @@
-import {Box, Paper, Typography, Button} from '@mui/material';
-import {LoadingButton} from '@mui/lab';
-import React, {useState} from 'react';
-import {DockerCompose,} from '@core/domain/dockerCompose/models/DockerImage';
+import React, { Dispatch, SetStateAction } from 'react';
+import { Box, Paper, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { DockerCompose,  } from '@core/domain/dockerCompose/models/DockerImage';
 import DownloadIcon from '@mui/icons-material/Download';
-import {downloadDockerCompose} from '@core/application/downloader/Downloader';
-import {formatDockerComposeToPrevisualisation} from '@core/application/downloader/format/Formatter';
-
+import { formatDockerComposeToPrevisualisation } from '@core/application/downloader/format/Formatter';
+import DialogDownload from './DialogDownload';
 
 interface PrevizualizerProps {
     dockerCompose?: DockerCompose;
+    setDockerCompose?: Dispatch<SetStateAction<DockerCompose>>;
     rerender?: number;
 }
 
 export function Previzualizer(props: PrevizualizerProps) {
 
-
-    const [isLoading, setIsLoading] = useState(false)
+    const [open, setOpen] = React.useState(false);
 
     const handleDownloadYaml = async () => {
-        setIsLoading(true)
-        if (props.dockerCompose) {
-            const result = await downloadDockerCompose("docker-compose.yml", props.dockerCompose)
-            setIsLoading(false)
-        } else {
+        if(props.dockerCompose){
+            setOpen(true);
+        }else{
             alert('No docker-compose.yml')
         }
-        setIsLoading(false)
     }
 
     const handlePrevizualization = (dockerCompose: DockerCompose): string => {
@@ -46,12 +42,12 @@ export function Previzualizer(props: PrevizualizerProps) {
                     </pre>
                 </Typography>
             </Paper>
-            <Box sx={{marginTop: 2}}>
-                <LoadingButton loading={isLoading} onClick={handleDownloadYaml} startIcon={<DownloadIcon/>}
-                               variant="contained">
+            <Box sx={{marginTop:2}}>
+                <LoadingButton onClick={handleDownloadYaml} startIcon={<DownloadIcon />} variant="contained">
                     Télécharger
                 </LoadingButton>
             </Box>
+            <DialogDownload dockerCompose={props.dockerCompose} open={open} setOpen={setOpen} setDockerCompose={props.setDockerCompose} />
         </Box>
     );
 }

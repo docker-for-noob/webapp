@@ -28,4 +28,5 @@ export type DockerContainer = {
   Volumes?: volumes[];
   Link?: string[];
   Env?: envArray;
+  Command: string;
 };

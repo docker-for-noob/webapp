@@ -20,6 +20,7 @@ export const yamlAdapter = (data: DockerCompose) => {
         environment: formatEnvVarToKVPObject(container.Env),
         link: container.Link,
         restart: container.Restart,
+        command: container.Command,
       };
       return acc;
     }, {}),

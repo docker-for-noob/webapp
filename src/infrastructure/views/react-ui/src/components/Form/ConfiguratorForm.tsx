@@ -230,7 +230,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
           </Box>
       </Grid>
       <Grid item xs={6}>
-        <Previzualizer dockerCompose={props.dockerCompose} rerender={rerender}/>
+        <Previzualizer dockerCompose={props.dockerCompose} setDockerCompose={props.setDockerCompose} rerender={rerender}/>
       </Grid>
     </Grid>
   );
