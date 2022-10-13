@@ -50,7 +50,7 @@ export const VolumeContainerValidator = (volume: volumes) => (value: string) =>
     )(value);
 
 
-export const HostPortValidator = (usedPort?: HostContainer<string>[]) => (value: string) =>
+export const HostPortValidator = (usedPort: (port[]| undefined)[]) => (value: string) =>
     combineValidator(
         hostPortMustBeUnique(usedPort),
         portUIValidator

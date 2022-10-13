@@ -1,8 +1,19 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import {
+    Box,
+    Button,
+    IconButton,
+    Table,
+    Typography,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Chip
+} from '@mui/material';
 import {InputTextForm} from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {env, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
+import {DockerCompose, DockerContainer, env, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
 import AddIcon from '@mui/icons-material/Add';
 import {MAX_PORT_VALUE} from '@core/domain/dockerCompose/ports/Utils';
 import {
@@ -51,7 +62,7 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
         //remove from suggestions
         if (props.suggestions) {
-          props.setSuggestions(props.suggestions.filter(port => port.container !== dockerRoute));
+            props.setSuggestions(props.suggestions.filter(port => port.container !== dockerRoute));
         }
 
         setMachineRoute('');
@@ -66,23 +77,23 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
     return (
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
 
-          {props.suggestions !== undefined && props.suggestions.length > 0 &&
-            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-              <Typography>
-                Volumes suggérés :
-              </Typography>
-              {props.suggestions?.map((suggestion, index) => (
-                  <Chip
-                      key={index}
-                      label={`${suggestion.host}:${suggestion.container}`}
-                      onClick={() => {
-                          setMachineRoute(suggestion.host);
-                          setDockerRoute(suggestion.container);
-                      }}
-                      sx={{margin: '0 0.5rem'}}
-                  />
-              ))}
-          </Box>}
+            {props.suggestions !== undefined && props.suggestions.length > 0 &&
+                <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <Typography>
+                        Volumes suggérés :
+                    </Typography>
+                    {props.suggestions?.map((suggestion, index) => (
+                        <Chip
+                            key={index}
+                            label={`${suggestion.host}:${suggestion.container}`}
+                            onClick={() => {
+                                setMachineRoute(suggestion.host);
+                                setDockerRoute(suggestion.container);
+                            }}
+                            sx={{margin: '0 0.5rem'}}
+                        />
+                    ))}
+                </Box>}
 
             <InputTextForm label="Chemin sur votre machine"
                            value={machineRoute}
@@ -233,6 +244,7 @@ interface InputImagePortsProps {
     currentPorts: port[];
     suggestions?: port[];
     setSuggestions: (suggestions: port[]) => void;
+    dockerCompose: DockerCompose;
 }
 
 export const InputImagePorts = (props: InputImagePortsProps) => {
@@ -242,9 +254,13 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
     const [hostPort, setHostPort] = useState(0);
     const [containerPort, setContainerPort] = useState(0);
 
+    const usedPort = props.dockerCompose.Container.map(e => e.Ports);
+
+
     useEffect(() => {
         setPortList(props.currentPorts);
     }, [props.currentPorts]);
+
 
     const handleAddPort = () => {
         setPortList([...portList, {host: String(hostPort), container: String(containerPort)}]);
@@ -285,40 +301,40 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
     return (
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
             {props.suggestions !== undefined && props.suggestions.length > 0 &&
-            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-              <Typography>
-                Ports suggérés :
-              </Typography>
-              {props.suggestions?.map((suggestion, index) => (
-                  <Chip
-                      key={index}
-                      label={`${suggestion.host}:${suggestion.container}`}
-                      onClick={() => {
-                          setHostPort(Number(suggestion.host));
-                          setContainerPort(Number(suggestion.container));
-                      }}
-                      sx={{margin: '0 0.5rem'}}
-                  />
-              ))}
-            </Box>}
+                <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <Typography>
+                        Ports suggérés :
+                    </Typography>
+                    {props.suggestions?.map((suggestion, index) => (
+                        <Chip
+                            key={index}
+                            label={`${suggestion.host}:${suggestion.container}`}
+                            onClick={() => {
+                                setHostPort(Number(suggestion.host));
+                                setContainerPort(Number(suggestion.container));
+                            }}
+                            sx={{margin: '0 0.5rem'}}
+                        />
+                    ))}
+                </Box>}
 
             <InputTextForm label="Port machine"
                            type="number"
                            value={hostPort}
                            onChange={handleInternalPortChange}
-                           error={HostPortValidator()(String(hostPort))}
+                           error={HostPortValidator(usedPort)(String(hostPort))}
             />
             <InputTextForm label="Port container"
                            type="number"
                            value={containerPort}
                            onChange={handleExternalPortChange}
-                           error={ContainerPortValidator(props.defaultPorts)(String(containerPort))}
+                           error={ContainerPortValidator(props.suggestions)(String(containerPort))}
             />
             <Box>
                 <Button
                     startIcon={<AddIcon/>}
                     variant='outlined'
-                    disabled={handleError(portUIValidator(String(hostPort))) || handleError(portUIValidator(String(containerPort)))}
+                    disabled={handleError(ContainerPortValidator(props.suggestions)(String(containerPort))) || handleError(HostPortValidator(usedPort)(String(hostPort)))}
                     onClick={handleAddPort}>
                     Ajouter
                 </Button>

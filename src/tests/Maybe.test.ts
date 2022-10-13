@@ -88,7 +88,7 @@ test("handle error get maybe return true", function () {
   expect(handleError(actual)).toEqual(true);
 });
 
-test("handle error get maybe return true", function () {
+test("handle error get maybe return undefined", function () {
   const actual = suggest<string>("test");
-  expect(handleError(actual)).toEqual(true);
+  expect(handleError(actual)).toBeUndefined();
 });

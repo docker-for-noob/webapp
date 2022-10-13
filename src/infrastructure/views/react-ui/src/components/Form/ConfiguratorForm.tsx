@@ -99,6 +99,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
         currentPorts={props.dockerCompose.Container[indexContainer].Ports ?? []}
         suggestions={[]}
         setSuggestions={() => { }}
+        dockerCompose={props.dockerCompose}
       />,
       step: 1,
     },

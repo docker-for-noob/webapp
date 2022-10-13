@@ -1,7 +1,7 @@
 import {DockerContainer, port, volumes, env, DockerCompose} from "@core/domain/dockerCompose/models/DockerImage";
-import {Accordion, AccordionSummary, Typography, AccordionDetails, Box, Button} from "@mui/material";
-import React, {Dispatch, SetStateAction, useState, useEffect} from "react";
-import {InputImagePorts, InputImageVolumes, InputImageEnvVariables} from "../../FormInput/ImageInput";
+import { Accordion, AccordionSummary, Typography, AccordionDetails, Box, Button } from "@mui/material";
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../../FormInput/ImageInput";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {apiSlice} from "../../../../../../redux/api/apiSlice";
 
@@ -10,10 +10,10 @@ interface ServiceFormStep3Props {
     setSubstep: (substep: number) => void;
     setContainer: Dispatch<SetStateAction<DockerContainer>>
     container: DockerContainer;
-    dockerCompose: DockerCompose;
-}
-
-export function ServiceFormStep3(props: ServiceFormStep3Props) {
+    dockerCompose : DockerCompose
+  }
+  
+  export function ServiceFormStep3(props: ServiceFormStep3Props) {
     const [step, setStep] = useState(1);
 
     const [portsSuggestions, setPortsSuggestions] = useState<Array<port>>([]);
@@ -126,6 +126,7 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
           currentPorts={props.container.Ports ?? []}
           suggestions={portsSuggestions}
           setSuggestions={setPortsSuggestions}
+          dockerCompose={props.dockerCompose}
         />,
         step: 1,
       },
@@ -139,6 +140,7 @@ export function ServiceFormStep3(props: ServiceFormStep3Props) {
           currentVolumes={props.container.Volumes ?? []}
           suggestions={volumesSuggestions}
           setSuggestions={setVolumesSuggestions}
+
         />,
         step: 2,
       },

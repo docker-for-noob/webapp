@@ -15,6 +15,7 @@ import {
     acquireHelperText,
     acquireValidationColor,
     handleError,
+    handleFocus,
     Maybe
 } from "@core/application/commons/maybe/Maybe";
 
@@ -51,7 +52,7 @@ export function InputTextForm(props: InputTextFormProps) {
                     disabled={props.disabled}
                     error={handleError(props.error)}
                     color={color}
-                    focused={handleError(props.error)}
+                    focused={handleFocus(props.error)}
                     helperText={<Typography sx={{ color: theme.palette[color!].main }}>
                         {acquireHelperText(props.error)}
                     </Typography>}

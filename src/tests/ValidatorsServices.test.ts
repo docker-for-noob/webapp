@@ -37,15 +37,13 @@ test("Service is not unique and return false", () => {
 });
 
 test("default value was not changed and return a warning", () => {
-  const defaultPort = [{ host: "8080", container: "8080" }];
+  const defaultPort = [
+      { host: "8080", container: "8080" }];
 
-  const result = isDefaultPort(defaultPort)({
-    host: "8080",
-    container: "8080",
-  });
+  const result = isDefaultPort(defaultPort)("8080",);
   expect(isSuggest(result!)).toStrictEqual(true);
   expect(getSuggest(result!)).toStrictEqual(
-    `8080:8080 est le port par default, il est préférable de le modifier`
+    `8080 est le port par default, il est préférable de le modifier`
   );
 });
 
@@ -55,36 +53,27 @@ test("default value was not changed and return a warning", () => {
     { host: "8082", container: "8082" },
   ];
 
-  const result = isDefaultPort(defaultPort)({
-    host: "8080",
-    container: "8080",
-  });
+  const result = isDefaultPort(defaultPort)( "8080");
   expect(result).toBeUndefined();
 });
 
 test("new ports arent used and return undefined", () => {
-  const defaultPort = [
+  const defaultPort = [[
     { host: "8081", container: "8081" },
     { host: "8082", container: "8082" },
-  ];
+  ]];
 
-  const result = hostPortMustBeUnique(defaultPort)({
-    host: "8080",
-    container: "8080",
-  });
+  const result = hostPortMustBeUnique(defaultPort)( "8080");
   expect(result).toBeUndefined();
 });
 
 test("new host ports are use and return error", () => {
-  const defaultPort = [
+  const defaultPort = [[
     { host: "8081", container: "8081" },
     { host: "8082", container: "8082" },
-  ];
+  ]];
 
-  const result = hostPortMustBeUnique(defaultPort)({
-    host: "8081",
-    container: "8080",
-  });
+  const result = hostPortMustBeUnique(defaultPort)("8081");
 
   expect(isError(result!)).toStrictEqual(true);
   expect(getError(result!)).toStrictEqual(
@@ -93,15 +82,12 @@ test("new host ports are use and return error", () => {
 });
 
 test("new container ports are use and return undefined", () => {
-  const defaultPort = [
+  const defaultPort = [[
     { host: "8081", container: "8081" },
     { host: "8082", container: "8082" },
-  ];
+  ]];
 
-  const result = hostPortMustBeUnique(defaultPort)({
-    host: "8080",
-    container: "8082",
-  });
+  const result = hostPortMustBeUnique(defaultPort)("8080");
   expect(result).toBeUndefined();
 });
 
