@@ -22,7 +22,7 @@ const containerPathMustBeInput: Error<DomainException> = error<string>(
 );
 
 const versionIsLatest: Suggest<DomainException> = suggest<string>(
-  "La version sera mis a jour automatiquement"
+  "La version sera mise à jour automatiquement"
 );
 const hostPathMustBeInput: Error<DomainException> = error<string>(
   "Un chemin host doit être saisie"
