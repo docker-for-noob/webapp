@@ -8,6 +8,9 @@ export const defaultTheme: Theme = createTheme({
     secondary: {
       main: "#D8D8FF",
     },
+    warning: {
+      main: "#fdb44d",
+    },
   },
   typography: {
     h1: {

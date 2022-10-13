@@ -14,7 +14,6 @@ import { mockHelpers } from "../../../mock/HelperMock";
 import { HelperData, Helper } from "../../Helper";
 import { Previzualizer } from "../../Previzualizer";
 import { DockerCompose, DockerContainer } from '@core/domain/dockerCompose/models/DockerImage';
-
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { ServiceFormStep1 } from "./ServiceFormStep1";
@@ -63,6 +62,7 @@ export function ServiceForm(props: ServiceFormProps) {
     ServiceName: "",
     ImageName: "",
     Tag: "",
+    Command:"",
   });
 
   const steps = [
@@ -118,6 +118,7 @@ export function ServiceForm(props: ServiceFormProps) {
       case 0:
         return <ServiceFormStep1
           setDisableNext={setDisableNext}
+          dockerCompose={props.dockerCompose}
           setContainer={setContainer}
           container={container}
         />;
@@ -134,6 +135,7 @@ export function ServiceForm(props: ServiceFormProps) {
             setSubstep={setSubstep}
             setContainer={setContainer}
             container={container}
+            dockerCompose={props.dockerCompose}
           />
         );
       default:
@@ -159,7 +161,7 @@ export function ServiceForm(props: ServiceFormProps) {
       </Box>
       
       <Grid container spacing={4}>
-        <Grid item xs={7}>
+        <Grid item xs={6}>
           <Box sx={{paddingX:2,height:'70px'}}>
             <Typography variant="h1">{steps[activeStep]}</Typography>
           </Box>
@@ -174,7 +176,7 @@ export function ServiceForm(props: ServiceFormProps) {
             <Button variant='contained'endIcon={<ArrowForwardIosIcon />} onClick={handleNext} disabled={disableNext}>Suivant</Button>
           </Box>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <FormControlLabel
             control={
               <Switch

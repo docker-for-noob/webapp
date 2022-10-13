@@ -12,7 +12,7 @@ export function Helper(props: HelperData) {
     return (
         <Box sx={{backgroundColor:'#F0F0F0',paddingX:3,paddingY:2}}>
             <Box>
-                <Typography variant="h3">{props.title}</Typography>
+                <Typography variant="h3" component='div'>{props.title}</Typography>
             </Box>
             <Box sx={{marginY:2}}>
                 <Typography variant="body2">

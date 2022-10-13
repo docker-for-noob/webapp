@@ -16,7 +16,6 @@ import {
   InputImageVolumes,
 } from "../FormInput/ImageInput";
 import { Previzualizer } from "../Previzualizer";
-import { ServiceReference } from "@core/domain/serviceReference/models/service";
 import { DockerCompose, port, volumes, env } from '@core/domain/dockerCompose/models/DockerImage';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from '@mui/icons-material/Add';
@@ -98,6 +97,9 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
         handleAddPort={(ports) => handleAddPort(indexContainer, ports)}
         handleRemovePort={(portIndex) => handleRemovePort(indexContainer, portIndex)}
         currentPorts={props.dockerCompose.Container[indexContainer].Ports ?? []}
+        suggestions={[]}
+        setSuggestions={() => { }}
+        dockerCompose={props.dockerCompose}
       />,
       step: 1,
     },
@@ -109,6 +111,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
         handleAddVolume={(volume) => handleAddVolume(indexContainer, volume)}
         handleRemoveVolume={(volumeIndex) => handleRemoveVolume(indexContainer, volumeIndex)}
         currentVolumes={props.dockerCompose.Container[indexContainer].Volumes ?? []}
+        suggestions={[]}
+        setSuggestions={() => { }}
       />,
       step: 2,
     },
@@ -129,8 +133,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
     return `Configure ton application Docker grâce à l'interface`;
   }
 
-  const handleChange =
-    (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+  const handleChange = (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setStep((old) => (newExpanded ? step : old));
     };
 
@@ -144,7 +147,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={7}>
+      <Grid item xs={6}>
         <Box sx={{marginBottom:2,display:'flex',gap:1,alignItems:'start'}}>
           <Typography variant="h1">Configurateur</Typography>
           <Tooltip placement="right" title={TooltipTextH1()}>
@@ -169,7 +172,7 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
                 <Box sx={{display:'flex',alignItems:'center'}}>
                     <Box>
                       <Typography variant="h3" sx={{fontSize:'17px'}}>{service.ServiceName}</Typography>
-                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.Ports ? service.Ports[0].container+':'+service.Ports[0].host : 'Aucun port'}</Typography>
+                      <Typography variant="body1"  sx={{fontStyle:'italic'}}>{service.Ports && service.Ports.length > 0 ? service.Ports[0].host+':'+service.Ports[0].container : 'Aucun port'}</Typography>
                     </Box>
                 </Box>
 
@@ -226,8 +229,8 @@ export function ConfiguratorForm(props: ConfiguratorFormProps) {
             </Button>
           </Box>
       </Grid>
-      <Grid item xs={5}>
-        <Previzualizer dockerCompose={props.dockerCompose} rerender={rerender}/>
+      <Grid item xs={6}>
+        <Previzualizer dockerCompose={props.dockerCompose} setDockerCompose={props.setDockerCompose} rerender={rerender}/>
       </Grid>
     </Grid>
   );

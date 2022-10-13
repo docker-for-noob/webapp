@@ -8,10 +8,10 @@ const formatImageName = (data: DockerContainer): string => {
   if (data.Tag != undefined) return data.Tag;
   return data.ImageName;
 };
-const formatIEArrayToStringArray = <T>(
+const formatHCArrayToStringArray = <T>(
   data?: HostContainer<T>[]
-): string[] | undefined => data?.map(formatPrimitiveIEToString<T>);
-const formatPrimitiveIEToString = <T>(e: HostContainer<T>): string =>
+): string[] | undefined => data?.map(formatPrimitiveHCToString<T>);
+const formatPrimitiveHCToString = <T>(e: HostContainer<T>): string =>
   [e.host, e.container].join(":");
 
 const formatEnvVarToKVPObject = (data?: env[]): any =>
@@ -25,6 +25,6 @@ const formatEnvVarToKVPObject = (data?: env[]): any =>
 export {
   formatImageName,
   formatEnvVarToKVPObject,
-  formatIEArrayToStringArray,
-  formatPrimitiveIEToString,
+  formatHCArrayToStringArray,
+  formatPrimitiveHCToString,
 };

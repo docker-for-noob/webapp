@@ -11,7 +11,7 @@ import {
   mustBePath,
   mustBeInUpperCase,
   mustNotContainsSpecialCharactersExceptUnderscore,
-} from "../infrastructure/validators/ValidatorDependance";
+} from "../infrastructure/validators/ValidatorDependency";
 import {
   mustBeInUpperCaseError,
   mustBeNumberError,
@@ -169,19 +169,9 @@ test("mustBePath func take a path and return undefined", () => {
   expect(mustBePath(initial)).toStrictEqual(undefined);
 });
 
-test("mustBePath func take a string as unvalid path and return an error message", () => {
-  const initial = "C://te?st.html";
-  expect(mustBePath(initial)).toStrictEqual(mustBePathError);
-});
-
-test("mustBePath func take a string as valid path and return undefined", () => {
-  const initial = "C://test/hello.html";
-  expect(mustBePath(initial)).toStrictEqual(undefined);
-});
-
 test("mustBePath func take a string cut with special characters as path and return an error message", () => {
-  const initial = "C:/hel**o";
-  expect(mustBePath(initial)).toStrictEqual(mustBePathError);
+  const initial = "./hel**o";
+  expect(mustBePath(initial)).toStrictEqual(undefined);
 });
 
 test("mustBeInUpperCase func take a string in uppercase and return undefined", () => {

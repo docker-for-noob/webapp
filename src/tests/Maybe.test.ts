@@ -3,11 +3,14 @@ import {
   error,
   getError,
   getResult,
+  handleError,
   isError,
   isSuccess,
   Maybe,
   Success,
   success,
+  suggest,
+  warning,
 } from "../core/application/commons/maybe/Maybe";
 
 const isInLowerCase = (expr: string): Maybe<boolean> => {
@@ -68,4 +71,24 @@ test("Input OK, Output KO", function () {
   const actual = isInLowerCase("TEST");
   expect(actual.type).toEqual("ERROR");
   expect(getError(actual)).toEqual("Must be in lower case");
+});
+
+test("handle error get maybe return false", function () {
+  const actual = undefined;
+  expect(handleError(actual)).toEqual(false);
+});
+
+test("handle error get maybe return true", function () {
+  const actual = error<string>("test");
+  expect(handleError(actual)).toEqual(true);
+});
+
+test("handle error get maybe return undefined", function () {
+  const actual = warning<string>("test");
+  expect(handleError(actual)).toBeUndefined();
+});
+
+test("handle error get maybe return undefined", function () {
+  const actual = suggest<string>("test");
+  expect(handleError(actual)).toBeUndefined();
 });

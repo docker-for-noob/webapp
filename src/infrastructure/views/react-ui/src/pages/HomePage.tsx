@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { ServiceForm } from '../components/Form/ServiceForm/ServiceForm';
 import { ConfiguratorForm } from '../components/Form/ConfiguratorForm';
@@ -17,10 +17,6 @@ export function HomePage() {
     setForm(forms[index]);
   }
 
-  const changeDockerCompose = (dockerCompose: DockerCompose) => {
-    setDockerCompose(dockerCompose);
-  }
-
   const addDockerContainer = (dockerContainer: DockerContainer) => {
     if (dockerCompose !== undefined) {
       let dockerComposeCopy:DockerCompose = dockerCompose;
@@ -28,10 +24,6 @@ export function HomePage() {
       setDockerCompose(dockerCompose);
     }
   }
-
-  useEffect(() => {
-    console.log(dockerCompose);
-  }, [dockerCompose]);
 
   const forms = [
     {
