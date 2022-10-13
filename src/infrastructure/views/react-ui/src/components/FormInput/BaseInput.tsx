@@ -1,15 +1,15 @@
 import React from 'react';
 import {
+    Box,
     FormControl,
     TextField,
     Typography,
-    Tooltip,
     styled,
-    TooltipProps,
-    tooltipClasses,
     Input,
+    IconButton,
     FilledInput,
-    useTheme
+    useTheme,
+    Tooltip
 } from "@mui/material";
 import {
     acquireHelperText,
@@ -18,6 +18,7 @@ import {
     handleFocus,
     Maybe
 } from "@core/application/commons/maybe/Maybe";
+import HelpIcon from '@mui/icons-material/Help';
 
 interface InputTextFormProps {
     label: string;
@@ -27,24 +28,26 @@ interface InputTextFormProps {
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     disabled?: boolean;
     error?: Maybe<string>;
+    tooltip?: string;
 }
-const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))({
-    [`& .${tooltipClasses.tooltip}`]: {
-        maxWidth: 500,
-        height: 30
-    },
-});
+
 export function InputTextForm(props: InputTextFormProps) {
     const theme = useTheme()
     const color = acquireValidationColor(props.error)
 
     return (
         <FormControl sx={{ margin: '1rem 0' }}>
-            <CustomWidthTooltip title='Nisi cillum laboris officia duis ut dolore culpa.' followCursor={true}>
                 <TextField
-                    label={props.label}
+                    label={
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap:1 }}>
+                            {props.label}
+                            <Tooltip placement="right" title={props.tooltip || 'lorem ipsum dolor sit amet'}>
+                                <IconButton aria-label="help" size="small">
+                                    <HelpIcon fontSize="small" />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                    }
                     value={props.value}
                     type={props.type || 'text'}
                     variant={props.variant || 'standard'}
@@ -57,7 +60,6 @@ export function InputTextForm(props: InputTextFormProps) {
                         {acquireHelperText(props.error)}
                     </Typography>}
                 />
-            </CustomWidthTooltip>
         </FormControl>
     );
 }
