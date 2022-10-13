@@ -1,9 +1,9 @@
-import {DockerContainer, port, volumes, env, DockerCompose} from "@core/domain/dockerCompose/models/DockerImage";
+import { DockerContainer, port, volumes, env } from "@core/domain/dockerCompose/models/DockerImage";
 import { Accordion, AccordionSummary, Typography, AccordionDetails, Box, Button } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../../FormInput/ImageInput";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {apiSlice} from "../../../../../../redux/api/apiSlice";
+import { apiSlice } from "../../../../../../redux/api/apiSlice";
 
 interface ServiceFormStep3Props {
     setDisableNext: (disabled: boolean) => void;
@@ -20,10 +20,10 @@ interface ServiceFormStep3Props {
     const [volumesSuggestions, setVolumesSuggestions] = useState<Array<volumes>>([]);
 
     const {useFetchImageReferenceQuery} = apiSlice;
-    const imageReferenceQuery = useFetchImageReferenceQuery({image: props.container.ImageName});
+    const imageReferenceQuery = useFetchImageReferenceQuery({ image: props.container.ImageName });
 
     useEffect(() => {
-        props.setSubstep(step);
+      props.setSubstep(step);
     }, [step]);
 
     useEffect(() => {
@@ -32,9 +32,8 @@ interface ServiceFormStep3Props {
         error: imageReferenceError,
         isLoading: imageReferenceLoading,
       } = imageReferenceQuery;
-
       imageReferenceData?.Workdir?.forEach((volume) => {
-        setVolumesSuggestions((prev) => [...prev, { container: volume, host: volume }]);
+        handleAddVolume({host: volume, container: volume});
       });
       imageReferenceData?.Env?.forEach((env) => {
         //TODO: add env variable suggestion
@@ -46,14 +45,12 @@ interface ServiceFormStep3Props {
     }, [imageReferenceQuery]);
 
     const handleChange =
-        (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-            setStep((old) => (newExpanded ? step : old));
-        };
+      (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        setStep((old) => (newExpanded ? step : old));
+      };
+  
 
-    useEffect(() => {
-        props.setSubstep(step);
-    }, [step]);
-
+  
     const handleAddPort = (port: port) => {
         props.setContainer((prev: DockerContainer) => {
             const ports = prev.Ports ?? [];
@@ -95,24 +92,23 @@ interface ServiceFormStep3Props {
     }
 
     const handleAddEnvVariable = (envVariable: env) => {
-        console.log("envVariable", envVariable);
-        props.setContainer((prev: DockerContainer) => {
-            const envVariables = prev.Env ?? [];
-            return {
-                ...prev,
-                Env: [...envVariables, envVariable],
-            }
-        })
+      props.setContainer((prev: DockerContainer) => {
+        const envVariables = prev.Env ?? [];
+        return {
+          ...prev,
+          Env: [...envVariables, envVariable],
+        }
+      })
     }
 
     const handleRemoveEnvVariable = (index: number) => {
-        props.setContainer((prev: DockerContainer) => {
-            const envVariables = prev.Env ? prev.Env.filter((_, i) => i !== index) : [];
-            return {
-                ...prev,
-                Env: envVariables,
-            }
-        })
+      props.setContainer((prev: DockerContainer) => {
+        const envVariables = prev.Env ? prev.Env.filter((_, i) => i !== index) : [];
+        return {
+          ...prev,
+          Env: envVariables,
+        }
+      })
     }
 
     const accordionDetails = [
@@ -202,4 +198,4 @@ interface ServiceFormStep3Props {
             ))}
         </form>
     );
-}
+  }
