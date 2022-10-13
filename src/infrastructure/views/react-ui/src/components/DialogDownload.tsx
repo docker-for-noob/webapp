@@ -44,10 +44,6 @@ export default function DialogDownload(props: DialogDownloadProps) {
         props.setOpen(false);
     };
 
-    useEffect(() => {
-        console.log(dockerComposeWithCommand);
-    }, [dockerComposeWithCommand]);
-
     const handleChange = (imageName: string, command: string) => {
         if (props.dockerCompose) {
             let dockerComposeCopy: DockerCompose = dockerComposeWithCommand ?? props.dockerCompose;
