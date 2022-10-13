@@ -1,6 +1,4 @@
-export const REGEXP_PATH: RegExp = new RegExp(
-  /^(?:[a-z]:)?([\/\\]{0,2})(?:[.\/\\ ](?![.\/\\\n])|[^<>:"|?*.\/\\ \n])+$/i
-);
+export const REGEXP_PATH: RegExp = new RegExp(/^(.+)\/([^\/]+)|(.+)\/$/i);
 export const REGEXP_SPECIAL_CHARACTERS_EXCEPT_EQUALS: RegExp = new RegExp(
   /[^a-zA-Z0-9=]/
 );
