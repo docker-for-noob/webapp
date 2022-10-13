@@ -15,6 +15,9 @@ interface ServiceFormStep3Props {
   export function ServiceFormStep3(props: ServiceFormStep3Props) {
     const [step, setStep] = useState(1);
 
+    const [portsSuggestions, setPortsSuggestions] = useState<Array<port>>([]);
+    const [volumesSuggestions, setVolumesSuggestions] = useState<Array<volumes>>([]);
+
     const {useFetchImageReferenceQuery} = apiSlice;
     const imageReferenceQuery = useFetchImageReferenceQuery({ image: props.container.ImageName });
 
@@ -28,17 +31,24 @@ interface ServiceFormStep3Props {
         error: imageReferenceError,
         isLoading: imageReferenceLoading,
       } = imageReferenceQuery;
+
+      setVolumesSuggestions([]);
       imageReferenceData?.Workdir?.forEach((volume) => {
-        handleAddVolume({host: volume, container: volume});
+        setVolumesSuggestions((prev) => [...prev, { container: volume, host: volume }]);
       });
       imageReferenceData?.Env?.forEach((env) => {
-        handleAddEnvVariable({ key: env.Key, value: env.Desc });
+        //TODO: add env variable suggestion
       });
+      setPortsSuggestions([]);
       imageReferenceData?.Port?.forEach((port) => {
-        handleAddPort({ host: port, container: port });
+        setPortsSuggestions((prev) => [...prev, {host: port, container: port}]);
       });
       setStep(1);
     }, [imageReferenceQuery]);
+
+    useEffect(() => {
+      console.log(portsSuggestions);
+    }, [portsSuggestions]);
 
     const handleChange =
       (step: number) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -119,6 +129,8 @@ interface ServiceFormStep3Props {
           handleAddPort={handleAddPort}
           handleRemovePort={handleRemovePort}
           currentPorts={props.container.Ports ?? []}
+          suggestions={portsSuggestions}
+          setSuggestions={setPortsSuggestions}
         />,
         step: 1,
       },
@@ -130,6 +142,8 @@ interface ServiceFormStep3Props {
           handleAddVolume={handleAddVolume}
           handleRemoveVolume={handleRemoveVolume}
           currentVolumes={props.container.Volumes ?? []}
+          suggestions={volumesSuggestions}
+          setSuggestions={setVolumesSuggestions}
         />,
         step: 2,
       },

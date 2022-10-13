@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import {Box, Button, IconButton, Table, Typography, TableBody, TableCell, TableHead, TableRow, Chip} from '@mui/material';
 import {InputTextForm} from './BaseInput';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {env, port, volumes} from '@core/domain/dockerCompose/models/DockerImage';
@@ -22,6 +22,8 @@ interface InputImageVolumesProps {
     handleAddVolume: (volume: volumes) => void;
     handleRemoveVolume: (index: number) => void;
     currentVolumes: volumes[];
+    suggestions?: volumes[];
+    setSuggestions: (suggestions: volumes[]) => void;
 }
 
 export const InputImageVolumes = (props: InputImageVolumesProps) => {
@@ -44,9 +46,15 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
     const handleVolumesChange = () => {
         setVolumesList([...volumesList, {host: machineRoute, container: dockerRoute}]);
-        props.handleAddVolume({host: dockerRoute, container: machineRoute});
-        setMachineRoute('')
-        setDockerRoute('')
+        props.handleAddVolume({host: machineRoute, container: dockerRoute});
+
+        //remove from suggestions
+        if (props.suggestions) {
+          props.setSuggestions(props.suggestions.filter(port => port.container !== dockerRoute));
+        }
+
+        setMachineRoute('');
+        setDockerRoute('');
     }
 
     const handleVolumesDelete = (index: number) => {
@@ -56,6 +64,25 @@ export const InputImageVolumes = (props: InputImageVolumesProps) => {
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
+
+          {props.suggestions !== undefined && props.suggestions.length > 0 &&
+            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              <Typography>
+                Volumes suggérés :
+              </Typography>
+              {props.suggestions?.map((suggestion, index) => (
+                  <Chip
+                      key={index}
+                      label={`${suggestion.host}:${suggestion.container}`}
+                      onClick={() => {
+                          setMachineRoute(suggestion.host);
+                          setDockerRoute(suggestion.container);
+                      }}
+                      sx={{margin: '0 0.5rem'}}
+                  />
+              ))}
+          </Box>}
+
             <InputTextForm label="Chemin sur votre machine"
                            value={machineRoute}
                            onChange={handleMachineRouteChange}
@@ -203,15 +230,16 @@ interface InputImagePortsProps {
     handleAddPort: (port: port) => void;
     handleRemovePort: (index: number) => void;
     currentPorts: port[];
-    defaultPorts?: port;
+    suggestions?: port[];
+    setSuggestions: (suggestions: port[]) => void;
 }
 
 export const InputImagePorts = (props: InputImagePortsProps) => {
 
     const [portList, setPortList] = useState<Array<port>>(props.currentPorts);
 
-    const [hostPort, setHostPort] = useState(Number(props.defaultPorts?.host) || 0);
-    const [containerPort, setContainerPort] = useState(Number(props.defaultPorts?.container) || 0);
+    const [hostPort, setHostPort] = useState(0);
+    const [containerPort, setContainerPort] = useState(0);
 
     useEffect(() => {
         setPortList(props.currentPorts);
@@ -220,6 +248,12 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
     const handleAddPort = () => {
         setPortList([...portList, {host: String(hostPort), container: String(containerPort)}]);
         props.handleAddPort({host: String(hostPort), container: String(containerPort)});
+
+        //remove from suggestions
+        if (props.suggestions) {
+            props.setSuggestions(props.suggestions.filter(port => port.container !== String(containerPort)));
+        }
+        
         setHostPort(0);
         setContainerPort(0);
     }
@@ -249,6 +283,24 @@ export const InputImagePorts = (props: InputImagePortsProps) => {
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            {props.suggestions !== undefined && props.suggestions.length > 0 &&
+            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              <Typography>
+                Ports suggérés :
+              </Typography>
+              {props.suggestions?.map((suggestion, index) => (
+                  <Chip
+                      key={index}
+                      label={`${suggestion.host}:${suggestion.container}`}
+                      onClick={() => {
+                          setHostPort(Number(suggestion.host));
+                          setContainerPort(Number(suggestion.container));
+                      }}
+                      sx={{margin: '0 0.5rem'}}
+                  />
+              ))}
+            </Box>}
+
             <InputTextForm label="Port machine"
                            type="number"
                            value={hostPort}
