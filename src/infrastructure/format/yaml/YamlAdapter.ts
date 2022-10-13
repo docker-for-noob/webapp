@@ -6,6 +6,7 @@ import {
   formatEnvVarToKVPObject,
   formatHCArrayToStringArray,
   formatImageName,
+  formatDependsOn,
 } from "../../../core/application/downloader/format/FormatHelpers";
 
 export const yamlAdapter = (data: DockerCompose) => {
@@ -21,6 +22,7 @@ export const yamlAdapter = (data: DockerCompose) => {
         link: container.Link,
         restart: container.Restart,
         command: container.Command,
+        depends_on: formatDependsOn(container.DependsOn),
       };
       return acc;
     }, {}),
