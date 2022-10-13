@@ -157,31 +157,34 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
 
     const ImageCard = (image: ImageCardType) => {
       return (
-        <Card sx={{ backgroundColor: "#F0F0F0", margin: "0 0.5rem" }}>
-          <CardContent>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                <ContainerImage imageName={image.image} />
-                <Typography variant="h6" component="div" style={{ overflowWrap: "anywhere" }}>
-                    {image.image}
-                </Typography>
+        <Box sx={{ backgroundColor: "#F0F0F0", padding:2,borderRadius:2}}>
+
+            <Box sx={{ display: "flex", alignItems: "center",justifyContent:'center'}}>
+                <Box sx={{ display: "flex", alignItems: "center"}}>
+                  <ContainerImage imageName={image.image} />
+                  <Typography variant="h6" component="div" style={{ overflowWrap: "anywhere" }}>
+                      {image.image}
+                  </Typography>
+                </Box>
             </Box>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              size="medium"
-              sx={{ margin: "0.5rem 1rem" }}
-              onClick={() => handleChooseImage(image.image)}
-            >
-              Choisir
-            </Button>
-          </CardActions>
-        </Card>
+
+            <Box sx={{display:'flex',justifyContent:'center',marginTop:3}}>
+              <Button
+                variant="contained"
+                onClick={() => handleChooseImage(image.image)}
+              >
+                Choisir
+              </Button>
+            </Box>
+
+
+
+        </Box>
       );
     };
 
     return (
-        <form style={{display: "flex", flexDirection: "column", padding: '1rem'}}>
+        <form style={{display: "flex", flexDirection: "column"}}>
             <InputTextForm
                 variant="filled"
                 label="Rechercher un type d'image"
@@ -191,7 +194,7 @@ export function ServiceFormStep2(props: ServiceFormStep2Props) {
                 error={imageTypeUIValidator(chosenImage)}/>
             <Grid container spacing={2}>
                 {imageList.map((image) => (
-                    <Grid item xs={6} key={image}>
+                    <Grid item xs={12} md={6} key={image}>
                         <ImageCard image={image}/>
                     </Grid>
                 ))}

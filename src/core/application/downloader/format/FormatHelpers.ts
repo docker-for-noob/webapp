@@ -22,9 +22,15 @@ const formatEnvVarToKVPObject = (data?: env[]): any =>
     }, {}),
   };
 
+
+const formatDependsOn = (data: string): any => {
+  return data ? [data] : undefined
+}
+
 export {
   formatImageName,
   formatEnvVarToKVPObject,
   formatHCArrayToStringArray,
   formatPrimitiveHCToString,
+  formatDependsOn
 };
