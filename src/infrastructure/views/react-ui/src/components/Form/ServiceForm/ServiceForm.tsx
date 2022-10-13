@@ -62,6 +62,7 @@ export function ServiceForm(props: ServiceFormProps) {
     ServiceName: "",
     ImageName: "",
     Tag: "",
+    Command:"",
   });
 
   const steps = [

@@ -1,4 +1,4 @@
-import { DockerContainer, port, volumes, env } from "@core/domain/dockerCompose/models/DockerImage";
+import {DockerContainer, port, volumes, env, DockerCompose} from "@core/domain/dockerCompose/models/DockerImage";
 import { Accordion, AccordionSummary, Typography, AccordionDetails, Box, Button } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { InputImagePorts, InputImageVolumes, InputImageEnvVariables } from "../../FormInput/ImageInput";
